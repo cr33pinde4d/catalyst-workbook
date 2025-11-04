@@ -1,21 +1,181 @@
-```txt
+# Catalyst Tanulási Napló
+
+Interaktív online munkafüzet vezetői fejlesztéshez - strukturált problémamegoldás és stratégiai végrehajtás.
+
+## 🎯 Projekt áttekintés
+
+A Catalyst Tanulási Napló egy full-stack webalkalmazás, amely digitalizálja a 6 napos Catalyst vezetői fejlesztő programot. A platform lehetővé teszi a vezetők számára, hogy lépésről lépésre dolgozzanak át komplex vezetői problémákat, nyomon kövessék haladásukat, és strukturáltan dokumentálják tanulási folyamatukat.
+
+## ✨ Főbb funkciók
+
+### ✅ Jelenleg implementált funkciók
+
+- **🔐 Felhasználói autentikáció**: Biztonságos regisztráció és bejelentkezés JWT tokenekkel
+- **📊 Haladás követés**: Real-time progresszió tracking minden egyes lépéshez
+- **💾 Automatikus mentés**: Válaszok és jegyzetek automatikus mentése D1 adatbázisban
+- **📱 Responsive design**: Mobilbarát, modern UI Tailwind CSS-sel
+- **🎓 6 tréningnap**: Teljes kurzus struktúra 8 lépéssel naponta
+- **📝 Dinamikus mezők**: Kontextus-érzékeny input mezők minden lépéshez
+- **🎯 Státusz menedzsment**: "Folyamatban" és "Befejezett" státuszok
+- **📈 Dashboard**: Vizuális áttekintés az összes tréningnapról és haladásról
+
+### 🔄 Folyamatban lévő funkciók
+
+- **📄 PDF Export**: Kitöltött munkafüzet exportálása PDF formátumba
+- **🔍 Keresés**: Válaszok és jegyzetek közötti keresés
+- **📊 Analitika**: Részletes statisztikák és insights
+
+## 🏗 Architektúra
+
+### Frontend
+- **Framework**: Vanilla JavaScript (SPA architecture)
+- **UI**: Tailwind CSS, Font Awesome icons
+- **State Management**: Simple state object with localStorage persistence
+- **HTTP Client**: Axios
+
+### Backend
+- **Framework**: Hono (lightweight edge framework)
+- **Runtime**: Cloudflare Workers
+- **Database**: Cloudflare D1 (SQLite)
+- **Authentication**: JWT with bcrypt password hashing
+
+## 📊 Adatbázis struktúra
+
+### Táblák
+
+- **users**: Felhasználói adatok (email, név, jelszó hash)
+- **training_days**: 6 tréningnap mester adatai
+- **training_steps**: Lépések minden naphoz (összesen ~48 lépés)
+- **user_progress**: Felhasználói haladás tracking (státusz, időbélyegek)
+- **user_responses**: Felhasználói válaszok és jegyzetek
+- **sessions**: Munkamenet kezelés
+
+## 🚀 Használat
+
+### Helyi fejlesztés
+
+```bash
+# Függőségek telepítése
 npm install
-npm run dev
+
+# D1 migráció alkalmazása (lokálisan)
+npm run db:migrate:local
+
+# Build
+npm run build
+
+# Fejlesztői szerver indítása PM2-vel
+pm2 start ecosystem.config.cjs
+
+# Szerver tesztelése
+npm run test
+
+# Logok megtekintése
+pm2 logs catalyst --nostream
+
+# Szerver leállítása
+pm2 stop catalyst
 ```
 
-```txt
-npm run deploy
-```
+### Publikus URL
 
-[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
+**Development**: https://3000-ildzif0p6yl6272ppdpuy-5c13a017.sandbox.novita.ai
 
-```txt
-npm run cf-typegen
-```
+### API Endpointok
 
-Pass the `CloudflareBindings` as generics when instantiation `Hono`:
+#### Autentikáció
+- `POST /api/auth/register` - Új felhasználó regisztráció
+- `POST /api/auth/login` - Bejelentkezés
+- `GET /api/auth/me` - Aktuális felhasználó adatai (protected)
 
-```ts
-// src/index.ts
-const app = new Hono<{ Bindings: CloudflareBindings }>()
-```
+#### Tréning adatok
+- `GET /api/training/days` - Összes tréningnap (protected)
+- `GET /api/training/days/:dayId` - Egy nap részletei + lépések (protected)
+- `GET /api/training/steps/:stepId` - Egy lépés részletei (protected)
+
+#### Haladás tracking
+- `GET /api/progress` - Felhasználó összes haladása (protected)
+- `GET /api/progress/day/:dayId` - Egy nap haladása (protected)
+- `POST /api/progress/step/:stepId` - Lépés státusz frissítése (protected)
+
+#### Válaszok
+- `GET /api/responses` - Összes válasz (protected)
+- `GET /api/responses/day/:dayId` - Egy nap válaszai (protected)
+- `GET /api/responses/step/:stepId` - Egy lépés válaszai (protected)
+- `POST /api/responses` - Válasz mentése (protected)
+- `POST /api/responses/batch` - Több válasz mentése egyszerre (protected)
+
+## 📚 Tréningnapok
+
+### 1. Nap: Vezetői tudatosság és problémamegoldás
+8 lépés - Strukturált problémafeltárás, hatáselemzés, gyökérok-elemzés
+
+### 2. Nap: Vezetői stílus és stratégiaalkotás  
+8 lépés - Start with Why, vízió, célok, akcióterv, döntéshozatal
+
+### 3. Nap: Csapat kialakítása
+Szerepek, kompetenciák, RACI mátrix
+
+### 4. Nap: Teljesítménymenedzsment
+KPI-ok, mérés, monitoring, visszajelzés
+
+### 5. Nap: Csapatmenedzsment
+Delegálás, motiváció, konfliktuskezelés
+
+### 6. Nap: Fenntartás & adaptáció
+Változás beépítése, folyamatos fejlődés kultúrája
+
+## 🔒 Biztonság
+
+- **Jelszavak**: bcrypt hash (10 rounds)
+- **Autentikáció**: JWT tokenek (7 napos lejárat)
+- **CORS**: Engedélyezett API útvonalakhoz
+- **Input validáció**: Backend és frontend oldalon is
+
+## 🛠 Technológiai stack
+
+- **Language**: TypeScript
+- **Framework**: Hono 4.10.4
+- **Database**: Cloudflare D1 (SQLite)
+- **Auth**: bcryptjs + jsonwebtoken
+- **Build**: Vite 6.3.5
+- **Deployment**: Cloudflare Pages + Workers
+- **Process Manager**: PM2 (development)
+
+## 📈 Következő lépések
+
+1. ✅ ~~Alapvető CRUD műveletek~~
+2. ✅ ~~Haladás tracking rendszer~~
+3. ✅ ~~Dinamikus input mezők minden lépéshez~~
+4. 🔄 PDF export funkció implementálása
+5. 🔄 Keresési funkció
+6. 🔄 Admin dashboard
+7. 🔄 Email értesítések
+8. 🔄 Collaborative features (csoportos munkafüzetek)
+
+## 📝 Változásnapló
+
+### 2025-11-04 - v1.0.0
+- ✅ Teljes auth rendszer (register/login/JWT)
+- ✅ 6 tréningnap + 48 lépés seed adatok
+- ✅ Haladás tracking (not_started/in_progress/completed)
+- ✅ Válaszok mentése és betöltése
+- ✅ Batch mentés
+- ✅ Responsive dashboard
+- ✅ Dinamikus gyakorlat mezők (Day 1 specifikus)
+- ✅ Real-time status frissítés
+
+## 🤝 Közreműködés
+
+Ez a projekt az MVM Catalyst Leadership Development Program része. A munkafüzet Balázs vezetésével készült.
+
+## 📄 Licensz
+
+Proprietary - MVM Group
+
+---
+
+**Készült**: 2025-11-04  
+**Verzió**: 1.0.0  
+**Státusz**: ✅ Működőképes (Development)  
+**Tech Stack**: Hono + Cloudflare D1 + TypeScript + Tailwind CSS
