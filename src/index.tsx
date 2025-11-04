@@ -46,23 +46,29 @@ app.get('/', (c) => {
     <title>Catalyst Tanulási Napló</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/catalyst-theme.css" rel="stylesheet">
+    <script>
+      // Extend Tailwind with Catalyst colors
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              catalyst: {
+                green: '#34957E',
+                red: '#EE7A61',
+                yellow: '#EEB134',
+                blue: '#005DAB',
+                purple: '#765AA1',
+                grey: '#8DA4A9',
+              }
+            }
+          }
+        }
+      }
+    </script>
     <style>
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-slide-in {
-            animation: slideIn 0.5s ease-out;
-        }
         .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .step-card {
-            transition: all 0.3s ease;
-        }
-        .step-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #005DAB 0%, #765AA1 100%);
         }
     </style>
 </head>

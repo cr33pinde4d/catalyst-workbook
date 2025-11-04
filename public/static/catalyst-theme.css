@@ -1,0 +1,253 @@
+/* MVM Catalyst Brand Colors */
+:root {
+  /* Primary Brand Colors */
+  --catalyst-green: #34957E;
+  --catalyst-red: #EE7A61;
+  --catalyst-yellow: #EEB134;
+  --catalyst-blue: #005DAB;
+  --catalyst-purple: #765AA1;
+  --catalyst-grey: #8DA4A9;
+  
+  /* Light variants (for backgrounds) */
+  --catalyst-green-light: rgba(52, 149, 126, 0.1);
+  --catalyst-red-light: rgba(238, 122, 97, 0.1);
+  --catalyst-yellow-light: rgba(238, 177, 52, 0.1);
+  --catalyst-blue-light: rgba(0, 93, 171, 0.1);
+  --catalyst-purple-light: rgba(118, 90, 161, 0.1);
+  --catalyst-grey-light: rgba(141, 164, 169, 0.1);
+  
+  /* Dark variants (for text) */
+  --catalyst-green-dark: #266b5c;
+  --catalyst-red-dark: #c65d47;
+  --catalyst-yellow-dark: #c68f2a;
+  --catalyst-blue-dark: #004080;
+  --catalyst-purple-dark: #5a4379;
+  --catalyst-grey-dark: #6a8085;
+}
+
+/* Gradient backgrounds */
+.catalyst-gradient-primary {
+  background: linear-gradient(135deg, var(--catalyst-blue) 0%, var(--catalyst-purple) 100%);
+}
+
+.catalyst-gradient-success {
+  background: linear-gradient(135deg, var(--catalyst-green) 0%, var(--catalyst-blue) 100%);
+}
+
+.catalyst-gradient-warning {
+  background: linear-gradient(135deg, var(--catalyst-yellow) 0%, var(--catalyst-red) 100%);
+}
+
+/* Button styles */
+.btn-catalyst-primary {
+  background-color: var(--catalyst-green);
+  color: white;
+  border-color: var(--catalyst-green);
+}
+
+.btn-catalyst-primary:hover {
+  background-color: var(--catalyst-green-dark);
+  border-color: var(--catalyst-green-dark);
+}
+
+.btn-catalyst-secondary {
+  background-color: var(--catalyst-blue);
+  color: white;
+  border-color: var(--catalyst-blue);
+}
+
+.btn-catalyst-secondary:hover {
+  background-color: var(--catalyst-blue-dark);
+  border-color: var(--catalyst-blue-dark);
+}
+
+.btn-catalyst-accent {
+  background-color: var(--catalyst-purple);
+  color: white;
+  border-color: var(--catalyst-purple);
+}
+
+.btn-catalyst-accent:hover {
+  background-color: var(--catalyst-purple-dark);
+  border-color: var(--catalyst-purple-dark);
+}
+
+/* Border colors for Tailwind */
+.border-catalyst-green {
+  border-color: var(--catalyst-green) !important;
+}
+
+.border-catalyst-blue {
+  border-color: var(--catalyst-blue) !important;
+}
+
+.border-catalyst-yellow {
+  border-color: var(--catalyst-yellow) !important;
+}
+
+.border-catalyst-red {
+  border-color: var(--catalyst-red) !important;
+}
+
+.border-catalyst-purple {
+  border-color: var(--catalyst-purple) !important;
+}
+
+.border-catalyst-grey {
+  border-color: var(--catalyst-grey) !important;
+}
+
+/* Background colors for Tailwind */
+.bg-catalyst-green {
+  background-color: var(--catalyst-green) !important;
+}
+
+.bg-catalyst-blue {
+  background-color: var(--catalyst-blue) !important;
+}
+
+.bg-catalyst-yellow {
+  background-color: var(--catalyst-yellow) !important;
+}
+
+.bg-catalyst-red {
+  background-color: var(--catalyst-red) !important;
+}
+
+.bg-catalyst-purple {
+  background-color: var(--catalyst-purple) !important;
+}
+
+.bg-catalyst-grey {
+  background-color: var(--catalyst-grey) !important;
+}
+
+/* Card styles */
+.card-catalyst-green {
+  border-left: 4px solid var(--catalyst-green);
+  background-color: var(--catalyst-green-light);
+}
+
+.card-catalyst-blue {
+  border-left: 4px solid var(--catalyst-blue);
+  background-color: var(--catalyst-blue-light);
+}
+
+.card-catalyst-yellow {
+  border-left: 4px solid var(--catalyst-yellow);
+  background-color: var(--catalyst-yellow-light);
+}
+
+.card-catalyst-red {
+  border-left: 4px solid var(--catalyst-red);
+  background-color: var(--catalyst-red-light);
+}
+
+.card-catalyst-purple {
+  border-left: 4px solid var(--catalyst-purple);
+  background-color: var(--catalyst-purple-light);
+}
+
+.card-catalyst-grey {
+  border-left: 4px solid var(--catalyst-grey);
+  background-color: var(--catalyst-grey-light);
+}
+
+/* Progress colors */
+.progress-completed {
+  background-color: var(--catalyst-green);
+}
+
+.progress-in-progress {
+  background-color: var(--catalyst-yellow);
+}
+
+.progress-not-started {
+  background-color: var(--catalyst-grey);
+}
+
+.progress-warning {
+  background-color: var(--catalyst-red);
+}
+
+/* Text colors */
+.text-catalyst-green {
+  color: var(--catalyst-green);
+}
+
+.text-catalyst-red {
+  color: var(--catalyst-red);
+}
+
+.text-catalyst-yellow {
+  color: var(--catalyst-yellow);
+}
+
+.text-catalyst-blue {
+  color: var(--catalyst-blue);
+}
+
+.text-catalyst-purple {
+  color: var(--catalyst-purple);
+}
+
+.text-catalyst-grey {
+  color: var(--catalyst-grey);
+}
+
+/* Badge styles */
+.badge-catalyst-green {
+  background-color: var(--catalyst-green);
+  color: white;
+}
+
+.badge-catalyst-blue {
+  background-color: var(--catalyst-blue);
+  color: white;
+}
+
+.badge-catalyst-yellow {
+  background-color: var(--catalyst-yellow);
+  color: white;
+}
+
+.badge-catalyst-red {
+  background-color: var(--catalyst-red);
+  color: white;
+}
+
+.badge-catalyst-purple {
+  background-color: var(--catalyst-purple);
+  color: white;
+}
+
+/* Hover effects */
+.hover-catalyst-green:hover {
+  background-color: var(--catalyst-green-light);
+  border-color: var(--catalyst-green);
+}
+
+.hover-catalyst-blue:hover {
+  background-color: var(--catalyst-blue-light);
+  border-color: var(--catalyst-blue);
+}
+
+/* Animation for slide-in */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out;
+}
+
+/* Card hover effect */
+.step-card {
+  transition: all 0.3s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
