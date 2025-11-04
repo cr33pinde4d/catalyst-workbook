@@ -601,68 +601,494 @@ function renderExerciseFields(step) {
   const dayId = step.day_id;
   const stepNum = step.step_number;
   
-  // Get saved responses
-  const getResponse = (fieldName) => {
+  // Get saved responses (current or previous steps)
+  const getResponse = (fieldName, targetStepNum = null) => {
+    // If targetStepNum specified, get from that step, otherwise current step
+    if (targetStepNum) {
+      const targetStep = state.currentDaySteps.find(s => s.day_id === dayId && s.step_number === targetStepNum);
+      if (targetStep) {
+        const key = `${dayId}-${targetStep.id}-${fieldName}`;
+        return state.userResponses[key] || '';
+      }
+    }
     const key = `${dayId}-${step.id}-${fieldName}`;
     return state.userResponses[key] || '';
   };
   
-  // Day 1 specific fields
+  // Get problems from Step 1 for reuse
+  const getProblemsFromStep1 = () => {
+    const problems = [];
+    for (let i = 1; i <= 5; i++) {
+      const prob = getResponse(`problem_${i}`, 1);
+      if (prob.trim()) problems.push({ id: i, text: prob });
+    }
+    return problems;
+  };
+  
+  // Day 1 specific fields - each step builds on previous
   if (dayId === 1) {
+    // Step 1: Identify 5 problems
     if (stepNum === 1) {
       return `
         <div class="space-y-4">
-          <p class="text-gray-700 font-medium">Írd fel az 5 legégetőbb szervezeti/üzleti problémát:</p>
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-exclamation-circle text-red-500"></i> 
+            Írd fel az 5 legégetőbb szervezeti/üzleti problémát:
+          </p>
           ${[1,2,3,4,5].map(i => `
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Probléma #${i}</label>
-              <textarea name="problem_${i}" rows="2" 
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Probléma #${i} <span class="text-red-500">*</span>
+              </label>
+              <textarea name="problem_${i}" rows="2" required
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Írj konkrét problémát...">${getResponse(`problem_${i}`)}</textarea>
+                placeholder="Írj konkrét, mérhető problémát...">${getResponse(`problem_${i}`)}</textarea>
             </div>
           `).join('')}
+          <div class="bg-blue-50 p-4 rounded-lg mt-4">
+            <p class="text-sm text-blue-800">
+              <i class="fas fa-info-circle"></i> 
+              <strong>Tipp:</strong> Légy konkrét! Pl. "A projekt határidők 40%-ban csúsznak" 
+              jobb, mint "Rossz projekttervezés"
+            </p>
+          </div>
         </div>
       `;
-    } else if (stepNum === 5) {
+    }
+    
+    // Step 2: Impact analysis - choose 3 problems and analyze
+    else if (stepNum === 2) {
+      const problems = getProblemsFromStep1();
+      
+      if (problems.length === 0) {
+        return `
+          <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+            <p class="text-yellow-800">
+              <i class="fas fa-exclamation-triangle"></i> 
+              <strong>Figyelem:</strong> Először töltsd ki az 1. lépést (Problémák azonosítása)!
+            </p>
+            <button type="button" onclick="navigateToStep(${state.currentDaySteps[0].id})"
+              class="mt-3 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">
+              <i class="fas fa-arrow-left"></i> Vissza az 1. lépéshez
+            </button>
+          </div>
+        `;
+      }
+      
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium">
+            <i class="fas fa-chart-line text-blue-500"></i> 
+            Válaszd ki a 3 legfontosabb problémát és elemezd a hatásukat:
+          </p>
+          
+          <!-- Imported problems from Step 1 -->
+          <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+            <p class="text-sm text-green-800 font-medium mb-2">
+              <i class="fas fa-check-circle"></i> Az 1. lépésből importált problémák:
+            </p>
+            <ol class="list-decimal list-inside space-y-1 text-sm text-green-700">
+              ${problems.map(p => `<li>${p.text}</li>`).join('')}
+            </ol>
+          </div>
+          
+          <!-- Impact analysis table -->
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
+              <thead class="bg-purple-600 text-white">
+                <tr>
+                  <th class="px-4 py-3 text-left">Probléma</th>
+                  <th class="px-4 py-3 text-center w-32">Hatás (1-5)</th>
+                  <th class="px-4 py-3 text-center w-32">Gyakoriság (1-5)</th>
+                  <th class="px-4 py-3 text-left w-48">Eszköz</th>
+                  <th class="px-4 py-3 text-left">Következmény</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${[1, 2, 3].map(i => `
+                  <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-3">
+                      <select name="selected_problem_${i}" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        <option value="">-- Válassz problémát --</option>
+                        ${problems.map(p => `
+                          <option value="${p.id}" ${getResponse(`selected_problem_${i}`) == p.id ? 'selected' : ''}>
+                            Probléma #${p.id}
+                          </option>
+                        `).join('')}
+                      </select>
+                    </td>
+                    <td class="px-4 py-3">
+                      <input type="number" name="impact_${i}" min="1" max="5" required
+                        value="${getResponse(`impact_${i}`)}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-purple-500">
+                    </td>
+                    <td class="px-4 py-3">
+                      <input type="number" name="frequency_${i}" min="1" max="5" required
+                        value="${getResponse(`frequency_${i}`)}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-purple-500">
+                    </td>
+                    <td class="px-4 py-3">
+                      <select name="tool_${i}" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        <option value="">-- Válassz --</option>
+                        <option value="CBA" ${getResponse(`tool_${i}`) === 'CBA' ? 'selected' : ''}>Cost-Benefit Analysis</option>
+                        <option value="FMEA" ${getResponse(`tool_${i}`) === 'FMEA' ? 'selected' : ''}>FMEA</option>
+                        <option value="Force Field" ${getResponse(`tool_${i}`) === 'Force Field' ? 'selected' : ''}>Erőtér-elemzés</option>
+                        <option value="ROI" ${getResponse(`tool_${i}`) === 'ROI' ? 'selected' : ''}>ROI</option>
+                      </select>
+                    </td>
+                    <td class="px-4 py-3">
+                      <textarea name="consequence_${i}" rows="2" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        placeholder="Mi a hatás?">${getResponse(`consequence_${i}`)}</textarea>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <p class="text-sm text-blue-800">
+              <i class="fas fa-info-circle"></i> 
+              <strong>Skála:</strong> 1 = Alacsony, 3 = Közepes, 5 = Magas
+            </p>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 3: Problem analysis - analyze selected problem
+    else if (stepNum === 3) {
+      const selectedProblemId = getResponse('selected_problem_1', 2) || getResponse('selected_problem_2', 2) || getResponse('selected_problem_3', 2);
+      const problemText = selectedProblemId ? getResponse(`problem_${selectedProblemId}`, 1) : '';
+      
       return `
         <div class="space-y-4">
+          ${problemText ? `
+            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+              <p class="text-sm text-green-800 font-medium">
+                <i class="fas fa-check-circle"></i> Elemzendő probléma (2. lépésből):
+              </p>
+              <p class="text-green-900 mt-2 font-semibold">${problemText}</p>
+            </div>
+          ` : `
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+              <p class="text-yellow-800">
+                <i class="fas fa-exclamation-triangle"></i> 
+                Először töltsd ki a 2. lépést (Hatáselemzés)!
+              </p>
+            </div>
+          `}
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Válassz elemzési eszközt</label>
+            <select name="analysis_tool" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+              <option value="">-- Válassz eszközt --</option>
+              <option value="Pareto" ${getResponse('analysis_tool') === 'Pareto' ? 'selected' : ''}>Pareto-elemzés</option>
+              <option value="Affinity" ${getResponse('analysis_tool') === 'Affinity' ? 'selected' : ''}>Affinitás-diagram</option>
+              <option value="Flowchart" ${getResponse('analysis_tool') === 'Flowchart' ? 'selected' : ''}>Folyamatábra</option>
+              <option value="DILO" ${getResponse('analysis_tool') === 'DILO' ? 'selected' : ''}>DILO/WILO</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Elemzés eredménye</label>
+            <textarea name="analysis_result" rows="8" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+              placeholder="Írd le az elemzés főbb megállapításait...">${getResponse('analysis_result')}</textarea>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 4: Prioritization matrix
+    else if (stepNum === 4) {
+      const problems = getProblemsFromStep1();
+      
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium">
+            <i class="fas fa-sort-amount-down text-purple-500"></i> 
+            Értékeld minden problémát Hatás és Erőfeszítés alapján:
+          </p>
+          
+          ${problems.length > 0 ? `
+            <div class="space-y-4">
+              ${problems.map(p => `
+                <div class="bg-white border-2 border-gray-200 rounded-lg p-4">
+                  <h4 class="font-semibold text-gray-800 mb-3">Probléma #${p.id}: ${p.text}</h4>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Hatás (1-5) <span class="text-xs text-gray-500">Mennyire nagy?</span>
+                      </label>
+                      <input type="number" name="priority_impact_${p.id}" min="1" max="5" required
+                        value="${getResponse(`priority_impact_${p.id}`)}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Erőfeszítés (1-5) <span class="text-xs text-gray-500">Mennyi munka?</span>
+                      </label>
+                      <input type="number" name="priority_effort_${p.id}" min="1" max="5" required
+                        value="${getResponse(`priority_effort_${p.id}`)}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                <i class="fas fa-star text-yellow-500"></i> Melyik problémára fókuszálsz? (prioritás alapján)
+              </label>
+              <select name="selected_priority_problem" required
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                <option value="">-- Válaszd ki a legoptimálisabbat --</option>
+                ${problems.map(p => `
+                  <option value="${p.id}" ${getResponse('selected_priority_problem') == p.id ? 'selected' : ''}>
+                    Probléma #${p.id}
+                  </option>
+                `).join('')}
+              </select>
+            </div>
+          ` : '<p class="text-yellow-600">Először töltsd ki az 1. lépést!</p>'}
+        </div>
+      `;
+    }
+    
+    // Step 5: Problem definition with 5W1H
+    else if (stepNum === 5) {
+      const selectedId = getResponse('selected_priority_problem', 4);
+      const problemText = selectedId ? getResponse(`problem_${selectedId}`, 1) : '';
+      
+      return `
+        <div class="space-y-4">
+          ${problemText ? `
+            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+              <p class="text-sm text-green-800 font-medium">
+                <i class="fas fa-check-circle"></i> Kiválasztott probléma (4. lépésből):
+              </p>
+              <p class="text-green-900 mt-2 font-semibold">${problemText}</p>
+            </div>
+          ` : ''}
+          
           <p class="text-gray-700 font-medium mb-4">5W1H Keretrendszer:</p>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">What? (Mi a probléma?)</label>
-            <textarea name="what" rows="3" 
+            <textarea name="what" rows="3" required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">${getResponse('what')}</textarea>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Why? (Miért fontos?)</label>
-            <textarea name="why" rows="3" 
+            <textarea name="why" rows="3" required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">${getResponse('why')}</textarea>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Who? (Kit érint?)</label>
-            <textarea name="who" rows="2" 
+            <textarea name="who" rows="2" required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">${getResponse('who')}</textarea>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">When? (Mikor történik?)</label>
-            <textarea name="when" rows="2" 
+            <textarea name="when" rows="2" required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">${getResponse('when')}</textarea>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Where? (Hol?)</label>
-            <textarea name="where" rows="2" 
+            <textarea name="where" rows="2" required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">${getResponse('where')}</textarea>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">How? (Hogyan nyilvánul meg?)</label>
-            <textarea name="how" rows="3" 
+            <textarea name="how" rows="3" required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">${getResponse('how')}</textarea>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 6: Context with SWOT
+    else if (stepNum === 6) {
+      const problemText = getResponse('what', 5);
+      
+      return `
+        <div class="space-y-6">
+          ${problemText ? `
+            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+              <p class="text-sm text-green-800 font-medium">
+                <i class="fas fa-check-circle"></i> Definiált probléma (5. lépésből):
+              </p>
+              <p class="text-green-900 mt-2">${problemText}</p>
+            </div>
+          ` : ''}
+          
+          <p class="text-gray-700 font-medium">
+            <i class="fas fa-th-large text-purple-500"></i> SWOT Elemzés:
+          </p>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+              <label class="block font-semibold text-green-800 mb-2">
+                <i class="fas fa-plus-circle"></i> Strengths (Erősségek)
+              </label>
+              <textarea name="swot_strengths" rows="4" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Belső erősségek...">${getResponse('swot_strengths')}</textarea>
+            </div>
+            
+            <div class="bg-red-50 p-4 rounded-lg border-2 border-red-300">
+              <label class="block font-semibold text-red-800 mb-2">
+                <i class="fas fa-minus-circle"></i> Weaknesses (Gyengeségek)
+              </label>
+              <textarea name="swot_weaknesses" rows="4" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                placeholder="Belső gyengeségek...">${getResponse('swot_weaknesses')}</textarea>
+            </div>
+            
+            <div class="bg-blue-50 p-4 rounded-lg border-2 border-blue-300">
+              <label class="block font-semibold text-blue-800 mb-2">
+                <i class="fas fa-arrow-up"></i> Opportunities (Lehetőségek)
+              </label>
+              <textarea name="swot_opportunities" rows="4" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Külső lehetőségek...">${getResponse('swot_opportunities')}</textarea>
+            </div>
+            
+            <div class="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-300">
+              <label class="block font-semibold text-yellow-800 mb-2">
+                <i class="fas fa-exclamation-triangle"></i> Threats (Veszélyek)
+              </label>
+              <textarea name="swot_threats" rows="4" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                placeholder="Külső veszélyek...">${getResponse('swot_threats')}</textarea>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-users"></i> Stakeholder elemzés
+            </label>
+            <textarea name="stakeholders" rows="4" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+              placeholder="Kik az érintettek? Mi az érdekük?">${getResponse('stakeholders')}</textarea>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 7: Data collection
+    else if (stepNum === 7) {
+      return `
+        <div class="space-y-4">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-database text-blue-500"></i> Adatok és tények gyűjtése:
+          </p>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
+              <thead class="bg-blue-600 text-white">
+                <tr>
+                  <th class="px-4 py-3 text-left">Adat típusa</th>
+                  <th class="px-4 py-3 text-left">Konkrét szám/tény</th>
+                  <th class="px-4 py-3 text-left">Forrás</th>
+                  <th class="px-4 py-3 text-center w-32">Megbízhatóság (1-5)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${['KPI/mérőszám', 'Visszajelzés', 'Pénzügyi hatás', 'Egyéb'].map((type, idx) => `
+                  <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-3 font-medium">${type}</td>
+                    <td class="px-4 py-3">
+                      <input type="text" name="data_value_${idx}" required
+                        value="${getResponse(`data_value_${idx}`)}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Pl. 40% csúszás">
+                    </td>
+                    <td class="px-4 py-3">
+                      <input type="text" name="data_source_${idx}" required
+                        value="${getResponse(`data_source_${idx}`)}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Pl. PM jelentés">
+                    </td>
+                    <td class="px-4 py-3">
+                      <input type="number" name="data_reliability_${idx}" min="1" max="5" required
+                        value="${getResponse(`data_reliability_${idx}`)}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500">
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <p class="text-sm text-blue-800">
+              <i class="fas fa-info-circle"></i> 
+              A baseline adatok segítenek később mérni a javulást!
+            </p>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 8: Root cause analysis
+    else if (stepNum === 8) {
+      const problemText = getResponse('what', 5);
+      
+      return `
+        <div class="space-y-6">
+          ${problemText ? `
+            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+              <p class="text-sm text-green-800 font-medium">
+                <i class="fas fa-check-circle"></i> Elemzendő probléma:
+              </p>
+              <p class="text-green-900 mt-2">${problemText}</p>
+            </div>
+          ` : ''}
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-question-circle text-purple-500"></i> 
+              5 Miért elemzés:
+            </label>
+            ${[1,2,3,4,5].map(i => `
+              <div class="mb-3">
+                <label class="block text-xs font-medium text-gray-600 mb-1">Miért ${i}?</label>
+                <textarea name="why_${i}" rows="2" required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                  placeholder="${i === 1 ? 'Miért történik a probléma?' : 'Miért történik az előző ok?'}">${getResponse(`why_${i}`)}</textarea>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+            <label class="block font-semibold text-red-900 mb-2">
+              <i class="fas fa-crosshairs"></i> Gyökérok (az utolsó "Miért" alapján):
+            </label>
+            <textarea name="root_cause" rows="3" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+              placeholder="Mi a valódi gyökérok?">${getResponse('root_cause')}</textarea>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-lightbulb text-yellow-500"></i> Javaslat a gyökérok kezelésére:
+            </label>
+            <textarea name="root_cause_solution" rows="4" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+              placeholder="Hogyan kezeled a gyökérokot?">${getResponse('root_cause_solution')}</textarea>
           </div>
         </div>
       `;
     }
   }
   
-  // Generic text area for other steps
+  // Generic text area for other days
   return `
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Jegyzetek</label>
