@@ -98,6 +98,7 @@ pm2 stop catalyst
 
 **Production**: https://catalyst-workbook.pages.dev
 **Latest Deployment**: https://7668c8af.catalyst-workbook.pages.dev
+**GitHub Repository**: https://github.com/cr33pinde4d/catalyst-workbook
 **Development**: https://3000-ildzif0p6yl6272ppdpuy-5c13a017.sandbox.novita.ai
 
 ### API Endpointok
