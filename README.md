@@ -110,11 +110,21 @@ pm2 stop catalyst
 
 ## 📚 Tréningnapok
 
-### 1. Nap: Vezetői tudatosság és problémamegoldás
+### 1. Nap: Vezetői tudatosság és problémamegoldás ✅
 8 lépés - Strukturált problémafeltárás, hatáselemzés, gyökérok-elemzés
+- **Progresszív flow**: Minden lépés építi az előzőt
+- **5 probléma → 3 elemzés → 1 kiválasztás → 5W1H → SWOT → Adatok → Gyökérok**
 
-### 2. Nap: Vezetői stílus és stratégiaalkotás  
+### 2. Nap: Vezetői stílus és stratégiaalkotás ✅
 8 lépés - Start with Why, vízió, célok, akcióterv, döntéshozatal
+- **Golden Circle**: WHY-HOW-WHAT
+- **Vision statement** időkerettel
+- **SMART célok** (3-5 db) részletes breakdown
+- **Goleman 6 vezetői stílus** önértékelés (slider-ekkel)
+- **Akcióterv táblázat** (feladat, felelős, határidő, KPI)
+- **Döntéshozatali keretrendszer**
+- **Kommunikációs mátrix** (ki-mit-hogyan-mikor)
+- **Kockázatelemzés** (valószínűség × hatás)
 
 ### 3. Nap: Csapat kialakítása
 Szerepek, kompetenciák, RACI mátrix
@@ -157,6 +167,19 @@ Változás beépítése, folyamatos fejlődés kultúrája
 8. 🔄 Collaborative features (csoportos munkafüzetek)
 
 ## 📝 Változásnapló
+
+### 2025-11-04 - v1.3.0
+- ✅ **2. Nap teljes implementáció**: Stratégiaalkotás és vezetői stílus
+  - Golden Circle (WHY-HOW-WHAT) Simon Sinek szerint
+  - Vízió megfogalmazás időkerettel és mérőszámokkal
+  - SMART célok részletes breakdown (3-5 cél)
+  - Goleman 6 vezetői stílus önértékelés slider-ekkel
+  - Akcióterv táblázat (min 3 akció kötelező)
+  - Döntéshozatali keretrendszer és kritériumok
+  - Kommunikációs mátrix (célcsoport × üzenet × csatorna)
+  - Kockázatelemzés (valószínűség × hatás mátrix)
+- ✅ **Cross-day adatimport**: 2. nap lát és használ 1. nap adatokat
+- ✅ **Új UI elemek**: Range slider-ek, strukturált táblázatok, színkódolt mezők
 
 ### 2025-11-04 - v1.2.0
 - ✅ **Progresszív adatáramlás**: 1. nap 8 lépése egymásra épül
