@@ -10,11 +10,13 @@ A Catalyst Tanulási Napló egy full-stack webalkalmazás, amely digitalizálja 
 
 ### ✅ Jelenleg implementált funkciók
 
+- **🏠 Landing oldal**: Első benyomás új látogatóknak - bemutatkozás, napok áttekintése, CTA gombok
+- **📖 Útmutató nézet**: Részletes használati útmutató mindig elérhető a navbar-ból
 - **🔐 Felhasználói autentikáció**: Biztonságos regisztráció és bejelentkezés JWT tokenekkel
 - **📊 Haladás követés**: Real-time progresszió tracking minden egyes lépéshez
 - **💾 Automatikus mentés**: Válaszok és jegyzetek automatikus mentése D1 adatbázisban
 - **📱 Responsive design**: Mobilbarát, modern UI Tailwind CSS-sel
-- **🎓 6 tréningnap**: Teljes kurzus struktúra 8 lépéssel naponta
+- **🎓 6 tréningnap**: Teljes kurzus struktúra 8 lépéssel naponta (48 lépés összesen)
 - **📝 Dinamikus mezők**: Kontextus-érzékeny input mezők minden lépéshez
 - **🎯 Státusz menedzsment**: "Folyamatban" és "Befejezett" státuszok
 - **📈 Dashboard**: Vizuális áttekintés az összes tréningnapról és haladásról
@@ -199,6 +201,21 @@ pm2 stop catalyst
 8. 🔄 Collaborative features (csoportos munkafüzetek)
 
 ## 📝 Változásnapló
+
+### 2025-11-04 - v1.8.0 🎊 **UX Enhancement**
+- ✅ **Landing oldal**: Új első benyomás nem bejelentkezett felhasználóknak
+  - Hero section Catalyst bemutatkozással
+  - "Hogyan használd?" instrukciók
+  - 6 tréningnap áttekintő kártyák
+  - CTA gombok: Bejelentkezés / Regisztráció, Útmutató
+- ✅ **Útmutató nézet**: Részletes használati útmutató mindig elérhető
+  - Navbar-ban "Útmutató" menüpont (dashboard header-ben)
+  - 4 lépéses használati útmutató
+  - Mind a 6 nap részletes leírása
+  - 15+ eszköz showcase
+  - Progresszív adatáramlás magyarázata
+- ✅ **Javított onboarding**: Új felhasználók először landing page-et látnak
+- ✅ **+400 sor frontend kód** (4564 → 4964 sor app.js)
 
 ### 2025-11-04 - v1.7.0 🎉 **COMPLETE - 100%**
 - ✅ **6. Nap teljes implementáció (8 lépés)**: Fenntartás & adaptáció
