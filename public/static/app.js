@@ -615,6 +615,34 @@ function renderExerciseFields(step) {
     return state.userResponses[key] || '';
   };
   
+  // Helper to get response from different day (for cross-day references)
+  const getResponseFromDay = (targetDayId, fieldName, targetStepNum) => {
+    // Look in all training days
+    for (const day of state.trainingDays) {
+      if (day.id === targetDayId) {
+        // Find the step in that day
+        const daySteps = state.currentDaySteps.filter(s => s.day_id === targetDayId);
+        const targetStep = daySteps.find(s => s.step_number === targetStepNum);
+        if (targetStep) {
+          const key = `${targetDayId}-${targetStep.id}-${fieldName}`;
+          return state.userResponses[key] || '';
+        }
+      }
+    }
+    // Fallback: search in userResponses directly
+    for (const [key, value] of Object.entries(state.userResponses)) {
+      const parts = key.split('-');
+      if (parts.length >= 3) {
+        const [respDayId, respStepId, ...respFieldParts] = parts;
+        const respFieldName = respFieldParts.join('-');
+        if (parseInt(respDayId) === targetDayId && respFieldName === fieldName) {
+          return value;
+        }
+      }
+    }
+    return '';
+  };
+  
   // Get problems from Step 1 for reuse
   const getProblemsFromStep1 = () => {
     const problems = [];
@@ -1086,6 +1114,640 @@ function renderExerciseFields(step) {
         </div>
       `;
     }
+  }
+  
+  // Day 2: Strategy and Leadership Style - builds on Day 1 problem & root cause
+  if (dayId === 2) {
+    // Helper: Get final problem and root cause from Day 1
+    const getProblemFromDay1 = () => {
+      const selectedId = getResponseFromDay(1, 'selected_priority_problem', 4);
+      return selectedId ? getResponseFromDay(1, `problem_${selectedId}`, 1) : '';
+    };
+    
+    const getRootCauseFromDay1 = () => {
+      return getResponseFromDay(1, 'root_cause', 8);
+    };
+    
+    const getSolutionFromDay1 = () => {
+      return getResponseFromDay(1, 'root_cause_solution', 8);
+    };
+    
+    // Step 1: Start with WHY (Golden Circle)
+    if (stepNum === 1) {
+      const problem = getProblemFromDay1();
+      const rootCause = getRootCauseFromDay1();
+      
+      return `
+        <div class="space-y-6">
+          ${problem ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium">
+                <i class="fas fa-link"></i> 1. Napból: Probléma
+              </p>
+              <p class="text-purple-900 mt-2 font-semibold">${problem}</p>
+              ${rootCause ? `
+                <p class="text-sm text-purple-700 mt-2">
+                  <strong>Gyökérok:</strong> ${rootCause}
+                </p>
+              ` : ''}
+            </div>
+          ` : `
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+              <p class="text-yellow-800">
+                <i class="fas fa-exclamation-triangle"></i> 
+                Ajánlott előbb befejezni az 1. Napot!
+              </p>
+            </div>
+          `}
+          
+          <p class="text-gray-700 font-medium">
+            <i class="fas fa-bullseye text-purple-500"></i> 
+            Golden Circle: Miért akarod megoldani ezt a problémát?
+          </p>
+          
+          <div class="bg-white border-2 border-blue-300 rounded-lg p-6">
+            <label class="block font-semibold text-blue-900 mb-2">
+              <i class="fas fa-heart"></i> MIÉRT? (WHY) - A mély cél
+            </label>
+            <p class="text-sm text-gray-600 mb-2">Mi a valódi motivációd? Miért fontos ez neked és a szervezetnek?</p>
+            <textarea name="why_purpose" rows="4" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="Pl. Azért, mert hiszem, hogy az emberek megérdemlik...">${getResponse('why_purpose')}</textarea>
+          </div>
+          
+          <div class="bg-white border-2 border-green-300 rounded-lg p-6">
+            <label class="block font-semibold text-green-900 mb-2">
+              <i class="fas fa-cogs"></i> HOGYAN? (HOW) - Az egyedi módszer
+            </label>
+            <p class="text-sm text-gray-600 mb-2">Milyen egyedi módon közelíted meg? Mi a te különleges módszered?</p>
+            <textarea name="how_method" rows="4" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+              placeholder="Pl. Egy innovatív megközelítéssel, amely...">${getResponse('how_method')}</textarea>
+          </div>
+          
+          <div class="bg-white border-2 border-purple-300 rounded-lg p-6">
+            <label class="block font-semibold text-purple-900 mb-2">
+              <i class="fas fa-box"></i> MIT? (WHAT) - A konkrét kimenet
+            </label>
+            <p class="text-sm text-gray-600 mb-2">Mi a konkrét eredmény, termék, szolgáltatás?</p>
+            <textarea name="what_output" rows="4" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+              placeholder="Pl. Egy új folyamat, ami...">${getResponse('what_output')}</textarea>
+          </div>
+          
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <p class="text-sm text-blue-800">
+              <i class="fas fa-info-circle"></i> 
+              <strong>Simon Sinek:</strong> "Az emberek nem azt veszik meg, amit csinálsz, hanem azt, AMIÉRT csinálod."
+            </p>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 2: Vision
+    if (stepNum === 2) {
+      const why = getResponse('why_purpose', 1);
+      
+      return `
+        <div class="space-y-6">
+          ${why ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium">
+                <i class="fas fa-link"></i> A te "MIÉRT"-ed (1. lépésből):
+              </p>
+              <p class="text-purple-900 mt-2">${why}</p>
+            </div>
+          ` : ''}
+          
+          <p class="text-gray-700 font-medium">
+            <i class="fas fa-eye text-blue-500"></i> 
+            Hogyan fog kinézni a jövő, amikor sikeresen megoldottad a problémát?
+          </p>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-calendar-alt"></i> Időhorizont (Mikor?)
+            </label>
+            <select name="vision_timeframe" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+              <option value="">-- Válassz időkeretet --</option>
+              <option value="6months" ${getResponse('vision_timeframe') === '6months' ? 'selected' : ''}>6 hónap</option>
+              <option value="1year" ${getResponse('vision_timeframe') === '1year' ? 'selected' : ''}>1 év</option>
+              <option value="2years" ${getResponse('vision_timeframe') === '2years' ? 'selected' : ''}>2 év</option>
+              <option value="5years" ${getResponse('vision_timeframe') === '5years' ? 'selected' : ''}>5 év</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-star"></i> Vízió (Inspiráló, pozitív jövőkép)
+            </label>
+            <textarea name="vision_statement" rows="6" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+              placeholder="Képzeld el a sikeres jövőt! Írd le élénken, inspirálóan...">${getResponse('vision_statement')}</textarea>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-chart-line"></i> Mérhető eredmények (3-5 konkrét)
+            </label>
+            ${[1,2,3].map(i => `
+              <div class="mb-2">
+                <input type="text" name="vision_metric_${i}" required
+                  value="${getResponse(`vision_metric_${i}`)}"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                  placeholder="Pl. A csapat elégedettsége 85% fölött">
+              </div>
+            `).join('')}
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-users"></i> Kit inspirál ez a vízió?
+            </label>
+            <textarea name="vision_stakeholders" rows="3" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+              placeholder="Csapat, vezetőség, ügyfelek...">${getResponse('vision_stakeholders')}</textarea>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 3: Strategic Goals (SMART/OKR)
+    if (stepNum === 3) {
+      const vision = getResponse('vision_statement', 2);
+      
+      return `
+        <div class="space-y-6">
+          ${vision ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium">
+                <i class="fas fa-link"></i> A te vízióod (2. lépésből):
+              </p>
+              <p class="text-purple-900 mt-2 italic">"${vision}"</p>
+            </div>
+          ` : ''}
+          
+          <p class="text-gray-700 font-medium">
+            <i class="fas fa-crosshairs text-green-500"></i> 
+            Bontsd le 3-5 SMART célra:
+          </p>
+          
+          ${[1,2,3].map(i => `
+            <div class="bg-white border-2 border-green-300 rounded-lg p-6">
+              <h4 class="font-bold text-gray-800 mb-4">
+                <i class="fas fa-bullseye text-green-600"></i> Cél #${i}
+              </h4>
+              
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">
+                    <strong>S</strong>pecific - Konkrét cél
+                  </label>
+                  <input type="text" name="goal_${i}_specific" required
+                    value="${getResponse(`goal_${i}_specific`)}"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    placeholder="Pontosan mit akarsz elérni?">
+                </div>
+                
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">
+                    <strong>M</strong>easurable - Mérőszám
+                  </label>
+                  <input type="text" name="goal_${i}_measurable" required
+                    value="${getResponse(`goal_${i}_measurable`)}"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    placeholder="Hogyan méred? Mi a szám?">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">
+                      <strong>A</strong>chievable - Elérhető?
+                    </label>
+                    <select name="goal_${i}_achievable" required
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                      <option value="">--</option>
+                      <option value="yes" ${getResponse(`goal_${i}_achievable`) === 'yes' ? 'selected' : ''}>Igen, reális</option>
+                      <option value="stretch" ${getResponse(`goal_${i}_achievable`) === 'stretch' ? 'selected' : ''}>Ambiciózus</option>
+                      <option value="no" ${getResponse(`goal_${i}_achievable`) === 'no' ? 'selected' : ''}>Túl nehéz</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">
+                      <strong>R</strong>elevant - Releváns?
+                    </label>
+                    <select name="goal_${i}_relevant" required
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                      <option value="">--</option>
+                      <option value="high" ${getResponse(`goal_${i}_relevant`) === 'high' ? 'selected' : ''}>Nagyon</option>
+                      <option value="medium" ${getResponse(`goal_${i}_relevant`) === 'medium' ? 'selected' : ''}>Közepes</option>
+                      <option value="low" ${getResponse(`goal_${i}_relevant`) === 'low' ? 'selected' : ''}>Alacsony</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">
+                    <strong>T</strong>ime-bound - Határidő
+                  </label>
+                  <input type="date" name="goal_${i}_deadline" required
+                    value="${getResponse(`goal_${i}_deadline`)}"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+    
+    // Step 4: Leadership Style (Goleman 6 styles)
+    if (stepNum === 4) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-user-tie text-purple-500"></i> 
+            Daniel Goleman 6 vezetői stílusa - Értékeld magad 1-10 skálán:
+          </p>
+          
+          ${[
+            {name: 'Irányító', key: 'coercive', desc: '"Csináld, amit mondok" - Gyors döntés, szigorú vezérlés', when: 'Válsághelyzetben', icon: 'fa-gavel'},
+            {name: 'Tekintélyalapú', key: 'authoritative', desc: '"Gyere velem" - Vízió, inspiráció', when: 'Új irányvonal kell', icon: 'fa-flag'},
+            {name: 'Kapcsolatalapú', key: 'affiliative', desc: '"Az emberek az elsők" - Harmónia', when: 'Bizalom építésénél', icon: 'fa-heart'},
+            {name: 'Demokratikus', key: 'democratic', desc: '"Mi a véleményed?" - Részvétel', when: 'Konszenzus kell', icon: 'fa-users'},
+            {name: 'Tempót diktáló', key: 'pacesetting', desc: '"Csináld úgy, ahogy én" - Példamutatás', when: 'Magas teljesítmény', icon: 'fa-tachometer-alt'},
+            {name: 'Fejlesztő', key: 'coaching', desc: '"Próbáld ki ezt" - Tanítás', when: 'Fejlesztés, mentorálás', icon: 'fa-chalkboard-teacher'}
+          ].map(style => `
+            <div class="bg-white border-2 border-purple-200 rounded-lg p-4">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex-1">
+                  <h4 class="font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fas ${style.icon} text-purple-600"></i>
+                    ${style.name}
+                  </h4>
+                  <p class="text-sm text-gray-600 mt-1">${style.desc}</p>
+                  <p class="text-xs text-green-700 mt-1">
+                    <i class="fas fa-check-circle"></i> <strong>Mikor:</strong> ${style.when}
+                  </p>
+                </div>
+              </div>
+              
+              <div class="flex items-center gap-3">
+                <input type="range" name="style_${style.key}" min="1" max="10" 
+                  value="${getResponse(`style_${style.key}`) || 5}"
+                  class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  oninput="document.getElementById('style_${style.key}_value').innerText = this.value">
+                <span id="style_${style.key}_value" class="text-2xl font-bold text-purple-600 w-12 text-center">
+                  ${getResponse(`style_${style.key}`) || 5}
+                </span>
+              </div>
+            </div>
+          `).join('')}
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-lightbulb"></i> Melyik stílust szeretnéd fejleszteni?
+            </label>
+            <textarea name="style_develop" rows="3" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+              placeholder="Melyik stílusban akarsz erősebb lenni és miért?">${getResponse('style_develop')}</textarea>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 5: Action Plan
+    if (stepNum === 5) {
+      const goals = [1,2,3].map(i => ({
+        id: i,
+        specific: getResponse(`goal_${i}_specific`, 3),
+        deadline: getResponse(`goal_${i}_deadline`, 3)
+      })).filter(g => g.specific);
+      
+      return `
+        <div class="space-y-6">
+          ${goals.length > 0 ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Célok (3. lépésből):
+              </p>
+              <ul class="list-disc list-inside space-y-1 text-sm text-purple-900">
+                ${goals.map(g => `<li>${g.specific} (${g.deadline})</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+          
+          <p class="text-gray-700 font-medium">
+            <i class="fas fa-tasks text-blue-500"></i> 
+            Akcióterv: Bontsd le a célokat konkrét lépésekre
+          </p>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
+              <thead class="bg-blue-600 text-white text-sm">
+                <tr>
+                  <th class="px-3 py-2 text-left">Akció</th>
+                  <th class="px-3 py-2 text-left w-32">Felelős</th>
+                  <th class="px-3 py-2 text-left w-32">Határidő</th>
+                  <th class="px-3 py-2 text-left w-32">Erőforrás</th>
+                  <th class="px-3 py-2 text-left">KPI/Mérés</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${[1,2,3,4,5].map(i => `
+                  <tr class="border-b hover:bg-gray-50">
+                    <td class="px-3 py-2">
+                      <input type="text" name="action_${i}_task" ${i <= 3 ? 'required' : ''}
+                        value="${getResponse(`action_${i}_task`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 text-sm"
+                        placeholder="Mit kell csinálni?">
+                    </td>
+                    <td class="px-3 py-2">
+                      <input type="text" name="action_${i}_owner" ${i <= 3 ? 'required' : ''}
+                        value="${getResponse(`action_${i}_owner`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 text-sm"
+                        placeholder="Ki?">
+                    </td>
+                    <td class="px-3 py-2">
+                      <input type="date" name="action_${i}_deadline" ${i <= 3 ? 'required' : ''}
+                        value="${getResponse(`action_${i}_deadline`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 text-sm">
+                    </td>
+                    <td class="px-3 py-2">
+                      <input type="text" name="action_${i}_resource" ${i <= 3 ? 'required' : ''}
+                        value="${getResponse(`action_${i}_resource`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 text-sm"
+                        placeholder="Mi kell?">
+                    </td>
+                    <td class="px-3 py-2">
+                      <input type="text" name="action_${i}_kpi" ${i <= 3 ? 'required' : ''}
+                        value="${getResponse(`action_${i}_kpi`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 text-sm"
+                        placeholder="Hogyan méred?">
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <p class="text-sm text-blue-800">
+              <i class="fas fa-info-circle"></i> 
+              Legalább 3 akciót adj meg! A részletesebb terv könnyebb végrehajtást eredményez.
+            </p>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 6: Decision Making Process
+    if (stepNum === 6) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium">
+            <i class="fas fa-balance-scale text-purple-500"></i> 
+            Hogyan fogsz dönteni a végrehajtás során?
+          </p>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-sitemap"></i> Döntési keretrendszer
+            </label>
+            <select name="decision_framework" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+              <option value="">-- Válassz keretrendszert --</option>
+              <option value="consensus" ${getResponse('decision_framework') === 'consensus' ? 'selected' : ''}>Konszenzus alapú</option>
+              <option value="consultative" ${getResponse('decision_framework') === 'consultative' ? 'selected' : ''}>Konzultatív (meghallgat, de te döntesz)</option>
+              <option value="delegated" ${getResponse('decision_framework') === 'delegated' ? 'selected' : ''}>Delegált (mások döntenek)</option>
+              <option value="autocratic" ${getResponse('decision_framework') === 'autocratic' ? 'selected' : ''}>Autokratikus (te döntesz egyedül)</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-users"></i> Kit vonsz be a döntésekbe?
+            </label>
+            <textarea name="decision_stakeholders" rows="3" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+              placeholder="Csapattagok, szakértők, vezetőség...">${getResponse('decision_stakeholders')}</textarea>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-clipboard-list"></i> Döntési kritériumok (Mi alapján döntesz?)
+            </label>
+            ${[1,2,3].map(i => `
+              <div class="mb-2">
+                <input type="text" name="decision_criteria_${i}" required
+                  value="${getResponse(`decision_criteria_${i}`)}"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                  placeholder="Pl. Költség-haszon arány">
+              </div>
+            `).join('')}
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-stopwatch"></i> Mennyi időd van döntésre?
+            </label>
+            <select name="decision_timeframe" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+              <option value="">-- Válassz --</option>
+              <option value="immediate" ${getResponse('decision_timeframe') === 'immediate' ? 'selected' : ''}>Azonnali (1-2 nap)</option>
+              <option value="short" ${getResponse('decision_timeframe') === 'short' ? 'selected' : ''}>Rövid (1 hét)</option>
+              <option value="medium" ${getResponse('decision_timeframe') === 'medium' ? 'selected' : ''}>Közepes (2-4 hét)</option>
+              <option value="long" ${getResponse('decision_timeframe') === 'long' ? 'selected' : ''}>Hosszú (1+ hónap)</option>
+            </select>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 7: Communication Plan
+    if (stepNum === 7) {
+      const vision = getResponse('vision_statement', 2);
+      
+      return `
+        <div class="space-y-6">
+          ${vision ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium">
+                <i class="fas fa-link"></i> Mit kommunikálsz? (Vízió):
+              </p>
+              <p class="text-purple-900 mt-2 italic">"${vision}"</p>
+            </div>
+          ` : ''}
+          
+          <p class="text-gray-700 font-medium">
+            <i class="fas fa-bullhorn text-blue-500"></i> 
+            Hogyan kommunikálod a változást és stratégiát?
+          </p>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
+              <thead class="bg-green-600 text-white text-sm">
+                <tr>
+                  <th class="px-3 py-2 text-left">Célcsoport</th>
+                  <th class="px-3 py-2 text-left">Üzenet</th>
+                  <th class="px-3 py-2 text-left w-32">Csatorna</th>
+                  <th class="px-3 py-2 text-left w-32">Gyakoriság</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${['Csapat', 'Vezetőség', 'Érintettek', 'Egyéb'].map((group, idx) => `
+                  <tr class="border-b hover:bg-gray-50">
+                    <td class="px-3 py-2 font-medium">${group}</td>
+                    <td class="px-3 py-2">
+                      <input type="text" name="comm_${idx}_message" required
+                        value="${getResponse(`comm_${idx}_message`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 text-sm"
+                        placeholder="Mit mondasz?">
+                    </td>
+                    <td class="px-3 py-2">
+                      <select name="comm_${idx}_channel" required
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 text-sm">
+                        <option value="">--</option>
+                        <option value="meeting" ${getResponse(`comm_${idx}_channel`) === 'meeting' ? 'selected' : ''}>Meeting</option>
+                        <option value="email" ${getResponse(`comm_${idx}_channel`) === 'email' ? 'selected' : ''}>Email</option>
+                        <option value="presentation" ${getResponse(`comm_${idx}_channel`) === 'presentation' ? 'selected' : ''}>Prezentáció</option>
+                        <option value="workshop" ${getResponse(`comm_${idx}_channel`) === 'workshop' ? 'selected' : ''}>Workshop</option>
+                      </select>
+                    </td>
+                    <td class="px-3 py-2">
+                      <select name="comm_${idx}_frequency" required
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 text-sm">
+                        <option value="">--</option>
+                        <option value="once" ${getResponse(`comm_${idx}_frequency`) === 'once' ? 'selected' : ''}>Egyszeri</option>
+                        <option value="weekly" ${getResponse(`comm_${idx}_frequency`) === 'weekly' ? 'selected' : ''}>Heti</option>
+                        <option value="monthly" ${getResponse(`comm_${idx}_frequency`) === 'monthly' ? 'selected' : ''}>Havi</option>
+                        <option value="quarterly" ${getResponse(`comm_${idx}_frequency`) === 'quarterly' ? 'selected' : ''}>Negyedéves</option>
+                      </select>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              <i class="fas fa-quote-left"></i> Elevator Pitch (30 másodperc)
+            </label>
+            <textarea name="elevator_pitch" rows="4" required
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+              placeholder="Ha 30 másodperced van, hogyan foglalnád össze a változást?">${getResponse('elevator_pitch')}</textarea>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Step 8: Risk Analysis
+    if (stepNum === 8) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium">
+            <i class="fas fa-exclamation-triangle text-red-500"></i> 
+            Mi mehet rosszul? Készülj fel!
+          </p>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
+              <thead class="bg-red-600 text-white text-sm">
+                <tr>
+                  <th class="px-3 py-2 text-left">Kockázat</th>
+                  <th class="px-3 py-2 text-center w-24">Valószínűség (1-5)</th>
+                  <th class="px-3 py-2 text-center w-24">Hatás (1-5)</th>
+                  <th class="px-3 py-2 text-left">Megelőzés</th>
+                  <th class="px-3 py-2 text-left">B terv</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${[1,2,3,4,5].map(i => `
+                  <tr class="border-b hover:bg-gray-50">
+                    <td class="px-3 py-2">
+                      <input type="text" name="risk_${i}_description" ${i <= 3 ? 'required' : ''}
+                        value="${getResponse(`risk_${i}_description`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 text-sm"
+                        placeholder="Mi a kockázat?">
+                    </td>
+                    <td class="px-3 py-2">
+                      <input type="number" name="risk_${i}_probability" min="1" max="5" ${i <= 3 ? 'required' : ''}
+                        value="${getResponse(`risk_${i}_probability`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded text-center focus:ring-2 focus:ring-red-500 text-sm">
+                    </td>
+                    <td class="px-3 py-2">
+                      <input type="number" name="risk_${i}_impact" min="1" max="5" ${i <= 3 ? 'required' : ''}
+                        value="${getResponse(`risk_${i}_impact`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded text-center focus:ring-2 focus:ring-red-500 text-sm">
+                    </td>
+                    <td class="px-3 py-2">
+                      <input type="text" name="risk_${i}_prevention" ${i <= 3 ? 'required' : ''}
+                        value="${getResponse(`risk_${i}_prevention`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 text-sm"
+                        placeholder="Hogyan előzöd meg?">
+                    </td>
+                    <td class="px-3 py-2">
+                      <input type="text" name="risk_${i}_contingency" ${i <= 3 ? 'required' : ''}
+                        value="${getResponse(`risk_${i}_contingency`)}"
+                        class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 text-sm"
+                        placeholder="Ha mégis bekövetkezik?">
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+              <label class="block font-semibold text-yellow-900 mb-2">
+                <i class="fas fa-shield-alt"></i> Legnagyobb kockázat
+              </label>
+              <textarea name="biggest_risk" rows="3" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                placeholder="Mi a #1 kockázat?">${getResponse('biggest_risk')}</textarea>
+            </div>
+            
+            <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+              <label class="block font-semibold text-green-900 mb-2">
+                <i class="fas fa-check-double"></i> Legfontosabb megelőzés
+              </label>
+              <textarea name="top_mitigation" rows="3" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Mit teszel azonnal?">${getResponse('top_mitigation')}</textarea>
+            </div>
+          </div>
+          
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <p class="text-sm text-blue-800">
+              <i class="fas fa-info-circle"></i> 
+              <strong>Kockázat = Valószínűség × Hatás.</strong> Ha >= 15, azonnal cselekedj!
+            </p>
+          </div>
+        </div>
+      `;
+    }
+  }
+  
+  // Helper function to get response from different day
+  function getResponseFromDay(dayId, fieldName, stepNum) {
+    const targetStep = state.currentDaySteps.find(s => s.day_id === dayId && s.step_number === stepNum);
+    if (targetStep) {
+      const key = `${dayId}-${targetStep.id}-${fieldName}`;
+      return state.userResponses[key] || '';
+    }
+    // If not found in current day steps, search all days
+    const allDaySteps = state.trainingDays.flatMap(d => d.steps || []);
+    const step = allDaySteps.find(s => s.day_id === dayId && s.step_number === stepNum);
+    if (step) {
+      const key = `${dayId}-${step.id}-${fieldName}`;
+      return state.userResponses[key] || '';
+    }
+    return '';
   }
   
   // Generic text area for other days
