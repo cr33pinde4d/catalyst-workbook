@@ -98,9 +98,10 @@ app.post('/', async (c) => {
     const result = await db.prepare(`
       INSERT INTO processes (user_id, title, description, status, current_day, current_step)
       VALUES (?, ?, ?, 'active', 1, 1)
-    `).bind(userId, title, description || null).run();
+      RETURNING id
+    `).bind(userId, title, description || null).first();
 
-    const processId = result.meta.last_row_id;
+    const processId = (result as any).id;
 
     // Initialize all process steps
     // First, get all training steps

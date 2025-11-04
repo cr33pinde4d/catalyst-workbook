@@ -1317,7 +1317,7 @@ async function deleteProcess(processId) {
 
 function exportProcessToPDF(processId) {
   // Open export template in new window with process ID and token
-  const exportUrl = `/export-template.html?processId=${processId}&token=${state.token}`;
+  const exportUrl = `/static/export-template.html?processId=${processId}&token=${state.token}`;
   window.open(exportUrl, '_blank', 'width=1400,height=900');
 }
 
