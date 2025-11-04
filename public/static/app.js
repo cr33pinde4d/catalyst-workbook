@@ -166,11 +166,17 @@ function showView(viewName, params = {}) {
   const app = document.getElementById('app');
   
   switch(viewName) {
+    case 'landing':
+      app.innerHTML = renderLandingView();
+      break;
     case 'login':
       app.innerHTML = renderLoginView();
       break;
     case 'dashboard':
       app.innerHTML = renderDashboardView();
+      break;
+    case 'guide':
+      app.innerHTML = renderGuideView();
       break;
     case 'day':
       state.currentDay = params.day;
@@ -185,6 +191,133 @@ function showView(viewName, params = {}) {
 }
 
 // View renderers
+function renderLandingView() {
+  return `
+    <div class="min-h-screen gradient-bg">
+      <!-- Hero Section -->
+      <div class="container mx-auto px-4 py-16">
+        <div class="max-w-4xl mx-auto">
+          <!-- Header -->
+          <div class="text-center mb-12 animate-slide-in">
+            <h1 class="text-5xl font-bold text-white mb-4">
+              <i class="fas fa-rocket"></i> Catalyst Munkafüzet
+            </h1>
+            <p class="text-2xl text-purple-100">
+              Strukturált vezetői problémamegoldás és stratégiai végrehajtás
+            </p>
+          </div>
+
+          <!-- Introduction Card -->
+          <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8 animate-slide-in">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">
+              <i class="fas fa-book-open text-purple-600"></i> Hogyan használd ezt a munkafüzetet?
+            </h2>
+            
+            <div class="space-y-4 text-gray-700 text-lg">
+              <p>
+                A Catalyst Tanulási Napló egy <strong>interaktív online munkafüzet</strong>, amely végigvezet 
+                a vezetői problémamegoldás és stratégiai végrehajtás teljes folyamatán.
+              </p>
+              
+              <div class="bg-purple-50 border-l-4 border-purple-500 p-6 rounded-r-lg">
+                <h3 class="font-bold text-purple-900 mb-3 text-xl">
+                  <i class="fas fa-layer-group"></i> Munkafüzet felépítése:
+                </h3>
+                <ul class="space-y-2">
+                  <li><i class="fas fa-check text-green-500"></i> <strong>6 tréningnap</strong> – mindegyik egy-egy vezetői készségre fókuszál</li>
+                  <li><i class="fas fa-check text-green-500"></i> Minden naphoz: <strong>miért fontos, 8 lépés, eszközök, gyakorlati példák</strong></li>
+                  <li><i class="fas fa-check text-green-500"></i> <strong>Részletes eszközleírások</strong> 15+ vezetői eszközhöz (kattintható modal-okban)</li>
+                  <li><i class="fas fa-check text-green-500"></i> <strong>Progresszív adatáramlás</strong> – minden lépés építi az előzőt</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6 Days Overview -->
+          <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8 animate-slide-in">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">
+              <i class="fas fa-calendar-alt text-purple-600"></i> Tréningnapok áttekintése
+            </h2>
+            <p class="text-gray-700 mb-6 text-lg">
+              Minden nap a következőre épít, végigkísérve a <strong>problémától a fenntartható megoldásig</strong>.
+            </p>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+              <!-- Day 1 -->
+              <div class="border-l-4 border-blue-500 bg-blue-50 p-6 rounded-r-lg hover:shadow-lg transition">
+                <h3 class="font-bold text-blue-900 text-xl mb-2">
+                  <span class="bg-blue-500 text-white px-3 py-1 rounded-full mr-2">1</span>
+                  Vezetői tudatosság
+                </h3>
+                <p class="text-gray-700">Problémafeltárás, hatáselemzés, gyökérok-elemzés</p>
+              </div>
+
+              <!-- Day 2 -->
+              <div class="border-l-4 border-green-500 bg-green-50 p-6 rounded-r-lg hover:shadow-lg transition">
+                <h3 class="font-bold text-green-900 text-xl mb-2">
+                  <span class="bg-green-500 text-white px-3 py-1 rounded-full mr-2">2</span>
+                  Stratégiaalkotás
+                </h3>
+                <p class="text-gray-700">Golden Circle, vízió, SMART célok, akcióterv</p>
+              </div>
+
+              <!-- Day 3 -->
+              <div class="border-l-4 border-yellow-500 bg-yellow-50 p-6 rounded-r-lg hover:shadow-lg transition">
+                <h3 class="font-bold text-yellow-900 text-xl mb-2">
+                  <span class="bg-yellow-500 text-white px-3 py-1 rounded-full mr-2">3</span>
+                  Csapat kialakítása
+                </h3>
+                <p class="text-gray-700">Szerepek, RACI, kompetenciák, struktúra</p>
+              </div>
+
+              <!-- Day 4 -->
+              <div class="border-l-4 border-red-500 bg-red-50 p-6 rounded-r-lg hover:shadow-lg transition">
+                <h3 class="font-bold text-red-900 text-xl mb-2">
+                  <span class="bg-red-500 text-white px-3 py-1 rounded-full mr-2">4</span>
+                  Teljesítménymenedzsment
+                </h3>
+                <p class="text-gray-700">KPI-ok, dashboard, visszajelzés, folyamatos fejlesztés</p>
+              </div>
+
+              <!-- Day 5 -->
+              <div class="border-l-4 border-purple-500 bg-purple-50 p-6 rounded-r-lg hover:shadow-lg transition">
+                <h3 class="font-bold text-purple-900 text-xl mb-2">
+                  <span class="bg-purple-500 text-white px-3 py-1 rounded-full mr-2">5</span>
+                  Csapatmenedzsment
+                </h3>
+                <p class="text-gray-700">Delegálás, motiváció, konfliktus, coaching</p>
+              </div>
+
+              <!-- Day 6 -->
+              <div class="border-l-4 border-indigo-500 bg-indigo-50 p-6 rounded-r-lg hover:shadow-lg transition">
+                <h3 class="font-bold text-indigo-900 text-xl mb-2">
+                  <span class="bg-indigo-500 text-white px-3 py-1 rounded-full mr-2">6</span>
+                  Fenntartás & adaptáció
+                </h3>
+                <p class="text-gray-700">Változásbeépítés, monitoring, tanulási kultúra, utódlás</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div class="text-center space-y-4 animate-slide-in">
+            <button onclick="showView('login')" 
+              class="bg-white text-purple-600 px-12 py-4 rounded-xl text-xl font-bold hover:bg-purple-50 transition shadow-lg">
+              <i class="fas fa-sign-in-alt"></i> Bejelentkezés / Regisztráció
+            </button>
+            <div>
+              <button onclick="showView('guide')" 
+                class="text-white hover:text-purple-100 underline">
+                <i class="fas fa-book"></i> Részletes útmutató
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function renderLoginView() {
   return `
     <div class="min-h-screen gradient-bg flex items-center justify-center p-4">
@@ -260,6 +393,266 @@ function toggleAuthForm() {
   registerForm.classList.toggle('hidden');
 }
 
+function renderGuideView() {
+  return `
+    <div class="min-h-screen bg-gray-50">
+      <!-- Header -->
+      <header class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h1 class="text-3xl font-bold">
+                <i class="fas fa-book"></i> Útmutató
+              </h1>
+              <p class="text-purple-100 mt-1">Hogyan használd a Catalyst Munkafüzetet</p>
+            </div>
+            <button onclick="${state.user ? "showView('dashboard')" : "showView('landing')"}" 
+              class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
+              <i class="fas fa-arrow-left"></i> Vissza
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="max-w-5xl mx-auto px-4 py-8">
+        <!-- Introduction -->
+        <div class="bg-white rounded-xl shadow-md p-8 mb-6 animate-slide-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">
+            <i class="fas fa-info-circle text-purple-600"></i> Bevezetés
+          </h2>
+          <div class="prose prose-lg max-w-none text-gray-700 space-y-4">
+            <p>
+              A <strong>Catalyst Tanulási Napló</strong> egy interaktív online munkafüzet, amely végigvezet a 
+              vezetői problémamegoldás és stratégiai végrehajtás teljes folyamatán. A program 6 tréningnapból áll, 
+              mindegyik naphoz 8 strukturált lépéssel.
+            </p>
+            <p>
+              Minden lépés építi az előzőt – a <strong>progresszív adatáramlásnak</strong> köszönhetően az előző 
+              lépésekben megadott válaszaid automatikusan megjelennek a következő lépésekben, így valóban 
+              egymásra épülő folyamatot kapsz.
+            </p>
+          </div>
+        </div>
+
+        <!-- How to Use -->
+        <div class="bg-white rounded-xl shadow-md p-8 mb-6 animate-slide-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">
+            <i class="fas fa-tasks text-purple-600"></i> Hogyan használd?
+          </h2>
+          <div class="space-y-6">
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                1
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Válassz egy napot</h3>
+                <p class="text-gray-700">
+                  A Dashboard-on válaszd ki, melyik nappal szeretnél dolgozni. Javasoljuk, hogy sorban haladj, 
+                  mert minden nap az előzőre épül.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                2
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Dolgozd végig a lépéseket</h3>
+                <p class="text-gray-700">
+                  Minden naphoz 8 lépés tartozik. Töltsd ki a mezőket, használd az eszközöket (kattintható badge-ek), 
+                  és mentsd el a válaszaidat.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                3
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Mentés és státusz</h3>
+                <p class="text-gray-700">
+                  Két gomb áll rendelkezésedre: <strong>"Mentés"</strong> (folyamatban jelölés) és 
+                  <strong>"Befejezés"</strong> (befejezett jelölés). Nyugodtan térj vissza később – minden mentve marad.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center text-xl font-bold">
+                4
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Használd az eszközöket</h3>
+                <p class="text-gray-700">
+                  A lépések alatt találsz <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                  <i class="fas fa-tools mr-1"></i> Eszköz</span> badge-eket. Kattints rájuk a részletes dokumentációért!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 Days Structure -->
+        <div class="bg-white rounded-xl shadow-md p-8 mb-6 animate-slide-in">
+          <h2 class="text-3xl font-bold text-gray-900 mb-6">
+            <i class="fas fa-calendar-alt text-purple-600"></i> 6 Tréningnap áttekintése
+          </h2>
+          <p class="text-gray-700 mb-6">
+            Minden nap a következőre épít, végigkísérve a <strong>problémától a fenntartható megoldásig</strong>.
+          </p>
+          
+          <div class="space-y-4">
+            <!-- Day 1 -->
+            <div class="border-l-4 border-blue-500 bg-blue-50 p-6 rounded-r-lg">
+              <h3 class="font-bold text-blue-900 text-xl mb-2">
+                <span class="bg-blue-500 text-white px-3 py-1 rounded-full mr-2">1. Nap</span>
+                Vezetői tudatosság és problémamegoldás
+              </h3>
+              <p class="text-gray-700 mb-2">
+                Strukturált problémafeltárás, hatáselemzés, problémaelemzés, priorizálás, 
+                problémameghatározás, kontextus leírása, adatgyűjtés, gyökérok-elemzés
+              </p>
+              <div class="text-sm text-gray-600">
+                <strong>Cél:</strong> Azonosítsd és értsd meg mélyen a problémádat
+              </div>
+            </div>
+
+            <!-- Day 2 -->
+            <div class="border-l-4 border-green-500 bg-green-50 p-6 rounded-r-lg">
+              <h3 class="font-bold text-green-900 text-xl mb-2">
+                <span class="bg-green-500 text-white px-3 py-1 rounded-full mr-2">2. Nap</span>
+                Vezetői stílus és stratégiaalkotás
+              </h3>
+              <p class="text-gray-700 mb-2">
+                Start with Why (Golden Circle), vízió megfogalmazása, stratégiai célok (SMART), 
+                vezetői stílus, akcióterv, döntéshozatal, kommunikációs terv, kockázatelemzés
+              </p>
+              <div class="text-sm text-gray-600">
+                <strong>Cél:</strong> Alakítsd ki a stratégiádat és vezetői megközelítésedet
+              </div>
+            </div>
+
+            <!-- Day 3 -->
+            <div class="border-l-4 border-yellow-500 bg-yellow-50 p-6 rounded-r-lg">
+              <h3 class="font-bold text-yellow-900 text-xl mb-2">
+                <span class="bg-yellow-500 text-white px-3 py-1 rounded-full mr-2">3. Nap</span>
+                Csapat kialakítása
+              </h3>
+              <p class="text-gray-700 mb-2">
+                Szerepek azonosítása, kompetencia-elemzés, RACI mátrix, csapatstruktúra, 
+                tehetségértékelés (9-Box), gap analízis, toborzás/fejlesztés, csapat finalizálás
+              </p>
+              <div class="text-sm text-gray-600">
+                <strong>Cél:</strong> Építs fel egy hatékony csapatot
+              </div>
+            </div>
+
+            <!-- Day 4 -->
+            <div class="border-l-4 border-red-500 bg-red-50 p-6 rounded-r-lg">
+              <h3 class="font-bold text-red-900 text-xl mb-2">
+                <span class="bg-red-500 text-white px-3 py-1 rounded-full mr-2">4. Nap</span>
+                Teljesítménymenedzsment
+              </h3>
+              <p class="text-gray-700 mb-2">
+                KPI meghatározása, mérési rendszer, adatgyűjtés, dashboard & reporting, 
+                visszajelzési rendszer, teljesítményértékelés, korrekciós mechanizmusok, folyamatos fejlesztés
+              </p>
+              <div class="text-sm text-gray-600">
+                <strong>Cél:</strong> Mérj, értékelj és fejlessz folyamatosan
+              </div>
+            </div>
+
+            <!-- Day 5 -->
+            <div class="border-l-4 border-purple-500 bg-purple-50 p-6 rounded-r-lg">
+              <h3 class="font-bold text-purple-900 text-xl mb-2">
+                <span class="bg-purple-500 text-white px-3 py-1 rounded-full mr-2">5. Nap</span>
+                Csapatmenedzsment
+              </h3>
+              <p class="text-gray-700 mb-2">
+                Delegálási stratégia, motivációs tényezők, konfliktuskezelés, pszichológiai biztonság, 
+                coaching & mentoring, nehéz beszélgetések, csapatkohézió, vezetői jelenlét
+              </p>
+              <div class="text-sm text-gray-600">
+                <strong>Cél:</strong> Vezess hatékonyan és fejleszd a csapatod
+              </div>
+            </div>
+
+            <!-- Day 6 -->
+            <div class="border-l-4 border-indigo-500 bg-indigo-50 p-6 rounded-r-lg">
+              <h3 class="font-bold text-indigo-900 text-xl mb-2">
+                <span class="bg-indigo-500 text-white px-3 py-1 rounded-full mr-2">6. Nap</span>
+                Fenntartás & adaptáció
+              </h3>
+              <p class="text-gray-700 mb-2">
+                Változásbeépítési terv, SOPs & dokumentáció, tudástranszfer, monitoring & korai figyelmeztetés, 
+                agilitás fejlesztése, tanulási kultúra, sikerkommunikáció, átadás & utódlástervezés
+              </p>
+              <div class="text-sm text-gray-600">
+                <strong>Cél:</strong> Tedd fenntarthatóvá a változásokat
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tools Info -->
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-purple-500 rounded-r-xl shadow-md p-8 mb-6 animate-slide-in">
+          <h2 class="text-3xl font-bold text-purple-900 mb-4">
+            <i class="fas fa-toolbox"></i> 15+ Vezetői eszköz
+          </h2>
+          <p class="text-gray-700 mb-4">
+            A munkafüzetben több mint 15 vezetői eszköz részletes dokumentációja érhető el. Ezek az eszközök 
+            <strong>kattintható badge-ek formájában</strong> jelennek meg a lépésekben.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              <i class="fas fa-tools mr-1"></i> Brainstorming
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              <i class="fas fa-tools mr-1"></i> 5 Whys
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              <i class="fas fa-tools mr-1"></i> Ishikawa
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              <i class="fas fa-tools mr-1"></i> SWOT
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              <i class="fas fa-tools mr-1"></i> Golden Circle
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              <i class="fas fa-tools mr-1"></i> SMART
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              <i class="fas fa-tools mr-1"></i> OKR
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              <i class="fas fa-tools mr-1"></i> RACI
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              <i class="fas fa-tools mr-1"></i> 9-Box Talent Grid
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              <i class="fas fa-tools mr-1"></i> GROW Model
+            </span>
+            <span class="text-gray-500">...és még sok más!</span>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="text-center">
+          <button onclick="${state.user ? "showView('dashboard')" : "showView('landing')"}" 
+            class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-xl text-lg font-bold hover:from-purple-700 hover:to-pink-700 transition shadow-lg">
+            <i class="fas fa-arrow-left mr-2"></i> ${state.user ? 'Vissza a Dashboard-ra' : 'Vissza a főoldalra'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function renderDashboardView() {
   const completedSteps = state.userProgress.filter(p => p.status === 'completed').length;
   const inProgressSteps = state.userProgress.filter(p => p.status === 'in_progress').length;
@@ -281,10 +674,16 @@ function renderDashboardView() {
               </h1>
               <p class="text-purple-100 mt-1">Üdv, ${state.user.name}!</p>
             </div>
-            <button onclick="handleLogout()" 
-              class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
-              <i class="fas fa-sign-out-alt"></i> Kilépés
-            </button>
+            <div class="flex gap-3">
+              <button onclick="showView('guide')" 
+                class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
+                <i class="fas fa-book"></i> Útmutató
+              </button>
+              <button onclick="handleLogout()" 
+                class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
+                <i class="fas fa-sign-out-alt"></i> Kilépés
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -4556,7 +4955,8 @@ async function init() {
       handleLogout();
     }
   } else {
-    showView('login');
+    // Show landing page for first-time visitors
+    showView('landing');
   }
 }
 
