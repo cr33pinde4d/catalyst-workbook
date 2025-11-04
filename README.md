@@ -137,8 +137,16 @@ pm2 stop catalyst
 - **7. Toborzási/fejlesztési terv**: Make vs Buy vs Borrow, 70-20-10 modell, akciók
 - **8. Csapatösszetétel véglegesítése**: Team Charter, szerepkör-leírások, csapatmátrix, kick-off, sikermutatók
 
-### 4. Nap: Teljesítménymenedzsment
-KPI-ok, mérés, monitoring, visszajelzés
+### 4. Nap: Teljesítménymenedzsment ✅
+8 lépés - KPI-ok, mérés, dashboard, visszajelzés, értékelés
+- **1. KPI meghatározása**: SMART KPI, Balanced Scorecard, Leading vs Lagging, top 3 KPI
+- **2. Mérési rendszer kialakítása**: Mérési terv, adatminőség, data governance, automatizálás
+- **3. Adatgyűjtési mechanizmusok**: Eszközök, API integrációk, manuális gyűjtés, validáció
+- **4. Dashboard és reporting**: Executive/operatív dashboard, BI eszközök, reporting ritmus, vizualizáció
+- **5. Visszajelzési rendszer**: 1-on-1 meetings, SBI modell, Feedforward, 360° visszajelzés
+- **6. Teljesítményértékelési folyamat**: Értékelési mátrix, OKR review, calibration, gyakoriság
+- **7. Korrekciós mechanizmusok**: Alert rendszer, CAP, root cause analysis, PDCA ciklus
+- **8. Folyamatos fejlesztés**: Kaizen kultúra, retrospektívek, A/B testing, learning reviews, KPI felülvizsgálat
 
 ### 5. Nap: Csapatmenedzsment
 Delegálás, motiváció, konfliktuskezelés
@@ -175,6 +183,18 @@ Változás beépítése, folyamatos fejlődés kultúrája
 8. 🔄 Collaborative features (csoportos munkafüzetek)
 
 ## 📝 Változásnapló
+
+### 2025-11-04 - v1.5.0
+- ✅ **4. Nap teljes implementáció (8 lépés)**: Teljesítménymenedzsment
+  - 1. KPI meghatározása - SMART, Balanced Scorecard, leading/lagging
+  - 2. Mérési rendszer - mérési terv, adatminőség, governance
+  - 3. Adatgyűjtés - eszközök, API-k, validáció
+  - 4. Dashboard & reporting - executive/operatív, BI, vizualizáció
+  - 5. Visszajelzési rendszer - 1-on-1, SBI, feedforward, 360°
+  - 6. Teljesítményértékelés - mátrix, OKR review, calibration
+  - 7. Korrekciós mechanizmusok - alerts, CAP, root cause, PDCA
+  - 8. Folyamatos fejlesztés - Kaizen, retro, A/B test, learning
+- ✅ **Migration frissítése**: Mind a 8 lépés hozzáadva az adatbázishoz
 
 ### 2025-11-04 - v1.4.0
 - ✅ **3. Nap teljes implementáció (8 lépés)**: Csapat kialakítása
@@ -236,7 +256,7 @@ Proprietary - MVM Group
 ---
 
 **Készült**: 2025-11-04  
-**Verzió**: 1.4.0  
+**Verzió**: 1.5.0  
 **Státusz**: ✅ Működőképes (Development)  
 **Tech Stack**: Hono + Cloudflare D1 + TypeScript + Tailwind CSS  
-**Haladás**: 3/6 tréningnap implementálva (50%)
+**Haladás**: 4/6 tréningnap implementálva (67%) 🚀
