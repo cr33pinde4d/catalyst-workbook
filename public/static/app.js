@@ -8,7 +8,12 @@ const state = {
   currentDaySteps: [],
   currentStep: null,
   userProgress: [],
-  userResponses: {}
+  userResponses: {},
+  // Process management
+  processes: [],
+  currentProcess: null,
+  processResponses: {},
+  isProcessMode: false
 };
 
 // API configuration
@@ -84,6 +89,47 @@ const api = {
   
   async batchSaveResponses(responses) {
     const { data } = await axios.post('/responses/batch', { responses });
+    return data;
+  },
+  
+  // Process management APIs
+  async getProcesses() {
+    const { data } = await axios.get('/processes');
+    return data;
+  },
+  
+  async getProcess(processId) {
+    const { data } = await axios.get(`/processes/${processId}`);
+    return data;
+  },
+  
+  async createProcess(title, description) {
+    const { data } = await axios.post('/processes', { title, description });
+    return data;
+  },
+  
+  async updateProcess(processId, updates) {
+    const { data } = await axios.put(`/processes/${processId}`, updates);
+    return data;
+  },
+  
+  async deleteProcess(processId) {
+    const { data } = await axios.delete(`/processes/${processId}`);
+    return data;
+  },
+  
+  async getProcessResponses(processId) {
+    const { data } = await axios.get(`/processes/${processId}/responses`);
+    return data;
+  },
+  
+  async saveProcessResponses(processId, responses) {
+    const { data } = await axios.post(`/processes/${processId}/responses`, { responses });
+    return data;
+  },
+  
+  async completeProcessStep(processId, stepId) {
+    const { data } = await axios.post(`/processes/${processId}/steps/${stepId}/complete`);
     return data;
   }
 };
@@ -186,6 +232,22 @@ function showView(viewName, params = {}) {
     case 'step':
       state.currentStep = params.step;
       app.innerHTML = renderStepView();
+      break;
+    case 'processes':
+      app.innerHTML = renderProcessesView();
+      break;
+    case 'process-day':
+      state.currentDay = params.day;
+      state.currentDaySteps = params.steps;
+      state.currentProcess = params.process;
+      state.isProcessMode = true;
+      app.innerHTML = renderProcessDayView();
+      break;
+    case 'process-step':
+      state.currentStep = params.step;
+      state.currentProcess = params.process;
+      state.isProcessMode = true;
+      app.innerHTML = renderProcessStepView();
       break;
   }
 }
@@ -679,6 +741,10 @@ function renderDashboardView() {
                 class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
                 <i class="fas fa-book"></i> Útmutató
               </button>
+              <button onclick="showProcessesView()" 
+                class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
+                <i class="fas fa-briefcase"></i> Folyamataim
+              </button>
               <button onclick="handleLogout()" 
                 class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition">
                 <i class="fas fa-sign-out-alt"></i> Kilépés
@@ -770,6 +836,128 @@ function renderDayCard(day) {
           <div class="w-full bg-gray-200 rounded-full h-2">
             <div class="bg-purple-500 h-2 rounded-full transition-all" style="width: ${percentage}%"></div>
           </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderProcessesView() {
+  return `
+    <div class="min-h-screen bg-gray-50">
+      <!-- Header -->
+      <header class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+          <button onclick="showView('dashboard')" 
+            class="text-white hover:text-purple-200 mb-4 flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Vissza a Dashboard-ra
+          </button>
+          <div class="flex justify-between items-center">
+            <div>
+              <h1 class="text-3xl font-bold">
+                <i class="fas fa-briefcase"></i> Folyamataim
+              </h1>
+              <p class="text-purple-100 mt-1">Valós problémák elemzése a tréning módszertanával</p>
+            </div>
+            <button onclick="showCreateProcessModal()" 
+              class="bg-white text-purple-600 px-6 py-3 rounded-lg font-bold hover:bg-purple-50 transition shadow-lg">
+              <i class="fas fa-plus-circle"></i> Új folyamat
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        ${state.processes.length === 0 ? `
+          <!-- Empty State -->
+          <div class="text-center py-16 bg-white rounded-xl shadow-md">
+            <i class="fas fa-folder-open text-gray-300 text-6xl mb-4"></i>
+            <h2 class="text-2xl font-bold text-gray-700 mb-2">Még nincs folyamatod</h2>
+            <p class="text-gray-500 mb-6">Hozz létre egy új folyamatot egy valós probléma elemzéséhez</p>
+            <button onclick="showCreateProcessModal()" 
+              class="bg-purple-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-purple-700 transition">
+              <i class="fas fa-plus-circle"></i> Új folyamat indítása
+            </button>
+          </div>
+        ` : `
+          <!-- Processes List -->
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            ${state.processes.map(process => renderProcessCard(process)).join('')}
+          </div>
+        `}
+      </div>
+    </div>
+  `;
+}
+
+function renderProcessCard(process) {
+  const statusColors = {
+    active: 'bg-blue-100 text-blue-700 border-blue-300',
+    completed: 'bg-green-100 text-green-700 border-green-300',
+    archived: 'bg-gray-100 text-gray-700 border-gray-300'
+  };
+  
+  const statusIcons = {
+    active: 'fa-play-circle',
+    completed: 'fa-check-circle',
+    archived: 'fa-archive'
+  };
+  
+  const statusTexts = {
+    active: 'Aktív',
+    completed: 'Befejezett',
+    archived: 'Archivált'
+  };
+  
+  const statusColor = statusColors[process.status] || statusColors.active;
+  const statusIcon = statusIcons[process.status] || statusIcons.active;
+  const statusText = statusTexts[process.status] || statusTexts.active;
+  
+  const progress = process.progress || 0;
+  const lastUpdate = new Date(process.updated_at).toLocaleDateString('hu-HU');
+  
+  return `
+    <div class="step-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 ${statusColor}">
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-3">
+          <h3 class="text-xl font-bold text-gray-800 flex-1 pr-2">
+            ${process.title}
+          </h3>
+          <span class="${statusColor} px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap">
+            <i class="fas ${statusIcon}"></i> ${statusText}
+          </span>
+        </div>
+        
+        ${process.description ? `
+          <p class="text-gray-600 mb-4 line-clamp-2">${process.description}</p>
+        ` : ''}
+        
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-600">Haladás</span>
+              <span class="text-purple-600 font-bold">${progress}%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-purple-500 h-2 rounded-full transition-all" style="width: ${progress}%"></div>
+            </div>
+          </div>
+          
+          <div class="flex justify-between text-sm text-gray-500">
+            <span><i class="fas fa-calendar"></i> ${lastUpdate}</span>
+            <span><i class="fas fa-layer-group"></i> Nap ${process.current_day || 1}</span>
+          </div>
+        </div>
+        
+        <div class="flex gap-2 mt-4">
+          <button onclick="navigateToProcess(${process.id})" 
+            class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
+            <i class="fas fa-arrow-right"></i> Folytatás
+          </button>
+          <button onclick="deleteProcess(${process.id})" 
+            class="bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 transition">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -875,6 +1063,124 @@ async function navigateToStep(stepId) {
     showView('step', { step });
   } catch (error) {
     alert('Hiba a lépés betöltésekor: ' + error.message);
+  }
+}
+
+// Process management functions
+async function showProcessesView() {
+  try {
+    const { processes } = await api.getProcesses();
+    state.processes = processes;
+    showView('processes');
+  } catch (error) {
+    alert('Hiba a folyamatok betöltésekor: ' + error.message);
+  }
+}
+
+function showCreateProcessModal() {
+  const modalHtml = `
+    <div id="create-process-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="closeCreateProcessModal(event)">
+      <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 animate-slide-in" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">
+            <i class="fas fa-plus-circle text-purple-600"></i> Új folyamat
+          </h2>
+          <button onclick="closeCreateProcessModal(event)" class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        <form onsubmit="handleCreateProcess(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Folyamat címe <span class="text-red-500">*</span>
+            </label>
+            <input type="text" id="process-title" required
+              placeholder="pl. Hatékonyság növelése a marketing csapatban"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Probléma leírása (opcionális)
+            </label>
+            <textarea id="process-description" rows="4"
+              placeholder="Rövid leírás arról, milyen problémán fogsz dolgozni..."
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+          </div>
+          <div class="flex gap-3">
+            <button type="submit" 
+              class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
+              <i class="fas fa-check"></i> Létrehozás
+            </button>
+            <button type="button" onclick="closeCreateProcessModal(event)" 
+              class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-400 transition">
+              <i class="fas fa-times"></i> Mégse
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function closeCreateProcessModal(event) {
+  event?.stopPropagation();
+  const modal = document.getElementById('create-process-modal');
+  if (modal) {
+    modal.remove();
+  }
+}
+
+async function handleCreateProcess(e) {
+  e.preventDefault();
+  const title = document.getElementById('process-title').value;
+  const description = document.getElementById('process-description').value;
+  
+  try {
+    const result = await api.createProcess(title, description);
+    closeCreateProcessModal();
+    alert('Folyamat sikeresen létrehozva!');
+    showProcessesView(); // Refresh the list
+  } catch (error) {
+    alert('Hiba a folyamat létrehozásakor: ' + error.message);
+  }
+}
+
+async function navigateToProcess(processId) {
+  try {
+    const { process, steps } = await api.getProcess(processId);
+    const { responses } = await api.getProcessResponses(processId);
+    
+    state.currentProcess = process;
+    state.isProcessMode = true;
+    
+    // Convert responses to map
+    state.processResponses = {};
+    responses.forEach(r => {
+      const key = `${r.day_id}-${r.step_id}-${r.field_name}`;
+      state.processResponses[key] = r.response_text;
+    });
+    
+    // Navigate to first day
+    const dayId = process.current_day || 1;
+    const { day, steps: daySteps } = await api.getTrainingDay(dayId);
+    showView('process-day', { day, steps: daySteps, process });
+  } catch (error) {
+    alert('Hiba a folyamat betöltésekor: ' + error.message);
+  }
+}
+
+async function deleteProcess(processId) {
+  if (!confirm('Biztosan törölni szeretnéd ezt a folyamatot?')) {
+    return;
+  }
+  
+  try {
+    await api.deleteProcess(processId);
+    alert('Folyamat törölve');
+    showProcessesView(); // Refresh the list
+  } catch (error) {
+    alert('Hiba a folyamat törlésekor: ' + error.message);
   }
 }
 
@@ -993,6 +1299,251 @@ function renderStepView() {
       </div>
     </div>
   `;
+}
+
+// Process-specific view renderers
+function renderProcessDayView() {
+  const day = state.currentDay;
+  const steps = state.currentDaySteps;
+  const process = state.currentProcess;
+  
+  return `
+    <div class="min-h-screen bg-gray-50">
+      <!-- Header -->
+      <header class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+          <button onclick="showProcessesView()" 
+            class="text-white hover:text-purple-200 mb-4 flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Vissza a folyamatokhoz
+          </button>
+          <div class="flex justify-between items-center">
+            <div class="flex-1">
+              <h1 class="text-3xl font-bold">${day.title}</h1>
+              <p class="text-purple-100 mt-2">${day.subtitle}</p>
+            </div>
+            <div class="bg-white/20 px-4 py-2 rounded-lg">
+              <div class="text-sm text-purple-100">Folyamat:</div>
+              <div class="font-bold">${process.title}</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Steps -->
+      <div class="max-w-5xl mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">
+          <i class="fas fa-list-ol text-purple-600"></i> Lépések
+        </h2>
+        <div class="space-y-4">
+          ${steps.map(step => renderProcessStepCard(step)).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderProcessStepCard(step) {
+  const process = state.currentProcess;
+  
+  // Check completion status (simplified for now - could be enhanced)
+  let statusColor = 'bg-gray-100 text-gray-600 border-gray-300';
+  let statusIcon = 'fa-circle';
+  let statusText = 'Még nem kezdted el';
+  
+  return `
+    <div class="step-card bg-white rounded-lg shadow-md border-l-4 ${statusColor} p-6 cursor-pointer"
+      onclick="navigateToProcessStep(${process.id}, ${step.id})">
+      <div class="flex justify-between items-start mb-3">
+        <h3 class="text-xl font-bold text-gray-800">
+          ${step.step_number}. ${step.title}
+        </h3>
+        <span class="${statusColor} px-3 py-1 rounded-full text-sm font-medium">
+          <i class="fas ${statusIcon}"></i> ${statusText}
+        </span>
+      </div>
+      <p class="text-gray-600 mb-3">${step.description}</p>
+      ${step.tools ? `
+        <div class="flex flex-wrap gap-2 mt-3">
+          ${JSON.parse(step.tools).map(tool => 
+            `<span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs">
+              <i class="fas fa-tools"></i> ${tool}
+            </span>`
+          ).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+async function navigateToProcessStep(processId, stepId) {
+  try {
+    const step = state.currentDaySteps.find(s => s.id === stepId);
+    if (!step) {
+      alert('Lépés nem található');
+      return;
+    }
+    
+    state.currentStep = step;
+    showView('process-step', { step, process: state.currentProcess });
+  } catch (error) {
+    alert('Hiba a lépés betöltésekor: ' + error.message);
+  }
+}
+
+function renderProcessStepView() {
+  const step = state.currentStep;
+  const day = state.currentDay;
+  const process = state.currentProcess;
+  
+  return `
+    <div class="min-h-screen bg-gray-50">
+      <!-- Header -->
+      <header class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+          <button onclick="navigateToProcess(${process.id})" 
+            class="text-white hover:text-purple-200 mb-4 flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Vissza a ${day.title}-hoz
+          </button>
+          <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-bold">
+              ${step.step_number}. ${step.title}
+            </h1>
+            <div class="bg-white/20 px-4 py-2 rounded-lg text-sm">
+              <div class="text-purple-100">Folyamat:</div>
+              <div class="font-bold">${process.title}</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Step Content -->
+      <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Description -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6 animate-slide-in">
+          <h2 class="text-xl font-bold text-gray-800 mb-3">
+            <i class="fas fa-info-circle text-blue-500"></i> Cél
+          </h2>
+          <p class="text-gray-700">${step.description}</p>
+        </div>
+
+        ${step.tools ? `
+          <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">
+              <i class="fas fa-toolbox text-purple-500"></i> Eszközök
+              <span class="text-sm text-gray-500 font-normal ml-2">(Kattints a részletekért)</span>
+            </h2>
+            <div class="flex flex-wrap gap-3">
+              ${JSON.parse(step.tools).map(tool => 
+                `<button type="button" onclick="openToolModal('${tool.replace(/'/g, "\\'")}')" 
+                  class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-4 py-2 rounded-lg font-medium transition-all hover:scale-105 hover:shadow-md cursor-pointer">
+                  <i class="fas fa-book-open"></i> ${tool}
+                </button>`
+              ).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        ${step.importance ? `
+          <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-6 rounded-r-xl">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">
+              <i class="fas fa-exclamation-triangle text-yellow-500"></i> Fontosság
+            </h2>
+            <p class="text-gray-700">${step.importance}</p>
+          </div>
+        ` : ''}
+
+        ${step.limitations ? `
+          <div class="bg-red-50 border-l-4 border-red-400 p-6 mb-6 rounded-r-xl">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">
+              <i class="fas fa-shield-alt text-red-500"></i> Korlátok
+            </h2>
+            <p class="text-gray-700">${step.limitations}</p>
+          </div>
+        ` : ''}
+
+        ${step.instructions ? `
+          <div class="bg-green-50 border-l-4 border-green-400 p-6 mb-6 rounded-r-xl">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">
+              <i class="fas fa-tasks text-green-500"></i> Utasítások
+            </h2>
+            <p class="text-gray-700">${step.instructions}</p>
+          </div>
+        ` : ''}
+
+        <!-- Exercise Form -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+          <h2 class="text-xl font-bold text-gray-800 mb-6">
+            <i class="fas fa-pen text-purple-500"></i> Gyakorlat
+          </h2>
+          
+          <form id="process-step-form" onsubmit="handleProcessStepSubmit(event)" class="space-y-6">
+            ${renderProcessExerciseFields(step)}
+            
+            <!-- Submit Buttons -->
+            <div class="flex gap-4 pt-6 border-t">
+              <button type="submit" name="action" value="save"
+                class="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium">
+                <i class="fas fa-save"></i> Mentés
+              </button>
+              <button type="submit" name="action" value="complete"
+                class="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-medium">
+                <i class="fas fa-check"></i> Befejezés
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderProcessExerciseFields(step) {
+  // Temporarily swap userResponses with processResponses to reuse existing logic
+  const originalResponses = state.userResponses;
+  state.userResponses = state.processResponses;
+  
+  // Call the existing renderExerciseFields
+  const result = renderExerciseFields(step);
+  
+  // Restore original userResponses
+  state.userResponses = originalResponses;
+  
+  return result;
+}
+
+async function handleProcessStepSubmit(e) {
+  e.preventDefault();
+  const action = e.submitter.value;
+  const form = e.target;
+  const formData = new FormData(form);
+  const step = state.currentStep;
+  const process = state.currentProcess;
+  
+  // Collect form data
+  const responses = {};
+  formData.forEach((value, key) => {
+    const responseKey = `${step.day_id}-${step.id}-${key}`;
+    responses[responseKey] = value;
+    state.processResponses[responseKey] = value; // Update local state
+  });
+  
+  try {
+    // Save responses to process
+    await api.saveProcessResponses(process.id, responses);
+    
+    if (action === 'complete') {
+      // Mark step as completed
+      await api.completeProcessStep(process.id, step.id);
+      alert('Lépés befejezve és mentve!');
+    } else {
+      alert('Válaszok elmentve!');
+    }
+    
+    // Go back to process day view
+    navigateToProcess(process.id);
+  } catch (error) {
+    alert('Hiba a mentés során: ' + error.message);
+  }
 }
 
 function renderExerciseFields(step) {

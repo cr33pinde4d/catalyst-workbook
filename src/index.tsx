@@ -7,6 +7,7 @@ import auth from './routes/auth';
 import training from './routes/training';
 import progress from './routes/progress';
 import responses from './routes/responses';
+import processes from './routes/processes';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -23,11 +24,13 @@ app.route('/api/auth', auth);
 app.use('/api/training/*', authMiddleware);
 app.use('/api/progress/*', authMiddleware);
 app.use('/api/responses/*', authMiddleware);
+app.use('/api/processes/*', authMiddleware);
 app.use('/api/auth/me', authMiddleware);
 
 app.route('/api/training', training);
 app.route('/api/progress', progress);
 app.route('/api/responses', responses);
+app.route('/api/processes', processes);
 
 // Main HTML page
 app.get('/', (c) => {

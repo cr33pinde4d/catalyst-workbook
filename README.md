@@ -23,6 +23,12 @@ A Catalyst Tanulási Napló egy full-stack webalkalmazás, amely digitalizálja 
 - **🔗 Progresszív adatáramlás**: Lépések egymásra épülnek - az előző lépés adatai automatikusan importálódnak a következőbe
 - **🛠️ Eszköz One-Pagerek**: 15+ vezetői eszköz teljes dokumentációval, kattintható modal ablakokban
 - **📋 Strukturált táblázatok**: Hatáselemzés, priorizálás, adatgyűjtés táblázatos formában
+- **🚀 Folyamatkezelés (NEW)**: Valós problémák elemzése a tréning módszertanával
+  - Több párhuzamos folyamat indítása és kezelése
+  - Egy probléma = Egy folyamat (nem kötelező mind az 5)
+  - Folyamatok listája haladási százalékkal
+  - Külön adattárolás folyamatonként
+  - CRUD műveletek: létrehozás, folytatás, törlés
 
 ### 🔄 Folyamatban lévő funkciók
 
@@ -48,12 +54,18 @@ A Catalyst Tanulási Napló egy full-stack webalkalmazás, amely digitalizálja 
 
 ### Táblák
 
+**Tréning mód:**
 - **users**: Felhasználói adatok (email, név, jelszó hash)
 - **training_days**: 6 tréningnap mester adatai
 - **training_steps**: Lépések minden naphoz (összesen ~48 lépés)
 - **user_progress**: Felhasználói haladás tracking (státusz, időbélyegek)
 - **user_responses**: Felhasználói válaszok és jegyzetek
 - **sessions**: Munkamenet kezelés
+
+**Folyamat mód (valós problémák):**
+- **processes**: Felhasználó által indított folyamatok (title, description, status, progress)
+- **process_steps**: Folyamat-specifikus lépés tracking (completed, completed_at)
+- **process_responses**: Folyamathoz tartozó válaszok (külön adattárolás folyamatonként)
 
 ## 🚀 Használat
 
@@ -109,6 +121,16 @@ pm2 stop catalyst
 - `GET /api/responses/step/:stepId` - Egy lépés válaszai (protected)
 - `POST /api/responses` - Válasz mentése (protected)
 - `POST /api/responses/batch` - Több válasz mentése egyszerre (protected)
+
+#### Folyamatok (valós problémák)
+- `GET /api/processes` - Felhasználó összes folyamata (protected)
+- `GET /api/processes/:id` - Egy folyamat részletei (protected)
+- `POST /api/processes` - Új folyamat létrehozása (protected)
+- `PUT /api/processes/:id` - Folyamat módosítása (protected)
+- `DELETE /api/processes/:id` - Folyamat törlése (protected)
+- `GET /api/processes/:id/responses` - Folyamat válaszai (protected)
+- `POST /api/processes/:id/responses` - Folyamat válaszainak mentése (protected)
+- `POST /api/processes/:id/steps/:stepId/complete` - Lépés befejezése (protected)
 
 ## 📚 Tréningnapok
 
@@ -201,6 +223,22 @@ pm2 stop catalyst
 8. 🔄 Collaborative features (csoportos munkafüzetek)
 
 ## 📝 Változásnapló
+
+### 2025-11-04 - v1.9.0 🚀 **Process Management**
+- ✅ **Valós problémák elemzése**: Tréning utáni folyamatkezelés
+  - Új "Folyamataim" menüpont a dashboard-on
+  - Folyamat létrehozása modal ablakban (cím + leírás)
+  - Folyamatok lista view haladási százalékkal
+  - Egy folyamat = Egy valós probléma (nem kötelező 5 probléma)
+- ✅ **Új adatbázis táblák**: processes, process_steps, process_responses
+- ✅ **8 új API endpoint**: CRUD műveletek folyamatokhoz
+- ✅ **Process execution UI**: Külön nézetek folyamatokhoz
+  - Process Day View - lépések listája folyamat kontextusban
+  - Process Step View - gyakorlatok folyamat módban
+  - Progresszív adatáramlás működik folyamatokban is
+- ✅ **Független adattárolás**: Folyamat válaszok elkülönítve a tréning válaszoktól
+- ✅ **Státusz kezelés**: Active, Completed, Archived státuszok
+- ✅ **+700 sor frontend kód**, +150 sor backend kód
 
 ### 2025-11-04 - v1.8.0 🎊 **UX Enhancement**
 - ✅ **Landing oldal**: Új első benyomás nem bejelentkezett felhasználóknak
@@ -316,7 +354,7 @@ Proprietary - MVM Group
 ---
 
 **Készült**: 2025-11-04  
-**Verzió**: 1.7.0  
-**Státusz**: ✅ Teljes (Production Ready) 🎉  
+**Verzió**: 1.9.0  
+**Státusz**: ✅ Teljes (Production Ready + Process Management) 🎉  
 **Tech Stack**: Hono + Cloudflare D1 + TypeScript + Tailwind CSS  
-**Haladás**: 6/6 tréningnap implementálva (100%) 🏆
+**Haladás**: 6/6 tréningnap (100%) + Folyamatkezelés 🏆
