@@ -266,8 +266,8 @@ function renderLandingView() {
             <div class="flex justify-center mb-6">
               <img src="/static/catalyst-logo-full.png" alt="MVM Catalyst" class="h-24" />
             </div>
-            <h1 class="text-4xl font-bold text-white mb-4">Munkafüzet</h1>
-            <p class="text-2xl text-white opacity-90">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Munkafüzet</h1>
+            <p class="text-2xl text-gray-700">
               Strukturált vezetői problémamegoldás és stratégiai végrehajtás
             </p>
           </div>
