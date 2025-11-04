@@ -1733,178 +1733,511 @@ function renderExerciseFields(step) {
     }
   }
   
-  // Day 3: Team Building (only 2 steps)
+  // Day 3: Team Building (8 steps)
   if (dayId === 3) {
-    // Step 1: Team roles identification
+    // Helper to get actions and goals from Day 2
+    const getActionsFromDay2 = () => {
+      const actions = [];
+      for (let i = 1; i <= 5; i++) {
+        const task = getResponseFromDay(2, `action_${i}_task`, 5);
+        if (task) actions.push(task);
+      }
+      return actions;
+    };
+
+    // Step 1: Role identification
     if (stepNum === 1) {
+      const actions = getActionsFromDay2();
+      
       return `
         <div class="space-y-6">
-          <p class="text-gray-700 font-medium mb-4">
-            <i class="fas fa-users text-blue-500"></i> 
-            Határozd meg, milyen szerepekre van szükség a csapatban.
-          </p>
-          
-          <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-            <h4 class="font-semibold text-blue-900 mb-2">
-              <i class="fas fa-info-circle"></i> Eszközök:
-            </h4>
-            <div class="flex flex-wrap gap-2">
-              <button type="button" onclick="openToolModal('Belbin szerepek')" 
-                class="px-3 py-1 bg-white rounded-full text-sm hover:bg-blue-100 transition">
-                <i class="fas fa-users"></i> Belbin szerepek
-              </button>
-              <button type="button" onclick="openToolModal('RACI mátrix')" 
-                class="px-3 py-1 bg-white rounded-full text-sm hover:bg-blue-100 transition">
-                <i class="fas fa-table"></i> RACI mátrix
-              </button>
-              <button type="button" onclick="openToolModal('Kompetencia mátrix')" 
-                class="px-3 py-1 bg-white rounded-full text-sm hover:bg-blue-100 transition">
-                <i class="fas fa-chart-bar"></i> Kompetencia mátrix
-              </button>
+          ${actions.length > 0 ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Akciók a 2. Napból:
+              </p>
+              <ul class="list-disc list-inside space-y-1 text-sm text-purple-900">
+                ${actions.map(a => `<li>${a}</li>`).join('')}
+              </ul>
             </div>
-          </div>
+          ` : ''}
 
           <div class="space-y-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                1. Milyen szerepekre van szükséged? (pl. projektvezető, technikai szakértő, elemző...)
+                1. Milyen szerepekre és pozíciókra van szükség a stratégia végrehajtásához?
               </label>
-              <textarea name="required_roles" rows="4" 
+              <textarea name="required_roles" rows="5" 
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Sorold fel a szükséges szerepeket...">${getResponse('required_roles')}</textarea>
+                placeholder="Sorold fel a kritikus szerepköröket (pl. projektvezető, technikai szakértő, üzleti elemző...)">${getResponse('required_roles')}</textarea>
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                2. Kik alkotják jelenleg a csapatodat? (név, pozíció, erősségek)
+                2. Milyen funkcióknak kell lefedve lennie? (WBS - Work Breakdown Structure)
               </label>
-              <textarea name="current_team" rows="4" 
+              <textarea name="functions" rows="4" 
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Írd le a jelenlegi csapattagokat...">${getResponse('current_team')}</textarea>
+                placeholder="Pl. tervezés, végrehajtás, monitoring, kommunikáció, minőségbiztosítás...">${getResponse('functions')}</textarea>
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                3. Belbin szerepek alapján - kik milyen szerepeket töltenek be?
+                3. Átfedések és hiányok a szerepekben?
               </label>
-              <textarea name="belbin_mapping" rows="4" 
+              <textarea name="role_gaps" rows="3" 
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Térképezd fel a Belbin szerepeket: Koordinátor, Formáló, Megvalósító, Csapatjátékos, stb.">${getResponse('belbin_mapping')}</textarea>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                4. RACI mátrix - Ki a felelős (R), elszámoltatható (A), bevont (C), tájékoztatott (I)?
-              </label>
-              <textarea name="raci_matrix" rows="6" 
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Készítsd el a RACI mátrixot a főbb feladatokra...">${getResponse('raci_matrix')}</textarea>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                5. Milyen átfedések vagy hiányok vannak a szerepekben?
-              </label>
-              <textarea name="gaps_overlaps" rows="3" 
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Írd le az észlelt hiányokat és átfedéseket...">${getResponse('gaps_overlaps')}</textarea>
+                placeholder="Milyen kritikus funkciók maradnak lefedetlen? Hol van túl sok ember?">${getResponse('role_gaps')}</textarea>
             </div>
           </div>
         </div>
       `;
     }
 
-    // Step 2: Competency assessment
+    // Step 2: Competency analysis
     if (stepNum === 2) {
-      const requiredRoles = getResponse('required_roles', 1);
-      const currentTeam = getResponse('current_team', 1);
+      const roles = getResponse('required_roles', 1);
       
       return `
         <div class="space-y-6">
-          ${requiredRoles || currentTeam ? `
+          ${roles ? `
             <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
               <p class="text-sm text-purple-800 font-medium mb-2">
-                <i class="fas fa-link"></i> Az 1. lépésből:
+                <i class="fas fa-link"></i> Szerepek az 1. lépésből:
               </p>
-              ${requiredRoles ? `<p class="text-sm text-purple-900 mb-2"><strong>Szükséges szerepek:</strong> ${requiredRoles.substring(0, 100)}${requiredRoles.length > 100 ? '...' : ''}</p>` : ''}
-              ${currentTeam ? `<p class="text-sm text-purple-900"><strong>Jelenlegi csapat:</strong> ${currentTeam.substring(0, 100)}${currentTeam.length > 100 ? '...' : ''}</p>` : ''}
+              <p class="text-sm text-purple-900">${roles.substring(0, 150)}${roles.length > 150 ? '...' : ''}</p>
             </div>
           ` : ''}
-
-          <p class="text-gray-700 font-medium mb-4">
-            <i class="fas fa-chart-line text-blue-500"></i> 
-            Mérjed fel a csapat jelenlegi kompetenciáit és azonosítsd a hiányokat.
-          </p>
-          
-          <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-            <h4 class="font-semibold text-blue-900 mb-2">
-              <i class="fas fa-info-circle"></i> Eszközök:
-            </h4>
-            <div class="flex flex-wrap gap-2">
-              <button type="button" onclick="openToolModal('Skills Matrix')" 
-                class="px-3 py-1 bg-white rounded-full text-sm hover:bg-blue-100 transition">
-                <i class="fas fa-th"></i> Skills Matrix
-              </button>
-              <button type="button" onclick="openToolModal('360° értékelés')" 
-                class="px-3 py-1 bg-white rounded-full text-sm hover:bg-blue-100 transition">
-                <i class="fas fa-user-circle"></i> 360° értékelés
-              </button>
-              <button type="button" onclick="openToolModal('Kompetencia gap elemzés')" 
-                class="px-3 py-1 bg-white rounded-full text-sm hover:bg-blue-100 transition">
-                <i class="fas fa-tasks"></i> Gap elemzés
-              </button>
-            </div>
-          </div>
 
           <div class="space-y-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                1. Milyen kompetenciákra van szükség a célok eléréséhez?
+                1. Kompetencia profilok - Minden szerepkörhöz szükséges készségek
               </label>
-              <textarea name="required_competencies" rows="4" 
+              <textarea name="competency_profiles" rows="6" 
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Sorold fel a szükséges készségeket, tudást, tapasztalatot...">${getResponse('required_competencies')}</textarea>
+                placeholder="Szerepkör → Szükséges készségek, tudás, tapasztalat
+Pl. Projektvezető: 5+ év tapasztalat, PMP certifikáció, agile módszertan, kommunikáció...">${getResponse('competency_profiles')}</textarea>
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                2. Skills Matrix - Értékeld a csapat jelenlegi kompetenciáit (1-5 skálán)
+                2. T-alakú készségmodell - Széles tudás (T vízszintes) + Mély szakértelem (T függőleges)
               </label>
-              <textarea name="skills_matrix" rows="8" 
+              <textarea name="t_shaped_skills" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Mely területeken kell széles tudás? Hol kell mély szakértelem?">${getResponse('t_shaped_skills')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Hard skills vs Soft skills - Mi a megfelelő egyensúly?
+              </label>
+              <textarea name="skills_balance" rows="3" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Technikai készségek és emberközpontú készségek aránya...">${getResponse('skills_balance')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 3: RACI Matrix
+    if (stepNum === 3) {
+      const actions = getActionsFromDay2();
+      
+      return `
+        <div class="space-y-6">
+          ${actions.length > 0 ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Főbb feladatok a 2. Napból:
+              </p>
+              <ul class="list-disc list-inside space-y-1 text-sm text-purple-900">
+                ${actions.map(a => `<li>${a}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-table text-blue-500"></i> 
+            RACI: Responsible (felelős), Accountable (elszámoltatható), Consulted (konzultált), Informed (tájékoztatott)
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. RACI Mátrix - Főbb feladatok és döntések
+              </label>
+              <textarea name="raci_matrix" rows="10" 
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
-                placeholder="Példa:
-Kompetencia         | Szükséges szint | Jelenlegi szint | Gap
----------------------|-----------------|-----------------|-----
-Projektmenedzsment  | 5               | 3               | 2
-Adatelemzés         | 4               | 4               | 0
-Vezetés             | 5               | 2               | 3">${getResponse('skills_matrix')}</textarea>
+                placeholder="Feladat/Döntés      | Személy1 | Személy2 | Személy3
+--------------------|----------|----------|----------
+Terv készítése      | R        | A        | C
+Budget jóváhagyás   | C        | A        | I
+...
+
+R = Responsible (csinálja)
+A = Accountable (felelős, csak 1!)  
+C = Consulted (megkérdezzük)
+I = Informed (tájékoztatjuk)">${getResponse('raci_matrix')}</textarea>
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                3. Kompetencia hiányok - Mit kell fejleszteni?
+                2. Döntéshozatal - Ki dönt miről? Milyen szinten?
               </label>
-              <textarea name="competency_gaps" rows="4" 
+              <textarea name="decision_authority" rows="4" 
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Írd le a kritikus hiányokat...">${getResponse('competency_gaps')}</textarea>
+                placeholder="Stratégiai döntések: ...
+Operatív döntések: ...
+Napi döntések: ...">${getResponse('decision_authority')}</textarea>
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                4. Akciók a hiányok kezelésére (tréning, toborzás, külső partner...)
+                3. Felelősségi konfliktusok - Hol van duplikáció vagy hiány?
               </label>
-              <textarea name="gap_actions" rows="5" 
+              <textarea name="responsibility_conflicts" rows="3" 
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Milyen lépéseket teszel a hiányok megszüntetésére?">${getResponse('gap_actions')}</textarea>
+                placeholder="Mely feladatoknál nincs egyértelmű felelős (A)? Hol van több A?">${getResponse('responsibility_conflicts')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 4: Team structure design
+    if (stepNum === 4) {
+      const roles = getResponse('required_roles', 1);
+      
+      return `
+        <div class="space-y-6">
+          ${roles ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Szerepek:
+              </p>
+              <p class="text-sm text-purple-900">${roles.substring(0, 120)}${roles.length > 120 ? '...' : ''}</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Szervezeti struktúra - Hierarchikus, lapos, mátrix, agile?
+              </label>
+              <select name="org_structure" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                <option value="">Válassz...</option>
+                <option value="hierarchical" ${getResponse('org_structure') === 'hierarchical' ? 'selected' : ''}>Hierarchikus (tradicionális)</option>
+                <option value="flat" ${getResponse('org_structure') === 'flat' ? 'selected' : ''}>Lapos (kevés szint)</option>
+                <option value="matrix" ${getResponse('org_structure') === 'matrix' ? 'selected' : ''}>Mátrix (több jelentési vonal)</option>
+                <option value="agile" ${getResponse('org_structure') === 'agile' ? 'selected' : ''}>Agile (önszerveződő csapatok)</option>
+              </select>
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                5. Prioritás - Melyik kompetencia fejlesztése a legfontosabb?
+                2. Span of Control - Hány ember tartozik egy vezetőhöz?
               </label>
-              <textarea name="priority_competency" rows="3" 
+              <textarea name="span_of_control" rows="3" 
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Melyik hiány kritikus a célok eléréséhez?">${getResponse('priority_competency')}</textarea>
+                placeholder="Optimális csapatméret és vezetési arány (pl. 1:5-7)">${getResponse('span_of_control')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Kommunikációs vonalak - Kinek kinek kell jelentenie?
+              </label>
+              <textarea name="reporting_lines" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Rajzold le a jelentési vonalakat (ki → kinek jelent)">${getResponse('reporting_lines')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Meeting struktúra - Milyen gyakran és kikkel?
+              </label>
+              <textarea name="meeting_structure" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Napi stand-up, heti sync, havi review...">${getResponse('meeting_structure')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 5: Talent assessment
+    if (stepNum === 5) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-star text-blue-500"></i> 
+            Értékeld a meglévő csapat tagjait kompetencia és potenciál alapján.
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. 9-Box Talent Grid - Teljesítmény × Potenciál
+              </label>
+              <textarea name="nine_box_grid" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="           | Alacsony | Közepes | Magas
+           | Potenciál| Potenciál| Potenciál
+-----------|----------|----------|----------
+Magas      |          |          |
+Teljesítm. |          |          |
+-----------|----------|----------|----------
+Közepes    |          |          |
+Teljesítm. |          |          |
+-----------|----------|----------|----------
+Alacsony   |          |          |
+Teljesítm. |          |          |
+
+Írd a neveket a megfelelő cellákba!">${getResponse('nine_box_grid')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Erősségek - Ki miben kiemelkedő?
+              </label>
+              <textarea name="team_strengths" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Név → Erősségek (kompetenciák, soft skills, tapasztalat...)">${getResponse('team_strengths')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Fejlesztendő területek - Ki min dolgozzon?
+              </label>
+              <textarea name="development_areas" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Név → Fejlesztendő területek, hiányzó készségek...">${getResponse('development_areas')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Karrier potenciál - Ki tud feljebb lépni?
+              </label>
+              <textarea name="career_potential" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="High potential (HiPo) tehetségek azonosítása...">${getResponse('career_potential')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 6: Gap analysis
+    if (stepNum === 6) {
+      const requiredComp = getResponse('competency_profiles', 2);
+      const teamStrengths = getResponse('team_strengths', 5);
+      
+      return `
+        <div class="space-y-6">
+          ${requiredComp || teamStrengths ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Korábbi lépésekből:
+              </p>
+              ${requiredComp ? `<p class="text-sm text-purple-900 mb-2"><strong>Szükséges kompetenciák:</strong> ${requiredComp.substring(0, 100)}...</p>` : ''}
+              ${teamStrengths ? `<p class="text-sm text-purple-900"><strong>Csapat erősségei:</strong> ${teamStrengths.substring(0, 100)}...</p>` : ''}
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Skills Gap Analysis - Kompetencia mátrix
+              </label>
+              <textarea name="skills_gap_matrix" rows="10" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="Kompetencia       | Szükséges | Jelenlegi | Gap | Prioritás
+------------------|-----------|-----------|-----|----------
+Projektmenedzsment| 5         | 3         | 2   | Magas
+Adatelemzés       | 4         | 4         | 0   | -
+Agile módszertan  | 5         | 2         | 3   | Kritikus
+...
+
+1-5 skála, Gap = Szükséges - Jelenlegi">${getResponse('skills_gap_matrix')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Kritikus hiányosságok - Melyek akadályozzák a sikert?
+              </label>
+              <textarea name="critical_gaps" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Listázd a top 3-5 hiányosságot, ami nélkül a projekt veszélyben van...">${getResponse('critical_gaps')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. FTE analízis - Mennyivel több/kevesebb ember kell?
+              </label>
+              <textarea name="fte_analysis" rows="3" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Jelenlegi FTE vs szükséges FTE szerepkörönként...">${getResponse('fte_analysis')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 7: Recruitment/development plan
+    if (stepNum === 7) {
+      const criticalGaps = getResponse('critical_gaps', 6);
+      
+      return `
+        <div class="space-y-6">
+          ${criticalGaps ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Kritikus hiányok a 6. lépésből:
+              </p>
+              <p class="text-sm text-purple-900">${criticalGaps.substring(0, 150)}${criticalGaps.length > 150 ? '...' : ''}</p>
+            </div>
+          ` : ''}
+
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-tasks text-blue-500"></i> 
+            Make vs Buy vs Borrow - Kit fejlesztesz, kit toborzol, kit kölcsönzöl?
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. MAKE - Belső fejlesztés (70-20-10 modell)
+              </label>
+              <textarea name="make_development" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="70% learning on the job (projektmunka)
+20% learning from others (mentorálás, coaching)
+10% formal training (kurzusok, certifikációk)
+
+Kit fejlesztesz? Milyen módszerrel?">${getResponse('make_development')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. BUY - Toborzás (új emberek)
+              </label>
+              <textarea name="buy_recruitment" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Milyen pozíciókra toborozhatsz? 
+Milyen időkeretek? Milyen költségek?
+Hol hirdetesz? (LinkedIn, Profession.hu...)">${getResponse('buy_recruitment')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. BORROW - Külső partner, tanácsadó, contractor
+              </label>
+              <textarea name="borrow_external" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Mely feladatokat adnál ki külső partnernek?
+Ideiglenes vagy hosszú távú együttműködés?">${getResponse('borrow_external')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Akcióterv - Ki, Mit, Mikor, Mennyiért
+              </label>
+              <textarea name="action_plan" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="Akció           | Felelős | Határidő | Költség | Megoldás
+----------------|---------|----------|---------|----------
+Data scientist  | HR      | Q2       | 15M Ft  | Toborzás
+Agile tréning   | L&D     | Q1       | 500k Ft | Fejlesztés
+...">${getResponse('action_plan')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 8: Team composition finalization
+    if (stepNum === 8) {
+      const roles = getResponse('required_roles', 1);
+      const structure = getResponse('org_structure', 4);
+      
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-check-circle text-green-500"></i> 
+            Véglegesítsd a csapat összetételét - A teljes "Ki-Mit-Mikor-Hogyan"
+          </p>
+
+          ${roles || structure ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Korábbi döntések:
+              </p>
+              ${roles ? `<p class="text-sm text-purple-900 mb-2"><strong>Szerepek:</strong> ${roles.substring(0, 80)}...</p>` : ''}
+              ${structure ? `<p class="text-sm text-purple-900"><strong>Struktúra:</strong> ${structure}</p>` : ''}
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Team Charter - A csapat küldetése és célja
+              </label>
+              <textarea name="team_charter" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Mi a csapat célja? Mit fog elérni? Hogyan fog együtt dolgozni?
+Értékek, szabályok, elvárások...">${getResponse('team_charter')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Végleges szerepkör-leírások - Ki mit csinál pontosan?
+              </label>
+              <textarea name="final_role_descriptions" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Szerepkör: ...
+Felelősségek: ...
+Elvárások: ...
+KPI-ok: ...
+--
+Szerepkör: ...
+...">${getResponse('final_role_descriptions')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Csapatösszetételi mátrix - A teljes kép
+              </label>
+              <textarea name="team_composition_matrix" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="Név      | Szerepkör     | Főbb felelősségek | Jelentés | Start
+---------|---------------|-------------------|----------|-------
+Kiss J.  | Projektvezető | Terv, koordináció | Igazgató | Azonnal
+Nagy A.  | Tech Lead     | Architektúra      | Kiss J.  | Q1
+...">${getResponse('team_composition_matrix')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Kick-off terv - Hogyan indítod a csapatot?
+              </label>
+              <textarea name="kickoff_plan" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Kick-off meeting: mikor, hol, kik?
+Team building aktivitás?
+Első 30/60/90 nap terv?
+Kommunikációs szabályok?">${getResponse('kickoff_plan')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                5. Sikermutatók - Honnan tudod, hogy jól működik a csapat?
+              </label>
+              <textarea name="team_success_metrics" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Teljesítmény KPI-ok, együttműködési mutatók, elégedettség...">${getResponse('team_success_metrics')}</textarea>
             </div>
           </div>
         </div>

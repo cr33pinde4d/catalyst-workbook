@@ -127,8 +127,61 @@ INSERT OR IGNORE INTO training_steps (day_id, step_number, title, description, t
 -- For now, adding placeholder structure for Days 3-6
 
 INSERT OR IGNORE INTO training_steps (day_id, step_number, title, description, tools, importance, limitations, instructions) VALUES 
-(3, 1, 'Csapatszerepek azonosítása', 'Határozd meg, milyen szerepekre van szükség a csapatban.', '["Belbin szerepek", "RACI mátrix", "Kompetencia mátrix"]', 'A tiszta szerepek csökkentik az átfedéseket és konfliktusokat.', 'A szerepek idővel változhatnak.', 'Térképezd fel a szükséges szerepeket és kompetenciákat.'),
-(3, 2, 'Kompetencia felmérés', 'Mérjed fel a csapat jelenlegi kompetenciáit.', '["Skills Matrix", "360° értékelés", "Kompetencia gap elemzés"]', 'A reális helyzet ismerete a fejlesztés alapja.', 'Az önértékelés torzíthat.', 'Végezz kompetencia felmérést és azonosítsd a hiányokat.'),
+(3, 1, 'Szerepek azonosítása', 
+ 'Határozd meg, milyen szerepekre és pozíciókra van szükség a stratégia végrehajtásához.',
+ '["Szerepkör-elemzési mátrix", "WBS", "Stakeholder mapping", "Funkcionális térkép"]',
+ 'A rossz szerepek vagy hiányzó pozíciók a legjobb stratégiát is megbuktathatják.',
+ 'Túl sok szerepkör átfedésekhez vezet. Túl kevés túlterhelést okoz.',
+ 'Azonosítsd a kritikus szerepköröket és funkciókat a stratégiádhoz.'),
+
+(3, 2, 'Kompetencia-elemzés',
+ 'Határozd meg minden szerepkörhöz a szükséges készségeket, tudást és tapasztalatokat.',
+ '["Kompetencia profilok", "T-alakú készségmodell", "Kompetencia szótár", "360° értékelés"]',
+ 'A kompetenciák meghatározzák, milyen emberek kellenek a sikeres végrehajtáshoz.',
+ 'Túl részletes elvárások szűkítik a jelölteket. Túl általános leírások nem adnak útmutatást.',
+ 'Készíts kompetencia profilokat minden szerepkörhöz.'),
+
+(3, 3, 'RACI mátrix',
+ 'Tisztázd minden kulcsfontosságú feladatnál, ki a felelős (R), elszámoltatható (A), konzultált (C) és tájékoztatott (I).',
+ '["RACI mátrix sablon", "RACI workshopok", "Felelősségi térkép", "Döntéshozatali fa"]',
+ '"Mindenki felelőssége = senki felelőssége." A RACI egyértelművé teszi a szerepeket.',
+ 'Túl részletes RACI nehézkessé válik. Túl általános nem ad elég útmutatást.',
+ 'Készítsd el a RACI mátrixot a főbb feladatokra és döntésekre.'),
+
+(3, 4, 'Csapatstruktúra tervezése',
+ 'Tervezd meg, hogyan kapcsolódnak a szerepek, milyen jelentési vonalak lesznek, és hogyan működik a hierarchia.',
+ '["Org Chart", "Span of Control elemzés", "Kommunikációs mátrix", "Csapatstruktúra modellek"]',
+ 'A struktúra határozza meg az információáramlást és a döntéshozatal sebességét.',
+ 'Túl hierarchikus struktúra lassít. Túl lapos struktúra káoszt okoz.',
+ 'Rajzold meg a csapat struktúráját és kommunikációs vonalait.'),
+
+(3, 5, 'Tehetségértékelés',
+ 'Mérjed fel a meglévő csapattagok kompetenciáit és potenciálját.',
+ '["9-Box Talent Grid", "Kompetencia assessment", "360° visszajelzés", "Teljesítmény-potenciál mátrix"]',
+ 'A megfelelő ember a megfelelő helyen sokszorosan hatékonyabb.',
+ 'Az értékelés szubjektív lehet. Több nézőpont szükséges.',
+ 'Értékeld a meglévő csapat tagjait: erősségek, fejlesztendő területek, potenciál.'),
+
+(3, 6, 'Gap analízis',
+ 'Hasonlítsd össze a szükséges kompetenciákat a meglévőkkel, hogy láthasd a hiányosságokat.',
+ '["Skills Gap Analysis", "Kompetencia térkép", "FTE elemzés", "Heatmap vizualizáció"]',
+ 'A gap analysis alapozza meg a fejlesztési és toborzási döntéseket.',
+ 'A jelenlegi kompetenciák értékelése szubjektív. Rendszeres felülvizsgálat szükséges.',
+ 'Készíts gap analízist: mely kompetenciák hiányoznak vagy elégtelenek?'),
+
+(3, 7, 'Toborzási/fejlesztési terv',
+ 'A gap analysis alapján készíts konkrét akcióterveket: kit toborozni, kit fejleszteni, mikor és hogyan.',
+ '["70-20-10 modell", "Toborzási csatorna elemzés", "L&D roadmap", "Make vs Buy vs Borrow"]',
+ 'A hiányosságok pótlása nélkül a stratégia nem valósítható meg.',
+ 'A toborzás időigényes. A fejlesztés eredménye bizonytalan. Alternatívákat is mérlegelj.',
+ 'Dolgozz ki akciótervet: kit kell toborozni, kit fejleszteni, milyen ütemezéssel.'),
+
+(3, 8, 'Csapatösszetétel véglegesítése',
+ 'Az előző lépések alapján véglegesítsd a csapat összetételét, szerepköreit és működési kereteit.',
+ '["Team Charter", "Szerepkör-leírások", "Csapatösszetételi mátrix", "Kick-off presentation"]',
+ 'A végső összefoglalás biztosítja, hogy mindenki tisztában legyen a szerepével.',
+ 'A papíron jó csapat a gyakorlatban másként működhet. Rendszeres adaptáció szükséges.',
+ 'Finalizáld a teljes csapat összetételét: ki-mit-mikor-hogyan.'),
 
 (4, 1, 'KPI rendszer kialakítása', 'Határozd meg a teljesítmény mérésének mutatóit.', '["Balanced Scorecard", "OKR", "KPI piramis"]', 'Amit mérünk, azt tudjuk fejleszteni.', 'Nem minden fontos dolog mérhető könnyen.', 'Válaszd ki a 3-5 legfontosabb KPI-t.'),
 (4, 2, 'Teljesítmény monitoring', 'Hozz létre folyamatos nyomon követési rendszert.', '["Dashboard", "Weekly review", "Data visualization"]', 'A folyamatos mérés lehetővé teszi a gyors korrekciót.', 'A túl sok adat béníthat.', 'Készíts monitoring tervet és dashboardot.'),
