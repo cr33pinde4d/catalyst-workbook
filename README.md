@@ -96,6 +96,8 @@ pm2 stop catalyst
 
 ### Publikus URL
 
+**Production**: https://catalyst-workbook.pages.dev
+**Latest Deployment**: https://7668c8af.catalyst-workbook.pages.dev
 **Development**: https://3000-ildzif0p6yl6272ppdpuy-5c13a017.sandbox.novita.ai
 
 ### API Endpointok
@@ -355,6 +357,8 @@ Proprietary - MVM Group
 
 **Készült**: 2025-11-04  
 **Verzió**: 1.9.0  
-**Státusz**: ✅ Teljes (Production Ready + Process Management) 🎉  
+**Státusz**: 🚀 LIVE - Production Deployed! 🎉  
+**Production URL**: https://catalyst-workbook.pages.dev  
 **Tech Stack**: Hono + Cloudflare D1 + TypeScript + Tailwind CSS  
-**Haladás**: 6/6 tréningnap (100%) + Folyamatkezelés 🏆
+**Haladás**: 6/6 tréningnap (100%) + Folyamatkezelés 🏆  
+**Database**: Cloudflare D1 (Production + Local dev)
