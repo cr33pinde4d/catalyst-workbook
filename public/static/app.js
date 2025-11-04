@@ -264,7 +264,9 @@ function renderLandingView() {
           <!-- Header -->
           <div class="text-center mb-12 animate-slide-in">
             <div class="flex justify-center mb-6">
-              <img src="/static/catalyst-logo-full.png" alt="MVM Catalyst" class="h-24" />
+              <div style="background: linear-gradient(to bottom, white 0%, rgba(255,255,255,0.9) 40%, rgba(255,255,255,0.5) 70%, transparent 100%); padding: 20px 40px; border-radius: 16px;">
+                <img src="/static/catalyst-logo-full.png" alt="MVM Catalyst" class="h-24" />
+              </div>
             </div>
             <h1 class="text-4xl font-bold text-white mb-4">Munkafüzet</h1>
             <p class="text-2xl text-white opacity-90">
@@ -734,7 +736,9 @@ function renderDashboardView() {
         <div class="max-w-7xl mx-auto px-4 py-6">
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-4">
-              <img src="/static/catalyst-logo-full.png" alt="Catalyst Logo" class="h-12" />
+              <div style="background: linear-gradient(to right, white 0%, rgba(255,255,255,0.8) 50%, transparent 100%); padding: 8px 16px 8px 12px; border-radius: 12px;">
+                <img src="/static/catalyst-logo-full.png" alt="Catalyst Logo" class="h-12" />
+              </div>
               <div>
                 <h1 class="text-2xl font-bold">Tanulási Napló</h1>
                 <p class="text-white opacity-90 text-sm">Üdv, ${state.user.name}!</p>
