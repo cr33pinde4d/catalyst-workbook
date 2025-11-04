@@ -1733,23 +1733,6 @@ function renderExerciseFields(step) {
     }
   }
   
-  // Helper function to get response from different day
-  function getResponseFromDay(dayId, fieldName, stepNum) {
-    const targetStep = state.currentDaySteps.find(s => s.day_id === dayId && s.step_number === stepNum);
-    if (targetStep) {
-      const key = `${dayId}-${targetStep.id}-${fieldName}`;
-      return state.userResponses[key] || '';
-    }
-    // If not found in current day steps, search all days
-    const allDaySteps = state.trainingDays.flatMap(d => d.steps || []);
-    const step = allDaySteps.find(s => s.day_id === dayId && s.step_number === stepNum);
-    if (step) {
-      const key = `${dayId}-${step.id}-${fieldName}`;
-      return state.userResponses[key] || '';
-    }
-    return '';
-  }
-  
   // Generic text area for other days
   return `
     <div>
