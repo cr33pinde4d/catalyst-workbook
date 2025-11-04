@@ -736,8 +736,8 @@ function renderDashboardView() {
             <div class="flex items-center gap-4">
               <img src="/static/catalyst-logo-full.png" alt="Catalyst Logo" class="h-12" />
               <div>
-                <h1 class="text-2xl font-bold">Tanulási Napló</h1>
-                <p class="text-white opacity-90 text-sm">Üdv, ${state.user.name}!</p>
+                <h1 class="text-2xl font-bold text-gray-900">Tanulási Napló</h1>
+                <p class="text-gray-700 text-sm">Üdv, ${state.user.name}!</p>
               </div>
             </div>
             <div class="flex gap-3">
