@@ -255,6 +255,92 @@ const toolsData = {
       "6. Jelöld az időket, felelősöket"
     ],
     tips: "Járd végig fizikálisan! Sok rejtett lépés úgy jön elő."
+  },
+  
+  "Belbin szerepek": {
+    title: "Belbin Csapatszerepek",
+    icon: "fa-users",
+    description: "9 csapatszerep, ami a sikeres csapat alapja.",
+    when: "Csapat összeállításakor, csapatdinamika elemzéséhez.",
+    howTo: [
+      "1. Koordinátor: Világos célok, delegálás, döntések",
+      "2. Formáló (Shaper): Drive, dinamikus, kihívást keres",
+      "3. Megvalósító (Implementer): Gyakorlatias, fegyelmezett, megbízható",
+      "4. Csapatjátékos: Együttműködő, diplomata, rugalmas",
+      "5. Kutató-felderítő (Resource Investigator): Kifelé néző, kapcsolatok, lehetőségek",
+      "6. Ötletadó (Plant): Kreatív, innovatív, szabadgondolkodó",
+      "7. Monitor-értékelő: Stratégiai, józan ítélet, objektív",
+      "8. Befejező (Completer-Finisher): Alapos, határidőkre odafigyel, perfekcionista",
+      "9. Szakértő (Specialist): Elkötelezett, szűk szakterület, mély tudás"
+    ],
+    tips: "Egy emberben több szerep is lehet! A kiegyensúlyozott csapatban minden szerepre van valaki.",
+    example: "Startup: kell Formáló (alapító), Ötletadó (innováció), Megvalósító (szállítás), Befejező (minőség)"
+  },
+  
+  "Skills Matrix": {
+    title: "Skills Matrix (Kompetencia Mátrix)",
+    icon: "fa-th",
+    description: "Vizuális készségtérkép a csapat kompetenciáiról.",
+    when: "Csapat képességfelméréshez, hiányelemzéshez, tréning tervezéshez.",
+    howTo: [
+      "1. Készíts táblázatot: Kompetenciák × Csapattagok",
+      "2. Határozd meg a releváns kompetenciákat (tech, soft skills, domain tudás)",
+      "3. Értékeld minden tag szintjét (pl. 1-5 skála)",
+      "4. 1 = Kezdő, 3 = Kompetens, 5 = Expert",
+      "5. Színkódold (piros=hiány, zöld=erősség)",
+      "6. Azonosítsd a kritikus hiányokat",
+      "7. Tervezd a fejlesztést vagy toborzást"
+    ],
+    tips: "Frissítsd negyedévente! Kérdezd meg a csapatot is (önértékelés + peer review).",
+    example: "Ha senki nem 3+ Python-ban, de az új projekt Python-t igényel → tréning vagy toborzás!"
+  },
+  
+  "360° értékelés": {
+    title: "360 fokos visszajelzés",
+    icon: "fa-user-circle",
+    description: "Több irányú visszajelzés: főnök, kollégák, beosztottak, önértékelés.",
+    when: "Vezetőfejlesztéshez, teljesítményértékeléshez, vak foltok feltárásához.",
+    howTo: [
+      "1. Válassz értékelőket: felettes, peers (3-5 fő), beosztottak (ha van)",
+      "2. Azonos kérdések mindenkinek (pl. kommunikáció, vezetés, együttműködés)",
+      "3. Anonim válaszok (bizalom!)",
+      "4. Skálázott válaszok (1-5) + szöveges megjegyzések",
+      "5. Összesítés és elemzés",
+      "6. Önértékelés összehasonlítása másokéval",
+      "7. Fejlesztési terv a gap-ek alapján"
+    ],
+    tips: "A legnagyobb tanulság: önértékelés vs mások értékelése közti különbség! Ez mutatja a vak foltokat.",
+    example: "Ha te 5-ösre értékeled a kommunikációdat, de mások 2-3-ra → van mit fejleszteni!"
+  },
+  
+  "Kompetencia gap elemzés": {
+    title: "Competency Gap Analysis",
+    icon: "fa-tasks",
+    description: "Jelenlegi vs szükséges kompetenciák különbségének elemzése.",
+    when: "Stratégiai tervezéshez, szervezeti átalakuláshoz, készségfejlesztéshez.",
+    howTo: [
+      "1. Határozd meg a SZÜKSÉGES kompetenciákat (jövőbeli célokhoz)",
+      "2. Mérjed fel a JELENLEGI kompetenciákat (skills matrix, értékelések)",
+      "3. Számítsd a GAP-et: Szükséges szint - Jelenlegi szint",
+      "4. Priorizálás: Melyik gap kritikus? (hatás × sürgősség)",
+      "5. Megoldási opciók: Tréning? Toborzás? Külső partner? Átszervezés?",
+      "6. Költség-haszon elemzés minden opcióra",
+      "7. Akcióterv: Ki, Mit, Mikor, Mennyiért"
+    ],
+    tips: "Ne csak a hiányokra fókuszálj! Az erősségek is fontosak – építs rájuk!",
+    example: "Gap: Data Science. Opciók: 1) Jelenlegi mérnököket képzed (6 hó, olcsóbb), 2) Data scientist-et toborozhatsz (gyorsabb, drágább)"
+  },
+  
+  "Kompetencia mátrix": {
+    title: "Kompetencia Mátrix",
+    icon: "fa-chart-bar",
+    description: "Skills Matrix szinonimája - lásd Skills Matrix.",
+    when: "Lásd Skills Matrix.",
+    howTo: [
+      "Ez az eszköz ugyanaz, mint a Skills Matrix.",
+      "Lásd a 'Skills Matrix' eszközt részletes útmutatóért."
+    ],
+    tips: "Használd a 'Skills Matrix' eszközt!"
   }
 };
 
