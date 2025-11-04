@@ -263,9 +263,10 @@ function renderLandingView() {
         <div class="max-w-4xl mx-auto">
           <!-- Header -->
           <div class="text-center mb-12 animate-slide-in">
-            <h1 class="text-5xl font-bold text-white mb-4">
-              <i class="fas fa-rocket"></i> Catalyst Munkafüzet
-            </h1>
+            <div class="flex justify-center mb-6">
+              <img src="/static/catalyst-logo-full.png" alt="MVM Catalyst" class="h-24" />
+            </div>
+            <h1 class="text-4xl font-bold text-white mb-4">Munkafüzet</h1>
             <p class="text-2xl text-white opacity-90">
               Strukturált vezetői problémamegoldás és stratégiai végrehajtás
             </p>
@@ -732,11 +733,12 @@ function renderDashboardView() {
       <header class="gradient-bg text-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 py-6">
           <div class="flex justify-between items-center">
-            <div>
-              <h1 class="text-3xl font-bold">
-                <i class="fas fa-rocket"></i> Catalyst Tanulási Napló
-              </h1>
-              <p class="text-white opacity-90 mt-1">Üdv, ${state.user.name}!</p>
+            <div class="flex items-center gap-4">
+              <img src="/static/catalyst-logo-full.png" alt="Catalyst Logo" class="h-12" />
+              <div>
+                <h1 class="text-2xl font-bold">Tanulási Napló</h1>
+                <p class="text-white opacity-90 text-sm">Üdv, ${state.user.name}!</p>
+              </div>
             </div>
             <div class="flex gap-3">
               <button onclick="showView('guide')" 
