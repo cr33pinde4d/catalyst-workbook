@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalyst Munkafüzet Export - A3 Formátum</title>
+    <style>
+        @page {
+            size: A3 landscape;
+            margin: 1cm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #333;
+        }
+        
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .page-break {
+                page-break-after: always;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32pt;
+            margin-bottom: 10px;
+        }
+        
+        .header .process-title {
+            font-size: 20pt;
+            opacity: 0.9;
+        }
+        
+        .header .meta {
+            font-size: 10pt;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+        
+        /* Day Section */
+        .day-section {
+            margin-bottom: 40px;
+            page-break-inside: avoid;
+        }
+        
+        .day-header {
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .day-header h2 {
+            font-size: 18pt;
+            margin-bottom: 5px;
+        }
+        
+        .day-header .subtitle {
+            font-size: 12pt;
+            opacity: 0.9;
+        }
+        
+        /* Steps Grid */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .step-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            background: white;
+            page-break-inside: avoid;
+        }
+        
+        .step-header {
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .step-header h3 {
+            font-size: 12pt;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .step-header .description {
+            font-size: 9pt;
+            color: #64748b;
+        }
+        
+        .step-content {
+            font-size: 9pt;
+        }
+        
+        .field-group {
+            margin-bottom: 12px;
+        }
+        
+        .field-label {
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+        
+        .field-value {
+            color: #1e293b;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        
+        .field-value.empty {
+            color: #cbd5e1;
+            font-style: italic;
+        }
+        
+        /* Print Button */
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .print-button:hover {
+            background: #5568d3;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 9pt;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">
+        🖨️ Nyomtatás / PDF mentés
+    </button>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📋 Catalyst Munkafüzet</h1>
+            <div class="process-title" id="process-title"></div>
+            <div class="meta" id="process-meta"></div>
+        </div>
+        
+        <!-- Content will be dynamically inserted here -->
+        <div id="content"></div>
+        
+        <!-- Footer -->
+        <div class="footer no-print">
+            <p>Catalyst Leadership Development Program - © 2025</p>
+            <p>Exportálva: <span id="export-date"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        // Get process ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const processId = urlParams.get('processId');
+        const token = urlParams.get('token');
+        
+        if (!processId || !token) {
+            document.body.innerHTML = '<div style="padding: 40px; text-align: center;"><h1>❌ Hiba</h1><p>Hiányzó paraméterek</p></div>';
+        } else {
+            loadProcessData(processId, token);
+        }
+        
+        async function loadProcessData(processId, token) {
+            try {
+                const response = await fetch(`/api/export/process/${processId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load data');
+                }
+                
+                const data = await response.json();
+                renderExport(data);
+            } catch (error) {
+                document.body.innerHTML = '<div style="padding: 40px; text-align: center;"><h1>❌ Hiba</h1><p>Nem sikerült betölteni az adatokat</p></div>';
+            }
+        }
+        
+        function renderExport(data) {
+            // Set header info
+            document.getElementById('process-title').textContent = data.process.title;
+            document.getElementById('process-meta').textContent = 
+                `Létrehozva: ${new Date(data.process.created_at).toLocaleDateString('hu-HU')} | ` +
+                `Módosítva: ${new Date(data.process.updated_at).toLocaleDateString('hu-HU')}`;
+            document.getElementById('export-date').textContent = new Date().toLocaleString('hu-HU');
+            
+            // Render days and steps
+            const contentDiv = document.getElementById('content');
+            let html = '';
+            
+            data.days.forEach((day, dayIndex) => {
+                html += `
+                    <div class="day-section ${dayIndex > 0 ? 'page-break' : ''}">
+                        <div class="day-header">
+                            <h2>${day.title}</h2>
+                            <div class="subtitle">${day.subtitle}</div>
+                        </div>
+                        
+                        <div class="steps-grid">
+                `;
+                
+                day.steps.forEach(step => {
+                    html += `
+                        <div class="step-card">
+                            <div class="step-header">
+                                <h3>${step.step_number}. ${step.title}</h3>
+                                <div class="description">${step.description}</div>
+                            </div>
+                            <div class="step-content">
+                                ${renderStepContent(step)}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            contentDiv.innerHTML = html;
+        }
+        
+        function renderStepContent(step) {
+            if (!step.responses || Object.keys(step.responses).length === 0) {
+                return '<div class="field-value empty">Nincs kitöltött adat</div>';
+            }
+            
+            let html = '';
+            for (const [key, value] of Object.entries(step.responses)) {
+                const label = formatFieldLabel(key);
+                html += `
+                    <div class="field-group">
+                        <div class="field-label">${label}</div>
+                        <div class="field-value">${value || '<span class="empty">Nincs adat</span>'}</div>
+                    </div>
+                `;
+            }
+            return html;
+        }
+        
+        function formatFieldLabel(key) {
+            // Convert field names to readable labels
+            const labels = {
+                'problems': 'Problémák',
+                'strategic_goals': 'Stratégiai célok',
+                'action_plan': 'Akcióterv',
+                'kpis': 'KPI-ok',
+                'team_structure': 'Csapat struktúra',
+                'monitoring': 'Monitoring',
+                // Add more mappings as needed
+            };
+            return labels[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+    </script>
+</body>
+</html>

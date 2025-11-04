@@ -1080,6 +1080,11 @@ function renderProcessCard(process) {
             class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
             <i class="fas fa-arrow-right"></i> Folytatás
           </button>
+          <button onclick="exportProcessToPDF(${process.id})" 
+            class="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition" 
+            title="PDF Export">
+            <i class="fas fa-file-pdf"></i>
+          </button>
           <button onclick="deleteProcess(${process.id})" 
             class="bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 transition">
             <i class="fas fa-trash"></i>
@@ -1308,6 +1313,12 @@ async function deleteProcess(processId) {
   } catch (error) {
     alert('Hiba a folyamat törlésekor: ' + error.message);
   }
+}
+
+function exportProcessToPDF(processId) {
+  // Open export template in new window with process ID and token
+  const exportUrl = `/export-template.html?processId=${processId}&token=${state.token}`;
+  window.open(exportUrl, '_blank', 'width=1400,height=900');
 }
 
 function renderStepView() {
