@@ -1,3 +1,6 @@
+// Version: 2025-11-04-v2 (Dashboard Process Mode)
+console.log('[APP] Catalyst app.js loaded - Version 2025-11-04-v2');
+
 // State management
 const state = {
   user: null,
@@ -13,6 +16,7 @@ const state = {
   processes: [],
   currentProcess: null,
   processResponses: {},
+  processSteps: [],
   isProcessMode: false
 };
 
@@ -210,6 +214,7 @@ async function loadUserData() {
 
 // View management
 function showView(viewName, params = {}) {
+  console.log('[DEBUG] showView called:', viewName, 'isProcessMode:', state.isProcessMode, 'currentProcess:', state.currentProcess?.title || 'none');
   state.currentView = viewName;
   const app = document.getElementById('app');
   
@@ -719,13 +724,27 @@ function renderGuideView() {
 }
 
 function renderDashboardView() {
-  const completedSteps = state.userProgress.filter(p => p.status === 'completed').length;
-  const inProgressSteps = state.userProgress.filter(p => p.status === 'in_progress').length;
-  const totalSteps = state.trainingDays.reduce((sum, day) => {
-    // Estimate 8 steps per day based on migration data
-    return sum + 8;
-  }, 0);
-  const progressPercentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
+  // Check if we're in process mode
+  const isProcessMode = state.isProcessMode && state.currentProcess;
+  
+  let completedSteps, inProgressSteps, totalSteps, progressPercentage;
+  
+  if (isProcessMode) {
+    // Use process data
+    completedSteps = state.processSteps.filter(s => s.completed === 1).length;
+    totalSteps = state.processSteps.length;
+    inProgressSteps = 0; // Processes don't track in_progress state separately
+    progressPercentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
+  } else {
+    // Use training data
+    completedSteps = state.userProgress.filter(p => p.status === 'completed').length;
+    inProgressSteps = state.userProgress.filter(p => p.status === 'in_progress').length;
+    totalSteps = state.trainingDays.reduce((sum, day) => {
+      // Estimate 8 steps per day based on migration data
+      return sum + 8;
+    }, 0);
+    progressPercentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
+  }
   
   return `
     <div class="min-h-screen bg-gray-50">
@@ -760,12 +779,12 @@ function renderDashboardView() {
 
       <!-- Main Content -->
       <div class="max-w-7xl mx-auto px-4 py-8">
-        ${renderDashboardProcesses()}
+        ${isProcessMode ? renderProcessHeader() : renderDashboardProcesses()}
 
         <!-- Progress Overview -->
         <div class="bg-white rounded-xl shadow-md p-6 mb-8 animate-slide-in">
           <h2 class="text-2xl font-bold text-gray-800 mb-4">
-            <i class="fas fa-chart-line text-catalyst-purple"></i> Tréning előrehaladás
+            <i class="fas fa-chart-line text-catalyst-purple"></i> Előrehaladás
           </h2>
           <div class="space-y-4">
             <div>
@@ -795,12 +814,12 @@ function renderDashboardView() {
           </div>
         </div>
 
-        <!-- Training Days -->
+        <!-- Training Days or Process Days -->
         <h2 class="text-2xl font-bold text-gray-800 mb-6">
-          <i class="fas fa-calendar-alt text-catalyst-purple"></i> Tréningnapok
+          <i class="fas fa-calendar-alt text-catalyst-purple"></i> Problémamegoldó lépések
         </h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          ${state.trainingDays.map(day => renderDayCard(day)).join('')}
+          ${isProcessMode ? state.trainingDays.map(day => renderProcessDayCard(day)).join('') : state.trainingDays.map(day => renderDayCard(day)).join('')}
         </div>
       </div>
     </div>
@@ -865,6 +884,119 @@ function renderDashboardProcesses() {
       ` : ''}
     </div>
   `;
+}
+
+function renderProcessHeader() {
+  const process = state.currentProcess;
+  return `
+    <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl shadow-md p-6 mb-8 border-2 border-blue-200 animate-slide-in">
+      <div class="flex justify-between items-start">
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-2">
+            <button onclick="exitProcessMode()" 
+              class="text-gray-600 hover:text-gray-800 transition">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-800">
+              <i class="fas fa-briefcase text-catalyst-blue"></i> ${process.title}
+            </h2>
+          </div>
+          ${process.description ? `
+            <p class="text-gray-600 ml-9">${process.description}</p>
+          ` : ''}
+          <div class="flex items-center gap-4 mt-3 ml-9">
+            <span class="text-sm text-gray-500">
+              <i class="fas fa-calendar"></i> 
+              Utolsó módosítás: ${new Date(process.updated_at).toLocaleDateString('hu-HU')}
+            </span>
+            <span class="text-sm font-medium ${process.status === 'active' ? 'text-catalyst-blue' : 'text-catalyst-green'}">
+              <i class="fas fa-${process.status === 'active' ? 'play' : 'check'}-circle"></i>
+              ${process.status === 'active' ? 'Aktív' : 'Befejezett'}
+            </span>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="exportProcessToPDF(${process.id})" 
+            class="bg-catalyst-grey text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition"
+            title="PDF Export">
+            <i class="fas fa-file-pdf"></i> Export
+          </button>
+          <button onclick="showProcessesView()" 
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition">
+            <i class="fas fa-list"></i> Minden folyamat
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderProcessDayCard(day) {
+  const process = state.currentProcess;
+  
+  // Get steps for this day from processSteps
+  const daySteps = state.processSteps.filter(s => s.day_id === day.id);
+  const completed = daySteps.filter(s => s.completed === 1).length;
+  const total = daySteps.length;
+  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+  
+  let statusColor = 'bg-gray-100 text-gray-600';
+  let statusIcon = 'fa-circle';
+  
+  if (percentage === 100) {
+    statusColor = 'bg-green-100 text-catalyst-green';
+    statusIcon = 'fa-check-circle';
+  } else if (percentage > 0) {
+    statusColor = 'bg-blue-100 text-catalyst-blue';
+    statusIcon = 'fa-clock';
+  }
+  
+  // Change "1. nap" to "1. lépés" format
+  const stepLabel = day.title.replace(/\d+\. nap/i, (match) => {
+    const num = match.match(/\d+/)[0];
+    return `${num}. lépés`;
+  });
+  
+  return `
+    <div class="step-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+      onclick="navigateToProcessDay(${process.id}, ${day.id})">
+      <div class="gradient-bg text-white p-6">
+        <h3 class="text-2xl font-bold mb-2">${stepLabel}</h3>
+        <p class="text-white opacity-90 text-sm">${day.subtitle}</p>
+      </div>
+      <div class="p-6">
+        <p class="text-gray-600 mb-4">${day.description}</p>
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="${statusColor} px-3 py-1 rounded-full text-sm font-medium">
+              <i class="fas ${statusIcon}"></i> ${percentage}% kész
+            </span>
+            <span class="text-gray-500 text-sm">${completed}/${total} lépés</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-catalyst-purple h-2 rounded-full transition-all" style="width: ${percentage}%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function exitProcessMode() {
+  state.isProcessMode = false;
+  state.currentProcess = null;
+  state.processSteps = [];
+  state.processResponses = {};
+  showView('dashboard');
+}
+
+async function navigateToProcessDay(processId, dayId) {
+  try {
+    const { day, steps } = await api.getTrainingDay(dayId);
+    showView('process-day', { day, steps, process: state.currentProcess });
+  } catch (error) {
+    alert('Hiba a nap betöltésekor: ' + error.message);
+  }
 }
 
 function renderDashboardProcessCard(process) {
@@ -952,11 +1084,17 @@ function renderDayCard(day) {
     statusIcon = 'fa-clock';
   }
   
+  // Change "1. nap" to "1. lépés" format
+  const stepLabel = day.title.replace(/\d+\. nap/i, (match) => {
+    const num = match.match(/\d+/)[0];
+    return `${num}. lépés`;
+  });
+  
   return `
     <div class="step-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
       onclick="navigateToDay(${day.id})">
       <div class="gradient-bg text-white p-6">
-        <h3 class="text-2xl font-bold mb-2">${day.title}</h3>
+        <h3 class="text-2xl font-bold mb-2">${stepLabel}</h3>
         <p class="text-white opacity-90 text-sm">${day.subtitle}</p>
       </div>
       <div class="p-6">
@@ -1117,6 +1255,12 @@ function renderDayView() {
   const day = state.currentDay;
   const steps = state.currentDaySteps;
   
+  // Change "1. nap" to "1. lépés" format
+  const stepLabel = day.title.replace(/\d+\. nap/i, (match) => {
+    const num = match.match(/\d+/)[0];
+    return `${num}. lépés`;
+  });
+  
   return `
     <div class="min-h-screen bg-gray-50">
       <!-- Header -->
@@ -1126,7 +1270,7 @@ function renderDayView() {
             class="text-white hover:text-purple-200 mb-4 flex items-center">
             <i class="fas fa-arrow-left mr-2"></i> Vissza a Dashboard-ra
           </button>
-          <h1 class="text-3xl font-bold">${day.title}</h1>
+          <h1 class="text-3xl font-bold">${stepLabel}</h1>
           <p class="text-white opacity-90 mt-2">${day.subtitle}</p>
           <p class="text-sm text-purple-200 mt-2">${day.description}</p>
         </div>
@@ -1288,11 +1432,15 @@ async function handleCreateProcess(e) {
 
 async function navigateToProcess(processId) {
   try {
+    console.log('[DEBUG] navigateToProcess called with processId:', processId);
     const { process, steps } = await api.getProcess(processId);
     const { responses } = await api.getProcessResponses(processId);
     
+    console.log('[DEBUG] Process loaded:', process.title, 'Steps:', steps.length);
+    
     state.currentProcess = process;
     state.isProcessMode = true;
+    state.processSteps = steps; // Store all process steps with completion status
     
     // Convert responses to map
     state.processResponses = {};
@@ -1301,11 +1449,12 @@ async function navigateToProcess(processId) {
       state.processResponses[key] = r.response_text;
     });
     
-    // Navigate to first day
-    const dayId = process.current_day || 1;
-    const { day, steps: daySteps } = await api.getTrainingDay(dayId);
-    showView('process-day', { day, steps: daySteps, process });
+    console.log('[DEBUG] Process mode enabled. Staying on dashboard. Responses count:', responses.length);
+    
+    // Stay on dashboard, but show process data
+    showView('dashboard');
   } catch (error) {
+    console.error('[DEBUG] Error in navigateToProcess:', error);
     alert('Hiba a folyamat betöltésekor: ' + error.message);
   }
 }
@@ -1334,6 +1483,12 @@ function renderStepView() {
   const step = state.currentStep;
   const day = state.currentDay;
   
+  // Change "1. nap" to "1. lépés" format
+  const stepLabel = day.title.replace(/\d+\. nap/i, (match) => {
+    const num = match.match(/\d+/)[0];
+    return `${num}. lépés`;
+  });
+  
   return `
     <div class="min-h-screen bg-gray-50">
       <!-- Header -->
@@ -1341,7 +1496,7 @@ function renderStepView() {
         <div class="max-w-7xl mx-auto px-4 py-6">
           <button onclick="showView('day', { day: state.currentDay, steps: state.currentDaySteps })" 
             class="text-white hover:text-purple-200 mb-4 flex items-center">
-            <i class="fas fa-arrow-left mr-2"></i> Vissza a ${day.title}-hoz
+            <i class="fas fa-arrow-left mr-2"></i> Vissza a ${stepLabel}-hoz
           </button>
           <h1 class="text-3xl font-bold">
             ${step.step_number}. ${step.title}
@@ -1436,6 +1591,12 @@ function renderProcessDayView() {
   const steps = state.currentDaySteps;
   const process = state.currentProcess;
   
+  // Change "1. nap" to "1. lépés" format
+  const stepLabel = day.title.replace(/\d+\. nap/i, (match) => {
+    const num = match.match(/\d+/)[0];
+    return `${num}. lépés`;
+  });
+  
   return `
     <div class="min-h-screen bg-gray-50">
       <!-- Header -->
@@ -1447,7 +1608,7 @@ function renderProcessDayView() {
           </button>
           <div class="flex justify-between items-center">
             <div class="flex-1">
-              <h1 class="text-3xl font-bold">${day.title}</h1>
+              <h1 class="text-3xl font-bold">${stepLabel}</h1>
               <p class="text-white opacity-90 mt-2">${day.subtitle}</p>
             </div>
             <div class="bg-white/20 px-4 py-2 rounded-lg">
@@ -1524,6 +1685,12 @@ function renderProcessStepView() {
   const day = state.currentDay;
   const process = state.currentProcess;
   
+  // Change "1. nap" to "1. lépés" format
+  const stepLabel = day.title.replace(/\d+\. nap/i, (match) => {
+    const num = match.match(/\d+/)[0];
+    return `${num}. lépés`;
+  });
+  
   return `
     <div class="min-h-screen bg-gray-50">
       <!-- Header -->
@@ -1531,7 +1698,7 @@ function renderProcessStepView() {
         <div class="max-w-7xl mx-auto px-4 py-6">
           <button onclick="navigateToProcess(${process.id})" 
             class="text-white hover:text-purple-200 mb-4 flex items-center">
-            <i class="fas fa-arrow-left mr-2"></i> Vissza a ${day.title}-hoz
+            <i class="fas fa-arrow-left mr-2"></i> Vissza a ${stepLabel}-hoz
           </button>
           <div class="flex justify-between items-center">
             <h1 class="text-3xl font-bold">
