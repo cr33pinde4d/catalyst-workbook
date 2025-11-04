@@ -186,14 +186,16 @@ function handleLogout() {
 // Data loading
 async function loadUserData() {
   try {
-    const [daysData, progressData, responsesData] = await Promise.all([
+    const [daysData, progressData, responsesData, processesData] = await Promise.all([
       api.getTrainingDays(),
       api.getUserProgress(),
-      api.getUserResponses()
+      api.getUserResponses(),
+      api.getProcesses()
     ]);
     
     state.trainingDays = daysData.days;
     state.userProgress = progressData.progress;
+    state.processes = processesData.processes;
     
     // Convert responses to map for easy lookup
     state.userResponses = {};
@@ -754,11 +756,14 @@ function renderDashboardView() {
         </div>
       </header>
 
-      <!-- Progress Overview -->
+      <!-- Main Content -->
       <div class="max-w-7xl mx-auto px-4 py-8">
+        ${renderDashboardProcesses()}
+
+        <!-- Progress Overview -->
         <div class="bg-white rounded-xl shadow-md p-6 mb-8 animate-slide-in">
           <h2 class="text-2xl font-bold text-gray-800 mb-4">
-            <i class="fas fa-chart-line text-purple-600"></i> Előrehaladásod
+            <i class="fas fa-chart-line text-purple-600"></i> Tréning előrehaladás
           </h2>
           <div class="space-y-4">
             <div>
@@ -796,6 +801,127 @@ function renderDashboardView() {
           ${state.trainingDays.map(day => renderDayCard(day)).join('')}
         </div>
       </div>
+    </div>
+  `;
+}
+
+function renderDashboardProcesses() {
+  // Filter active processes (not archived)
+  const activeProcesses = state.processes.filter(p => p.status !== 'archived');
+  
+  if (activeProcesses.length === 0) {
+    return `
+      <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl shadow-md p-6 mb-8 border-2 border-blue-200 animate-slide-in">
+        <div class="flex justify-between items-start">
+          <div class="flex-1">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">
+              <i class="fas fa-briefcase text-blue-600"></i> Valós problémák elemzése
+            </h2>
+            <p class="text-gray-600 mb-4">
+              A tréning után alkalmazd a tanult módszertant valós problémákra. 
+              Hozz létre folyamatokat és kövesd nyomon az előrehaladásod!
+            </p>
+          </div>
+          <button onclick="showCreateProcessModal()" 
+            class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition shadow-lg whitespace-nowrap ml-4">
+            <i class="fas fa-plus-circle"></i> Új folyamat
+          </button>
+        </div>
+      </div>
+    `;
+  }
+  
+  return `
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8 animate-slide-in">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+          <i class="fas fa-briefcase text-blue-600"></i> Folyamataim (${activeProcesses.length})
+        </h2>
+        <div class="flex gap-3">
+          <button onclick="showCreateProcessModal()" 
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition">
+            <i class="fas fa-plus-circle"></i> Új folyamat
+          </button>
+          <button onclick="showProcessesView()" 
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition">
+            <i class="fas fa-list"></i> Mind
+          </button>
+        </div>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-4">
+        ${activeProcesses.slice(0, 4).map(process => renderDashboardProcessCard(process)).join('')}
+      </div>
+      
+      ${activeProcesses.length > 4 ? `
+        <div class="text-center mt-4">
+          <button onclick="showProcessesView()" 
+            class="text-blue-600 hover:text-blue-700 font-medium">
+            <i class="fas fa-arrow-right"></i> További ${activeProcesses.length - 4} folyamat megtekintése
+          </button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function renderDashboardProcessCard(process) {
+  const statusColors = {
+    active: 'border-blue-500 bg-blue-50',
+    completed: 'border-green-500 bg-green-50'
+  };
+  
+  const statusIcons = {
+    active: 'fa-play-circle text-blue-600',
+    completed: 'fa-check-circle text-green-600'
+  };
+  
+  const statusTexts = {
+    active: 'Aktív',
+    completed: 'Befejezett'
+  };
+  
+  const borderColor = statusColors[process.status] || statusColors.active;
+  const statusIcon = statusIcons[process.status] || statusIcons.active;
+  const statusText = statusTexts[process.status] || statusTexts.active;
+  
+  const progress = process.progress || 0;
+  const lastUpdate = new Date(process.updated_at).toLocaleDateString('hu-HU', { 
+    month: 'short', 
+    day: 'numeric' 
+  });
+  
+  return `
+    <div class="border-l-4 ${borderColor} p-4 rounded-r-lg hover:shadow-md transition">
+      <div class="flex justify-between items-start mb-2">
+        <h3 class="text-lg font-bold text-gray-800 flex-1 pr-2">
+          ${process.title}
+        </h3>
+        <span class="text-xs font-medium whitespace-nowrap">
+          <i class="fas ${statusIcon}"></i> ${statusText}
+        </span>
+      </div>
+      
+      ${process.description ? `
+        <p class="text-sm text-gray-600 mb-3 line-clamp-2">${process.description}</p>
+      ` : ''}
+      
+      <div class="space-y-2">
+        <div class="flex justify-between text-xs text-gray-500">
+          <span><i class="fas fa-calendar"></i> ${lastUpdate}</span>
+          <span><i class="fas fa-layer-group"></i> Nap ${process.current_day}/6</span>
+          <span class="font-bold text-blue-600">${progress}%</span>
+        </div>
+        
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div class="bg-blue-500 h-2 rounded-full transition-all" style="width: ${progress}%"></div>
+        </div>
+      </div>
+      
+      <button onclick="navigateToProcess(${process.id})" 
+        class="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm">
+        <i class="fas fa-arrow-right"></i> Folytatás
+      </button>
     </div>
   `;
 }
