@@ -126,8 +126,10 @@ pm2 stop catalyst
 - **Kommunikációs mátrix** (ki-mit-hogyan-mikor)
 - **Kockázatelemzés** (valószínűség × hatás)
 
-### 3. Nap: Csapat kialakítása
-Szerepek, kompetenciák, RACI mátrix
+### 3. Nap: Csapat kialakítása ✅
+2 lépés - Szerepek, felelősségek és kompetenciák
+- **1. lépés - Csapatszerepek azonosítása**: Belbin szerepek, RACI mátrix, jelenlegi csapat feltérképezése, hiányok és átfedések
+- **2. lépés - Kompetencia felmérés**: Skills Matrix, jelenlegi vs szükséges kompetenciák, gap elemzés, akciók (tréning/toborzás/külső)
 
 ### 4. Nap: Teljesítménymenedzsment
 KPI-ok, mérés, monitoring, visszajelzés
@@ -167,6 +169,12 @@ Változás beépítése, folyamatos fejlődés kultúrája
 8. 🔄 Collaborative features (csoportos munkafüzetek)
 
 ## 📝 Változásnapló
+
+### 2025-11-04 - v1.4.0
+- ✅ **3. Nap implementáció (2 lépés)**: Csapat kialakítása
+  - 1. lépés: Csapatszerepek azonosítása (Belbin, RACI, jelenlegi csapat, hiányok)
+  - 2. lépés: Kompetencia felmérés (Skills Matrix, gap elemzés, akciók)
+- ✅ **Új eszközök hozzáadva**: Belbin szerepek, Skills Matrix, 360° értékelés, Kompetencia gap elemzés
 
 ### 2025-11-04 - v1.3.0
 - ✅ **2. Nap teljes implementáció**: Stratégiaalkotás és vezetői stílus
@@ -215,6 +223,7 @@ Proprietary - MVM Group
 ---
 
 **Készült**: 2025-11-04  
-**Verzió**: 1.0.0  
+**Verzió**: 1.4.0  
 **Státusz**: ✅ Működőképes (Development)  
-**Tech Stack**: Hono + Cloudflare D1 + TypeScript + Tailwind CSS
+**Tech Stack**: Hono + Cloudflare D1 + TypeScript + Tailwind CSS  
+**Haladás**: 3/6 tréningnap implementálva (50%)
