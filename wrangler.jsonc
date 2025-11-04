@@ -10,7 +10,7 @@
     {
       "binding": "DB",
       "database_name": "catalyst-production",
-      "database_id": "placeholder-will-be-replaced-on-deploy"
+      "database_id": "ffb6472b-3510-452d-adcb-5b1a06e033a7"
     }
   ]
 }
