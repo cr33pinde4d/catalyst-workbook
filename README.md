@@ -127,9 +127,15 @@ pm2 stop catalyst
 - **Kockázatelemzés** (valószínűség × hatás)
 
 ### 3. Nap: Csapat kialakítása ✅
-2 lépés - Szerepek, felelősségek és kompetenciák
-- **1. lépés - Csapatszerepek azonosítása**: Belbin szerepek, RACI mátrix, jelenlegi csapat feltérképezése, hiányok és átfedések
-- **2. lépés - Kompetencia felmérés**: Skills Matrix, jelenlegi vs szükséges kompetenciák, gap elemzés, akciók (tréning/toborzás/külső)
+8 lépés - Szerepek, kompetenciák, struktúra és csapatösszetétel
+- **1. Szerepek azonosítása**: Kritikus szerepkörök és funkciók, WBS, átfedések és hiányok
+- **2. Kompetencia-elemzés**: Kompetencia profilok, T-alakú készségmodell, hard vs soft skills
+- **3. RACI mátrix**: Felelősség (R), elszámoltathatóság (A), konzultáció (C), tájékoztatás (I)
+- **4. Csapatstruktúra tervezése**: Hierarchia típusa, span of control, jelentési vonalak, meeting struktúra
+- **5. Tehetségértékelés**: 9-Box Talent Grid, erősségek, fejlesztendő területek, karrier potenciál
+- **6. Gap analízis**: Skills Gap Matrix, kritikus hiányok, FTE analízis
+- **7. Toborzási/fejlesztési terv**: Make vs Buy vs Borrow, 70-20-10 modell, akciók
+- **8. Csapatösszetétel véglegesítése**: Team Charter, szerepkör-leírások, csapatmátrix, kick-off, sikermutatók
 
 ### 4. Nap: Teljesítménymenedzsment
 KPI-ok, mérés, monitoring, visszajelzés
@@ -171,9 +177,16 @@ Változás beépítése, folyamatos fejlődés kultúrája
 ## 📝 Változásnapló
 
 ### 2025-11-04 - v1.4.0
-- ✅ **3. Nap implementáció (2 lépés)**: Csapat kialakítása
-  - 1. lépés: Csapatszerepek azonosítása (Belbin, RACI, jelenlegi csapat, hiányok)
-  - 2. lépés: Kompetencia felmérés (Skills Matrix, gap elemzés, akciók)
+- ✅ **3. Nap teljes implementáció (8 lépés)**: Csapat kialakítása
+  - 1. Szerepek azonosítása - kritikus szerepkörök és funkciók
+  - 2. Kompetencia-elemzés - kompetencia profilok, T-alakú készségek
+  - 3. RACI mátrix - felelősségek tisztázása
+  - 4. Csapatstruktúra tervezése - hierarchia, jelentési vonalak
+  - 5. Tehetségértékelés - 9-Box Grid, erősségek, potenciál
+  - 6. Gap analízis - skills gap mátrix, FTE analízis
+  - 7. Toborzási/fejlesztési terv - Make/Buy/Borrow, 70-20-10
+  - 8. Csapatösszetétel véglegesítése - Team Charter, kick-off
+- ✅ **Migration frissítése**: Mind a 8 lépés hozzáadva az adatbázishoz
 - ✅ **Új eszközök hozzáadva**: Belbin szerepek, Skills Matrix, 360° értékelés, Kompetencia gap elemzés
 
 ### 2025-11-04 - v1.3.0
