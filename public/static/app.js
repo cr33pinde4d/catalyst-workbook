@@ -2245,6 +2245,600 @@ Kommunikációs szabályok?">${getResponse('kickoff_plan')}</textarea>
     }
   }
   
+  // Day 4: Performance Management (8 steps)
+  if (dayId === 4) {
+    // Helper to get goals from Day 2
+    const getGoalsFromDay2 = () => {
+      const goals = [];
+      for (let i = 1; i <= 5; i++) {
+        const specific = getResponseFromDay(2, `goal_${i}_specific`, 3);
+        if (specific) goals.push(specific);
+      }
+      return goals;
+    };
+
+    // Step 1: KPI definition
+    if (stepNum === 1) {
+      const goals = getGoalsFromDay2();
+      
+      return `
+        <div class="space-y-6">
+          ${goals.length > 0 ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Stratégiai célok a 2. Napból:
+              </p>
+              <ul class="list-disc list-inside space-y-1 text-sm text-purple-900">
+                ${goals.map(g => `<li>${g}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-bullseye text-blue-500"></i> 
+            Néhány jó KPI többet ér, mint sok rossz - válaszd ki a 3-7 legfontosabb mutatót!
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. KPI-ok meghatározása (SMART alapon)
+              </label>
+              <textarea name="kpis" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="KPI név | Cél | Mértékegység | Célérték | Határidő
+--------|-----|-------------|----------|----------
+Pl. Ügyfél-elégedettség | Növelés | NPS | 65 | Q2 vége
+Projektszállítás | Időre leadás | % | 95% | Folyamatos
+...">${getResponse('kpis')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Leading vs Lagging indicators - Mi a különbség?
+              </label>
+              <textarea name="leading_lagging" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Leading (előrejelző): Korai figyelmeztetések (pl. képzési órák száma)
+Lagging (késleltetett): Végeredmény mutatók (pl. eladási volumen)
+
+Mely KPI-id mely kategóriába esik?">${getResponse('leading_lagging')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Balanced Scorecard - Négy perspektíva
+              </label>
+              <textarea name="balanced_scorecard" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Pénzügyi perspektíva: ...
+Ügyfél perspektíva: ...
+Belső folyamatok: ...
+Tanulás és fejlődés: ...">${getResponse('balanced_scorecard')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Prioritás - Mely 3 KPI a legkritikusabb?
+              </label>
+              <textarea name="top_kpis" rows="3" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="1. ...\n2. ...\n3. ...">${getResponse('top_kpis')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 2: Measurement system design
+    if (stepNum === 2) {
+      const kpis = getResponse('kpis', 1);
+      
+      return `
+        <div class="space-y-6">
+          ${kpis ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> KPI-ok az 1. lépésből:
+              </p>
+              <p class="text-sm text-purple-900 font-mono whitespace-pre-wrap">${kpis.substring(0, 200)}${kpis.length > 200 ? '...' : ''}</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Mérési terv - Hogyan gyűjtsük az adatokat?
+              </label>
+              <textarea name="measurement_plan" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="KPI | Mérési módszer | Gyakoriság | Adatforrás | Felelős
+----|---------------|-----------|-----------|----------
+... | Automatikus   | Napi      | CRM       | Elemző
+... | Manuális      | Heti      | Jelentés  | Vezető
+...">${getResponse('measurement_plan')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Adatminőség - Hogyan biztosítod a megbízhatóságot?
+              </label>
+              <textarea name="data_quality" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Validációs szabályok, adattisztítás, minőségellenőrzés...">${getResponse('data_quality')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Data governance - Ki felelős az adatokért?
+              </label>
+              <textarea name="data_governance" rows="3" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Adatgazda, adatkezelők, hozzáférési jogok...">${getResponse('data_governance')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Automatizálás - Mit lehet automatizálni?
+              </label>
+              <textarea name="automation" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Automatikus adatletöltések, API integrációk, ETL folyamatok...">${getResponse('automation')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 3: Data collection mechanisms
+    if (stepNum === 3) {
+      const plan = getResponse('measurement_plan', 2);
+      
+      return `
+        <div class="space-y-6">
+          ${plan ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Mérési terv a 2. lépésből:
+              </p>
+              <p class="text-sm text-purple-900 font-mono whitespace-pre-wrap">${plan.substring(0, 150)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Adatgyűjtő eszközök és rendszerek
+              </label>
+              <textarea name="data_tools" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Eszköz | Funkcionalitás | KPI
+-------|---------------|-----
+CRM    | Ügyfél adatok | ...
+ERP    | Pénzügyi      | ...
+Survey | Visszajelzés  | ...
+...">${getResponse('data_tools')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. API integrációk - Milyen rendszerek beszélnek egymással?
+              </label>
+              <textarea name="api_integrations" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Forrás → Cél rendszer, milyen adatok, milyen gyakran...">${getResponse('api_integrations')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Manuális adatgyűjtés - Űrlapok, check-listák
+              </label>
+              <textarea name="manual_collection" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Mit, mikor, ki tölti ki? Milyen sablon/űrlap?">${getResponse('manual_collection')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Adattisztítás és validáció folyamat
+              </label>
+              <textarea name="data_validation" rows="3" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Hogyan szűröd ki a hibás/duplikált adatokat?">${getResponse('data_validation')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 4: Dashboard and reporting
+    if (stepNum === 4) {
+      const kpis = getResponse('top_kpis', 1);
+      
+      return `
+        <div class="space-y-6">
+          ${kpis ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Top KPI-ok:
+              </p>
+              <p class="text-sm text-purple-900">${kpis}</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Dashboard tervezés - Mit lásson az igazgatóság?
+              </label>
+              <textarea name="executive_dashboard" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Top 3-5 KPI, trendek, összehasonlítások, alerts...
+Milyen vizualizációk? (diagram típusok)">${getResponse('executive_dashboard')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Operatív dashboard - Mit lássanak a csapatvezetők?
+              </label>
+              <textarea name="operational_dashboard" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Napi metrikák, feladatok státusza, problémák, akciók...">${getResponse('operational_dashboard')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. BI eszközök - Milyen platformot használsz?
+              </label>
+              <select name="bi_tool" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                <option value="">Válassz...</option>
+                <option value="power_bi" ${getResponse('bi_tool') === 'power_bi' ? 'selected' : ''}>Power BI</option>
+                <option value="tableau" ${getResponse('bi_tool') === 'tableau' ? 'selected' : ''}>Tableau</option>
+                <option value="looker" ${getResponse('bi_tool') === 'looker' ? 'selected' : ''}>Looker / Google Data Studio</option>
+                <option value="excel" ${getResponse('bi_tool') === 'excel' ? 'selected' : ''}>Excel / Spreadsheets</option>
+                <option value="custom" ${getResponse('bi_tool') === 'custom' ? 'selected' : ''}>Egyedi fejlesztés</option>
+                <option value="other" ${getResponse('bi_tool') === 'other' ? 'selected' : ''}>Egyéb</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Reporting ritmus - Milyen gyakran és kinek?
+              </label>
+              <textarea name="reporting_rhythm" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Napi: ...
+Heti: ...
+Havi: ...
+Negyedéves: ...
+Kinek küldöd? Milyen formátumban?">${getResponse('reporting_rhythm')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                5. Vizualizációs best practices - Mit alkalmazol?
+              </label>
+              <textarea name="viz_best_practices" rows="3" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Színkódolás, egyszerűség, kontextus, interaktivitás...">${getResponse('viz_best_practices')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 5: Feedback system
+    if (stepNum === 5) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-comments text-blue-500"></i> 
+            A visszajelzés az egyik legerősebb fejlesztő eszköz - alakíts ki strukturált rendszert!
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. 1-on-1 meeting framework - Milyen gyakran, milyen struktúrával?
+              </label>
+              <textarea name="one_on_one" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Gyakoriság: Heti/kétheti/havi
+Időtartam: ...
+Agenda:
+- Általános állapot check
+- KPI-ok áttekintése
+- Akadályok, segítségkérés
+- Fejlesztési célok
+...">${getResponse('one_on_one')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. SBI modell (Situation-Behavior-Impact)
+              </label>
+              <textarea name="sbi_feedback" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Situation: Milyen helyzetben történt?
+Behavior: Mit csináltál/csinált konkrétan?
+Impact: Mi volt ennek a hatása?
+
+Példa: ...">${getResponse('sbi_feedback')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Feedforward vs Feedback - Mikor melyiket?
+              </label>
+              <textarea name="feedforward" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Feedback: Múltra vonatkozó
+Feedforward: Jövőbeli javaslatok, előre tekintő
+
+Mikor használod melyiket?">${getResponse('feedforward')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. 360° visszajelzés - Ki értékel kit?
+              </label>
+              <textarea name="360_feedback" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Felettes + Peers + Beosztottak + Önértékelés
+Milyen gyakran? Anonim? Milyen területeken?">${getResponse('360_feedback')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                5. Pozitív vs konstruktív visszajelzés aránya
+              </label>
+              <textarea name="feedback_ratio" rows="3" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Ideális arány: 5:1 (pozitív:konstruktív)
+Mi a te gyakorlatod?">${getResponse('feedback_ratio')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 6: Performance evaluation process
+    if (stepNum === 6) {
+      const kpis = getResponse('kpis', 1);
+      
+      return `
+        <div class="space-y-6">
+          ${kpis ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> KPI-ok az 1. lépésből:
+              </p>
+              <p class="text-sm text-purple-900 font-mono whitespace-pre-wrap">${kpis.substring(0, 150)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Értékelési mátrix - Milyen kritériumok alapján?
+              </label>
+              <textarea name="evaluation_matrix" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="Kritérium      | Súly | 1-5 értékelés
+---------------|------|---------------
+KPI teljesítés | 40%  | ...
+Kompetenciák   | 30%  | ...
+Együttműködés  | 20%  | ...
+Innovativitás  | 10%  | ...
+...">${getResponse('evaluation_matrix')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. OKR review process - Negyedéves értékelés
+              </label>
+              <textarea name="okr_review" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Objective elérése: X%
+Key Results:
+- KR1: Y% (cél: Z%)
+- KR2: ...
+
+Mi ment jól? Mi nehezebb volt? Mit tanultunk?">${getResponse('okr_review')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Calibration meeting - Hogyan biztosítod az objektivitást?
+              </label>
+              <textarea name="calibration" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Vezetők együtt kalibrálják az értékeléseket
+Forced distribution? Bell curve?
+Példák összehasonlítása...">${getResponse('calibration')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Értékelési gyakoriság és időzítés
+              </label>
+              <textarea name="evaluation_frequency" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Évközi review: ...
+Év végi értékelés: ...
+Próbaidő értékelés: ...
+Projektzáró értékelés: ...">${getResponse('evaluation_frequency')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 7: Corrective mechanisms
+    if (stepNum === 7) {
+      const topKpis = getResponse('top_kpis', 1);
+      
+      return `
+        <div class="space-y-6">
+          ${topKpis ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Kritikus KPI-ok:
+              </p>
+              <p class="text-sm text-purple-900">${topKpis}</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Alert rendszer és threshold-ok
+              </label>
+              <textarea name="alert_system" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="KPI | Zöld (OK) | Sárga (Figyelem) | Piros (Vészhelyzet)
+----|-----------|-----------------|------------------
+... | > 90%     | 70-90%          | < 70%
+... | ...       | ...             | ...
+
+Ki kapja az alertet? Milyen csatornán?">${getResponse('alert_system')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. CAP - Corrective Action Plan sablon
+              </label>
+              <textarea name="cap_template" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Probléma: ...
+Gyökérok: ...
+Korrekciós akció: ...
+Felelős: ...
+Határidő: ...
+Ellenőrzés: ...">${getResponse('cap_template')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Root cause analysis eszközök
+              </label>
+              <textarea name="root_cause_tools" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="5 Whys: Ismételt miért kérdések
+Fishbone (Ishikawa): Ok-okozati diagram
+Pareto: 80/20 szabály
+
+Melyiket mikor használod?">${getResponse('root_cause_tools')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. PDCA ciklus (Plan-Do-Check-Act)
+              </label>
+              <textarea name="pdca_cycle" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Plan: Mit változtatsz?
+Do: Kis léptékű teszt
+Check: Mi lett az eredmény?
+Act: Standard vagy újratervezés
+
+Példa PDCA ciklusodra...">${getResponse('pdca_cycle')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 8: Continuous improvement
+    if (stepNum === 8) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-infinity text-green-500"></i> 
+            A folyamatos fejlesztés fenntartja a rendszer relevanciáját és hatékonyságát!
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Kaizen / Continuous Improvement kultúra
+              </label>
+              <textarea name="kaizen_culture" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Hogyan építed be a folyamatos fejlesztést a kultúrába?
+Ötletdoboz? Fejlesztési workshopok? Jutalmazás?
+Ki az, aki bármi fejlesztést javasolhat?">${getResponse('kaizen_culture')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Retrospektív meetings - Milyen gyakran?
+              </label>
+              <textarea name="retrospectives" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Sprint retro (agile csapatoknál): 2 heti
+Projekt retro: Projekt végén
+Negyedéves retro: Q végén
+
+Formátum:
+- Mi ment jól? (Keep)
+- Mi volt nehéz? (Drop)
+- Mit próbáljunk ki? (Try)">${getResponse('retrospectives')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. A/B testing a mérési módszereknél
+              </label>
+              <textarea name="ab_testing" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Tesztelj különböző KPI-okat, dashboard formátumokat, reporting ritmusokat
+Mi működik jobban? Melyik ad jobb döntéseket?">${getResponse('ab_testing')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Learning reviews - Mit tanultunk?
+              </label>
+              <textarea name="learning_reviews" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Projekt végén, nagy mérföldköveknél:
+- Mit tudtunk jól mérni?
+- Hol hiányoztak adatok?
+- Mely KPI-ok voltak valóban hasznosak?
+- Mit változtatsz meg a következő ciklusban?">${getResponse('learning_reviews')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                5. KPI felülvizsgálat - Mikor frissíted a mutatókat?
+              </label>
+              <textarea name="kpi_review" rows="4" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Negyedévente? Évente? Stratégiai tervezésnél?
+Melyik KPI-ok maradnak? Melyek változnak? Miért?">${getResponse('kpi_review')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                6. Következő lépések - Mi a fejlesztési roadmap?
+              </label>
+              <textarea name="improvement_roadmap" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Q1: ...
+Q2: ...
+Q3: ...
+Q4: ...
+
+Mit fogsz fejleszteni a teljesítménymenedzsment rendszerben?">${getResponse('improvement_roadmap')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+  
   // Generic text area for other days
   return `
     <div>
