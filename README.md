@@ -97,7 +97,7 @@ pm2 stop catalyst
 ### Publikus URL
 
 **Production**: https://catalyst-workbook.pages.dev
-**Latest Deployment**: https://1b461682.catalyst-workbook.pages.dev (2025-11-04 - Bug fixes)
+**Latest Deployment**: https://e3d7f4ba.catalyst-workbook.pages.dev (2025-11-04 - Seed data + D1 binding)
 **GitHub Repository**: https://github.com/cr33pinde4d/catalyst-workbook
 **Development**: https://3000-ildzif0p6yl6272ppdpuy-5c13a017.sandbox.novita.ai
 
@@ -226,6 +226,14 @@ pm2 stop catalyst
 8. 🔄 Collaborative features (csoportos munkafüzetek)
 
 ## 📝 Változásnapló
+
+### 2025-11-04 - v1.9.2 🗄️ **Production Database Setup**
+- ✅ **Seed adatok production-ben**: 6 tréningnap + 48 lépés + eszközök feltöltve
+- ✅ **D1 binding konfiguráció**: wrangler.toml létrehozva Cloudflare Pages binding-hoz
+- ✅ **Produkció tesztelve**: 6 day returned with proper authentication
+- 🌍 **Latest deployment**: https://e3d7f4ba.catalyst-workbook.pages.dev
+- 📊 **Database stats**: 184KB, 51 rows written, 10 tables
+- 🔧 **Config fix**: Dual config approach (wrangler.jsonc for local, wrangler.toml for Pages)
 
 ### 2025-11-04 - v1.9.1 🐛 **Critical Bug Fixes**
 - 🐛 **SQL oszlophiba javítás**: Fixed "no such column: td.day_number" error
