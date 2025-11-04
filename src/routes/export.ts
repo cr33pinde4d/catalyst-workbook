@@ -21,7 +21,7 @@ app.get('/process/:id', async (c) => {
 
     // Get all training days
     const daysResult = await db.prepare(`
-      SELECT * FROM training_days ORDER BY day_number
+      SELECT * FROM training_days ORDER BY order_num
     `).all();
 
     // Get all training steps

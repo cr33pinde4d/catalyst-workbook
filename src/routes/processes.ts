@@ -61,7 +61,7 @@ app.get('/:id', async (c) => {
         ps.step_id,
         ps.completed,
         ps.completed_at,
-        td.day_number,
+        td.order_num as day_number,
         td.title as day_title,
         ts.step_number,
         ts.title as step_title
@@ -69,7 +69,7 @@ app.get('/:id', async (c) => {
       JOIN training_days td ON ps.day_id = td.id
       JOIN training_steps ts ON ps.step_id = ts.id
       WHERE ps.process_id = ?
-      ORDER BY td.day_number, ts.step_number
+      ORDER BY td.order_num, ts.step_number
     `).bind(processId).all();
 
     return c.json({ 
