@@ -573,7 +573,7 @@ function renderGuideView() {
             <!-- Day 1 -->
             <div class="border-l-4 border-catalyst-blue bg-white border-l-catalyst-blue p-6 rounded-r-lg">
               <h3 class="font-bold text-catalyst-blue text-xl mb-2">
-                <span class="bg-catalyst-blue text-white px-3 py-1 rounded-full mr-2">1. Nap</span>
+                <span class="bg-catalyst-blue text-white px-3 py-1 rounded-full mr-2">1. nap</span>
                 Vezetői tudatosság és problémamegoldás
               </h3>
               <p class="text-gray-700 mb-2">
@@ -588,7 +588,7 @@ function renderGuideView() {
             <!-- Day 2 -->
             <div class="border-l-4 border-catalyst-green bg-white border-l-catalyst-green p-6 rounded-r-lg">
               <h3 class="font-bold text-catalyst-green text-xl mb-2">
-                <span class="bg-catalyst-green text-white px-3 py-1 rounded-full mr-2">2. Nap</span>
+                <span class="bg-catalyst-green text-white px-3 py-1 rounded-full mr-2">2. nap</span>
                 Vezetői stílus és stratégiaalkotás
               </h3>
               <p class="text-gray-700 mb-2">
@@ -603,7 +603,7 @@ function renderGuideView() {
             <!-- Day 3 -->
             <div class="border-l-4 border-catalyst-yellow bg-white border-l-catalyst-yellow p-6 rounded-r-lg">
               <h3 class="font-bold text-catalyst-yellow text-xl mb-2">
-                <span class="bg-catalyst-yellow text-white px-3 py-1 rounded-full mr-2">3. Nap</span>
+                <span class="bg-catalyst-yellow text-white px-3 py-1 rounded-full mr-2">3. nap</span>
                 Csapat kialakítása
               </h3>
               <p class="text-gray-700 mb-2">
@@ -618,7 +618,7 @@ function renderGuideView() {
             <!-- Day 4 -->
             <div class="border-l-4 border-catalyst-red bg-white border-l-catalyst-red p-6 rounded-r-lg">
               <h3 class="font-bold text-catalyst-red text-xl mb-2">
-                <span class="bg-catalyst-red text-white px-3 py-1 rounded-full mr-2">4. Nap</span>
+                <span class="bg-catalyst-red text-white px-3 py-1 rounded-full mr-2">4. nap</span>
                 Teljesítménymenedzsment
               </h3>
               <p class="text-gray-700 mb-2">
@@ -633,7 +633,7 @@ function renderGuideView() {
             <!-- Day 5 -->
             <div class="border-l-4 border-catalyst-purple bg-white border-catalyst-purple p-6 rounded-r-lg">
               <h3 class="font-bold text-catalyst-purple text-xl mb-2">
-                <span class="bg-white border-catalyst-purple0 text-white px-3 py-1 rounded-full mr-2">5. Nap</span>
+                <span class="bg-white border-catalyst-purple0 text-white px-3 py-1 rounded-full mr-2">5. nap</span>
                 Csapatmenedzsment
               </h3>
               <p class="text-gray-700 mb-2">
@@ -648,7 +648,7 @@ function renderGuideView() {
             <!-- Day 6 -->
             <div class="border-l-4 border-indigo-500 bg-indigo-50 p-6 rounded-r-lg">
               <h3 class="font-bold text-indigo-900 text-xl mb-2">
-                <span class="bg-indigo-500 text-white px-3 py-1 rounded-full mr-2">6. Nap</span>
+                <span class="bg-indigo-500 text-white px-3 py-1 rounded-full mr-2">6. nap</span>
                 Fenntartás & adaptáció
               </h3>
               <p class="text-gray-700 mb-2">
@@ -2214,7 +2214,7 @@ function renderExerciseFields(step) {
           ${problem ? `
             <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-catalyst-purple">
               <p class="text-sm text-purple-800 font-medium">
-                <i class="fas fa-link"></i> 1. Napból: Probléma
+                <i class="fas fa-link"></i> 1. napból: Probléma
               </p>
               <p class="text-catalyst-purple mt-2 font-semibold">${problem}</p>
               ${rootCause ? `
@@ -2227,7 +2227,7 @@ function renderExerciseFields(step) {
             <div class="border-l-4 border-catalyst-yellow bg-white border-yellow-400 p-4 rounded-r-lg">
               <p class="text-yellow-800">
                 <i class="fas fa-exclamation-triangle"></i> 
-                Ajánlott előbb befejezni az 1. Napot!
+                Ajánlott előbb befejezni az 1. napot!
               </p>
             </div>
           `}
@@ -2826,7 +2826,7 @@ function renderExerciseFields(step) {
           ${actions.length > 0 ? `
             <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-catalyst-purple">
               <p class="text-sm text-purple-800 font-medium mb-2">
-                <i class="fas fa-link"></i> Akciók a 2. Napból:
+                <i class="fas fa-link"></i> Akciók a 2. napból:
               </p>
               <ul class="list-disc list-inside space-y-1 text-sm text-catalyst-purple">
                 ${actions.map(a => `<li>${a}</li>`).join('')}
@@ -2923,7 +2923,7 @@ Pl. Projektvezető: 5+ év tapasztalat, PMP certifikáció, agile módszertan, k
           ${actions.length > 0 ? `
             <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-catalyst-purple">
               <p class="text-sm text-purple-800 font-medium mb-2">
-                <i class="fas fa-link"></i> Főbb feladatok a 2. Napból:
+                <i class="fas fa-link"></i> Főbb feladatok a 2. napból:
               </p>
               <ul class="list-disc list-inside space-y-1 text-sm text-catalyst-purple">
                 ${actions.map(a => `<li>${a}</li>`).join('')}
@@ -3338,7 +3338,7 @@ Kommunikációs szabályok?">${getResponse('kickoff_plan')}</textarea>
           ${goals.length > 0 ? `
             <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-catalyst-purple">
               <p class="text-sm text-purple-800 font-medium mb-2">
-                <i class="fas fa-link"></i> Stratégiai célok a 2. Napból:
+                <i class="fas fa-link"></i> Stratégiai célok a 2. napból:
               </p>
               <ul class="list-disc list-inside space-y-1 text-sm text-catalyst-purple">
                 ${goals.map(g => `<li>${g}</li>`).join('')}
@@ -3929,7 +3929,7 @@ Mit fogsz fejleszteni a teljesítménymenedzsment rendszerben?">${getResponse('i
           ${team.charter || team.roles ? `
             <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-catalyst-purple">
               <p class="text-sm text-purple-800 font-medium mb-2">
-                <i class="fas fa-link"></i> Csapatod a 3. Napból:
+                <i class="fas fa-link"></i> Csapatod a 3. napból:
               </p>
               ${team.charter ? `<p class="text-sm text-catalyst-purple mb-2"><strong>Team Charter:</strong> ${team.charter.substring(0, 100)}...</p>` : ''}
               ${team.roles ? `<p class="text-sm text-catalyst-purple"><strong>Szerepek:</strong> ${team.roles.substring(0, 100)}...</p>` : ''}
@@ -4016,7 +4016,7 @@ Mely feladatoknál melyik szintet alkalmazod?">${getResponse('delegation_levels'
           ${teamStrengths ? `
             <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-catalyst-purple">
               <p class="text-sm text-purple-800 font-medium mb-2">
-                <i class="fas fa-link"></i> Csapattagok erősségei a 3. Napból:
+                <i class="fas fa-link"></i> Csapattagok erősségei a 3. napból:
               </p>
               <p class="text-sm text-catalyst-purple">${teamStrengths.substring(0, 150)}...</p>
             </div>
@@ -4250,7 +4250,7 @@ Milyen check-in rituálét építesz be?">${getResponse('checkin_rituals')}</tex
           ${devAreas ? `
             <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-catalyst-purple">
               <p class="text-sm text-purple-800 font-medium mb-2">
-                <i class="fas fa-link"></i> Fejlesztendő területek a 3. Napból:
+                <i class="fas fa-link"></i> Fejlesztendő területek a 3. napból:
               </p>
               <p class="text-sm text-catalyst-purple">${devAreas.substring(0, 150)}...</p>
             </div>
@@ -4840,7 +4840,7 @@ Lista és felelősök:">${getResponse('visual_instructions')}</textarea>
           ${teamStructure ? `
             <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border-l-4 border-catalyst-yellow p-4 rounded-lg">
               <h4 class="font-semibold text-yellow-800 mb-2">
-                <i class="fas fa-users"></i> Referencia: Csapatstruktúra (3. Napból)
+                <i class="fas fa-users"></i> Referencia: Csapatstruktúra (3. napból)
               </h4>
               <p class="text-sm text-gray-700">${teamStructure.substring(0, 400)}...</p>
             </div>
@@ -4940,7 +4940,7 @@ Legalább 3-5 belső trainer azonosítása és fejlesztési terve:">${getRespons
           ${kpisDefined ? `
             <div class="bg-gradient-to-r from-red-50 to-rose-50 border-l-4 border-catalyst-red p-4 rounded-lg">
               <h4 class="font-semibold text-red-800 mb-2">
-                <i class="fas fa-tachometer-alt"></i> Referencia: KPI-ok (4. Napból)
+                <i class="fas fa-tachometer-alt"></i> Referencia: KPI-ok (4. napból)
               </h4>
               <p class="text-sm text-gray-700">${kpisDefined.substring(0, 400)}...</p>
             </div>
@@ -5051,7 +5051,7 @@ Legalább 5 scenario és protokoll:">${getResponse('quick_response')}</textarea>
           ${okrsDefined ? `
             <div class="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-catalyst-purple p-4 rounded-lg">
               <h4 class="font-semibold text-purple-800 mb-2">
-                <i class="fas fa-bullseye"></i> Referencia: Stratégiai célok (2. Napból)
+                <i class="fas fa-bullseye"></i> Referencia: Stratégiai célok (2. napból)
               </h4>
               <p class="text-sm text-gray-700">${okrsDefined.substring(0, 400)}...</p>
             </div>
@@ -5271,7 +5271,7 @@ Hogyan indítod?">${getResponse('innovation_time')}</textarea>
           ${communicationPlan ? `
             <div class="bg-gradient-to-r from-green-50 to-teal-50 border-l-4 border-catalyst-green p-4 rounded-lg">
               <h4 class="font-semibold text-green-800 mb-2">
-                <i class="fas fa-bullhorn"></i> Referencia: Kommunikációs terv (2. Napból)
+                <i class="fas fa-bullhorn"></i> Referencia: Kommunikációs terv (2. napból)
               </h4>
               <p class="text-sm text-gray-700">${communicationPlan.substring(0, 400)}...</p>
             </div>
@@ -5379,7 +5379,7 @@ Kommunikációs naptár:">${getResponse('communication_channels')}</textarea>
           ${teamData ? `
             <div class="bg-gradient-to-r from-orange-50 to-red-50 border-l-4 border-orange-500 p-4 rounded-lg">
               <h4 class="font-semibold text-orange-800 mb-2">
-                <i class="fas fa-user-friends"></i> Referencia: Csapat és tehetségek (3. Napból)
+                <i class="fas fa-user-friends"></i> Referencia: Csapat és tehetségek (3. napból)
               </h4>
               <p class="text-sm text-gray-700">${teamData.substring(0, 400)}...</p>
             </div>

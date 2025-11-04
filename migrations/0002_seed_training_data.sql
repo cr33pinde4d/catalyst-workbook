@@ -1,11 +1,11 @@
 -- Seed training days
 INSERT OR IGNORE INTO training_days (id, title, subtitle, description, order_num) VALUES 
-(1, '1. Nap', 'Vezetői tudatosság és problémamegoldás', 'Strukturált problémafeltárás és gyökérok-elemzés', 1),
-(2, '2. Nap', 'Vezetői stílus és stratégiaalkotás', 'Jövőkép megfogalmazása és akciótervezés', 2),
-(3, '3. Nap', 'Csapat kialakítása', 'Szerepek, felelősségek és kompetenciák', 3),
-(4, '4. Nap', 'Teljesítménymenedzsment', 'KPI-ok, mérés és visszajelzési rendszerek', 4),
-(5, '5. Nap', 'Csapatmenedzsment', 'Delegálás, motiváció és konfliktuskezelés', 5),
-(6, '6. Nap', 'Fenntartás & adaptáció', 'Változás beépítése és folyamatos fejlődés', 6);
+(1, '1. nap', 'Vezetői tudatosság és problémamegoldás', 'Strukturált problémafeltárás és gyökérok-elemzés', 1),
+(2, '2. nap', 'Vezetői stílus és stratégiaalkotás', 'Jövőkép megfogalmazása és akciótervezés', 2),
+(3, '3. nap', 'Csapat kialakítása', 'Szerepek, felelősségek és kompetenciák', 3),
+(4, '4. nap', 'Teljesítménymenedzsment', 'KPI-ok, mérés és visszajelzési rendszerek', 4),
+(5, '5. nap', 'Csapatmenedzsment', 'Delegálás, motiváció és konfliktuskezelés', 5),
+(6, '6. nap', 'Fenntartás & adaptáció', 'Változás beépítése és folyamatos fejlődés', 6);
 
 -- Seed training steps for Day 1
 INSERT OR IGNORE INTO training_steps (day_id, step_number, title, description, tools, importance, limitations, instructions) VALUES 
