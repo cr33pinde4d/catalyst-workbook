@@ -730,7 +730,7 @@ function renderDashboardView() {
   return `
     <div class="min-h-screen bg-gray-50">
       <!-- Header -->
-      <header class="text-white shadow-lg" style="background: linear-gradient(to right, white 0%, white 8%, rgba(0, 93, 171, 0.5) 20%, #005DAB 35%, #765AA1 100%);">
+      <header class="text-white shadow-lg" style="background: linear-gradient(to right, white 0%, white 20%, rgba(0, 93, 171, 0.3) 35%, #005DAB 50%, #765AA1 100%);">
         <div class="max-w-7xl mx-auto px-4 py-6">
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-4">
