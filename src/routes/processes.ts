@@ -8,12 +8,16 @@ app.get('/', async (c) => {
   const db = c.env.DB;
   const userId = c.get('userId');
 
+  if (!userId) {
+    return c.json({ error: 'Unauthorized' }, 401);
+  }
+
   try {
     const result = await db.prepare(`
       SELECT 
         p.*,
-        COUNT(DISTINCT ps.id) as total_steps,
-        SUM(CASE WHEN ps.completed = 1 THEN 1 ELSE 0 END) as completed_steps
+        COALESCE(COUNT(DISTINCT ps.id), 0) as total_steps,
+        COALESCE(SUM(CASE WHEN ps.completed = 1 THEN 1 ELSE 0 END), 0) as completed_steps
       FROM processes p
       LEFT JOIN process_steps ps ON p.id = ps.process_id
       WHERE p.user_id = ?
@@ -29,7 +33,7 @@ app.get('/', async (c) => {
     return c.json({ processes });
   } catch (error: any) {
     console.error('Error fetching processes:', error);
-    return c.json({ error: 'Failed to fetch processes' }, 500);
+    return c.json({ error: 'Failed to fetch processes', details: error.message }, 500);
   }
 });
 

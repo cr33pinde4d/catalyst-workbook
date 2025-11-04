@@ -31,5 +31,6 @@ export async function authMiddleware(
   }
 
   c.set('user', user);
+  c.set('userId', user.id);
   await next();
 }
