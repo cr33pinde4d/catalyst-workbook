@@ -3556,6 +3556,908 @@ Melyik a legerősebb? Melyiket fejleszteni?">${getResponse('executive_presence')
       `;
     }
   }
+
+  // Day 6: Sustainability & Adaptation (8 steps)
+  if (dayId === 6) {
+    // Helper to get data from previous days
+    const getFromDay5 = (fieldName, stepNum) => getResponseFromDay(5, fieldName, stepNum);
+    const getFromDay4 = (fieldName, stepNum) => getResponseFromDay(4, fieldName, stepNum);
+    const getFromDay3 = (fieldName, stepNum) => getResponseFromDay(3, fieldName, stepNum);
+    const getFromDay2 = (fieldName, stepNum) => getResponseFromDay(2, fieldName, stepNum);
+    const getFromDay1 = (fieldName, stepNum) => getResponseFromDay(1, fieldName, stepNum);
+
+    // Step 1: Change anchoring plan
+    if (stepNum === 1) {
+      const strategicGoals = getFromDay2('strategic_goals_smart', 3) || '';
+      const actionPlan = getFromDay2('action_plan', 5) || '';
+      
+      return `
+        <div class="space-y-6">
+          ${strategicGoals || actionPlan ? `
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 p-4 rounded-lg">
+              <h4 class="font-semibold text-green-800 mb-2">
+                <i class="fas fa-anchor"></i> Referencia: Stratégia és akciók beépítése
+              </h4>
+              ${strategicGoals ? `<p class="text-sm text-gray-700"><strong>Stratégiai célok:</strong> ${strategicGoals.substring(0, 300)}...</p>` : ''}
+              ${actionPlan ? `<p class="text-sm text-gray-700 mt-2"><strong>Akciók:</strong> ${actionPlan.substring(0, 300)}...</p>` : ''}
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Kritikus új viselkedések/folyamatok azonosítása
+              </label>
+              <textarea name="critical_behaviors" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Melyek azok a kulcsviselkedések, amelyek kritikusak a változás fennmaradásához?
+
+Példák:
+- Heti stand-up meeting csütörtök 9-10
+- Minden döntéshez RACI használata
+- Új projekt indításakor stakeholder mapping
+
+Minimum 5 kritikus viselkedés/folyamat:">${getResponse('critical_behaviors')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Habit Stacking - Kapcsolás meglévő rutinokhoz
+              </label>
+              <textarea name="habit_stacking" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Minden új szokást kapcsolj egy meglévő rutinhoz:
+
+SABLON: 'Után/közben hogy [MEGLÉVŐ RUTIN], csinálni fogom [ÚJ VISELKEDÉS].'
+
+Példák:
+- Hétfői vezetői meeting után átnézem a heti OKR progresszt
+- Minden projektindítás előtt kitöltöm a stakeholder mátrixot
+- Munkanap végén 10 perces reflection a vezetői naplóban
+
+Írj minimum 5 habit stacking kapcsolatot:">${getResponse('habit_stacking')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. 90 napos változásbeépítési terv
+              </label>
+              <textarea name="90day_anchoring_plan" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="0-30 nap (Bevezetés és kommunikáció):
+- Mit kommunikálok? Kinek?
+- Mely viselkedéseket indítom?
+- Milyen támogatást adok?
+
+31-60 nap (Megerősítés):
+- Mely viselkedések rögzültek?
+- Hol van visszacsúszás?
+- Mit kell korrigálni?
+
+61-90 nap (Rutinná válás):
+- Mely folyamatok működnek már automatikusan?
+- Mit ünneplek/kommunikálok?
+- Hosszú távú fenntartás terve?">${getResponse('90day_anchoring_plan')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Megerősítési mechanizmusok és elismerés
+              </label>
+              <textarea name="reinforcement_mechanisms" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Hogyan erősítem meg a kívánt viselkedéseket?
+
+- Recognition program: Ki elismer? Mikor? Hogyan?
+- Reward system: Mi a jutalom?
+- Public celebration: Hogyan ünnepelünk?
+- Role models: Ki a példakép?
+- Stories: Milyen sikersztorikat mesélek el?
+
+Konkrét mechanizmusok és felelősök:">${getResponse('reinforcement_mechanisms')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 2: SOPs and documentation
+    if (stepNum === 2) {
+      const criticalBehaviors = getResponse('critical_behaviors', 1) || '';
+      
+      return `
+        <div class="space-y-6">
+          ${criticalBehaviors ? `
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-4 rounded-lg">
+              <h4 class="font-semibold text-blue-800 mb-2">
+                <i class="fas fa-file-alt"></i> Referencia: Kritikus viselkedések (1. lépésből)
+              </h4>
+              <p class="text-sm text-gray-700">${criticalBehaviors.substring(0, 400)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Top 10 kritikus folyamat azonosítása
+              </label>
+              <textarea name="top10_processes" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Lista a 10 legkritikusabb folyamatról, amelyet dokumentálni kell:
+
+1. Folyamat neve: ...
+   Miért kritikus: ...
+   Jelenlegi dokumentáció: van/nincs/elavult
+
+2. Folyamat neve: ...
+   ...
+
+Példák:
+- Új projekt indítási folyamat (RACI, stakeholder mapping)
+- Teljesítményértékelési folyamat
+- Konfliktuskezelési protokoll
+- Döntéshozatali folyamat">${getResponse('top10_processes')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. SOP sablon és dokumentációs standard
+              </label>
+              <textarea name="sop_template" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Standard SOP struktúra (MINDEN folyamathoz):
+
+1. Folyamat neve és célja
+2. Input (Mi kell hozzá?)
+3. Output (Mit állít elő?)
+4. Felelősök és szerepek (RACI)
+5. Lépésről lépésre leírás (1-2-3...)
+6. Időzítés/határidők
+7. Eszközök és források
+8. Minőségi kritériumok
+9. Eskalációs protokoll (Mi van, ha elakad?)
+10. Frissítési dátum és tulajdonos
+
+Válaszd ki 1 kritikus folyamatot és dokumentáld SOP formában:">${getResponse('sop_template')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Knowledge Base platform és hozzáférés
+              </label>
+              <textarea name="knowledge_base_plan" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Hol és hogyan lesz elérhető a dokumentáció?
+
+Platform választás: (SharePoint, Confluence, Google Drive, stb.)
+Struktúra: Mapparendszer/kategóriák
+Hozzáférés: Ki látja? Ki szerkesztheti?
+Kereshetőség: Hogyan találják meg?
+Frissítési protokoll: Ki frissíti? Milyen gyakran?
+Archíválás: Elavult dokumentumok kezelése
+
+Konkrét implementációs terv:">${getResponse('knowledge_base_plan')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Visual work instructions - Vizualizáció
+              </label>
+              <textarea name="visual_instructions" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Mely folyamatokat lehet flow chart-tal vagy vizualizációval egyszerűsíteni?
+
+Példák:
+- Döntési fa (flowchart): Mikor eszkalálok?
+- Swimlane diagram: Ki mit csinál mikor?
+- SIPOC diagram: Beszállítók-Input-Folyamat-Output-Ügyfelek
+
+Lista és felelősök:">${getResponse('visual_instructions')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 3: Knowledge transfer
+    if (stepNum === 3) {
+      const teamStructure = getFromDay3('team_structure', 4) || '';
+      
+      return `
+        <div class="space-y-6">
+          ${teamStructure ? `
+            <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border-l-4 border-yellow-500 p-4 rounded-lg">
+              <h4 class="font-semibold text-yellow-800 mb-2">
+                <i class="fas fa-users"></i> Referencia: Csapatstruktúra (3. Napból)
+              </h4>
+              <p class="text-sm text-gray-700">${teamStructure.substring(0, 400)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Kritikus tudás és birtokosai - Knowledge mapping
+              </label>
+              <textarea name="knowledge_mapping" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                placeholder="MÁTRIX: Kritikus tudás és birtokosai
+
+Tudás terület | Birtokos(ok) | Kockázat | Duplikáció szükséges?
+--------------------------------------------------------
+1. [Pl: Költségvetés folyamat] | [Név] | Magas/Közepes/Alacsony | Igen/Nem
+2. [Pl: Stakeholder kapcsolatok] | [Név] | ...
+3. [Pl: Technikai specifikáció] | [Név] | ...
+
+Azonosítsd:
+- Mely tudás kritikus a működéshez?
+- Ki az egyetlen birtokosa? (Single point of failure)
+- Hol van legnagyobb kockázat? (fluktuáció, nyugdíj, stb.)
+
+Minimum 8-10 kritikus tudás terület:">${getResponse('knowledge_mapping')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Mentoring/Shadowing program terv
+              </label>
+              <textarea name="mentoring_program" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                placeholder="Párosítások és tudástranszfer terv:
+
+Pár 1: [Mentor neve] → [Mentee neve]
+Tudás terület: ...
+Időtartam: X hónap
+Gyakoriság: Hetente/kéthetente X óra
+Módszertan: Shadowing, mentoring, gyakorlati projektek
+Sikerkritérium: Mentee önállóan képes lesz ...
+
+Pár 2: ...
+
+Minimum 5 párosítás/tudástranszfer kapcsolat:">${getResponse('mentoring_program')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Communities of Practice (CoP) - Szakmai közösségek
+              </label>
+              <textarea name="communities_of_practice" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                placeholder="Milyen szakmai közösségeket hozol létre?
+
+CoP 1: [Téma, pl: Agile Practitioners]
+Tagok: [Nevek/szerepkörök]
+Találkozások: Havonta/Negyedévente
+Cél: Tudásmegosztás, best practice, problémamegoldás
+Platform: (Teams, Slack, stb.)
+
+CoP 2: [Pl: Leadership Circle]
+...
+
+Minimum 3 CoP:">${getResponse('communities_of_practice')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Train-the-Trainer program
+              </label>
+              <textarea name="train_the_trainer" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                placeholder="Ki lesz belső trainer/szakértő?
+
+Trainer 1: [Név]
+Témakör: ...
+Képzési terv: Mikor tanítja? Kinek?
+Előkészítés: Milyen támogatást kap?
+
+Trainer 2: ...
+
+Legalább 3-5 belső trainer azonosítása és fejlesztési terve:">${getResponse('train_the_trainer')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 4: Monitoring and early warning system
+    if (stepNum === 4) {
+      const kpisDefined = getFromDay4('kpis_defined', 1) || '';
+      
+      return `
+        <div class="space-y-6">
+          ${kpisDefined ? `
+            <div class="bg-gradient-to-r from-red-50 to-rose-50 border-l-4 border-red-500 p-4 rounded-lg">
+              <h4 class="font-semibold text-red-800 mb-2">
+                <i class="fas fa-tachometer-alt"></i> Referencia: KPI-ok (4. Napból)
+              </h4>
+              <p class="text-sm text-gray-700">${kpisDefined.substring(0, 400)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Fenntarthatósági KPI-ok meghatározása
+              </label>
+              <textarea name="sustainability_kpis" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                placeholder="A fenntarthatóságot mérő mutatók (Leading Indicators!):
+
+KPI 1: [Pl: Weekly Retrospective Completion Rate]
+Mit mér: A csapatok hány %-a tart rendszeres retrospektívet
+Target: 90%+
+Gyakoriság: Heti
+Riasztás: <70%
+
+KPI 2: [Pl: SOP Documentation Coverage]
+Mit mér: Kritikus folyamatok hány %-a van dokumentálva
+Target: 100%
+...
+
+KPI 3: [Pl: Knowledge Transfer Completion]
+...
+
+Minimum 6-8 fenntarthatósági KPI:">${getResponse('sustainability_kpis')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Dashboard design - Mi legyen rajta?
+              </label>
+              <textarea name="sustainability_dashboard" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                placeholder="Dashboard elrendezés és tartalma:
+
+TOP WIDGETS (látható első pillanatra):
+1. [Widget neve]: Metrika, target, trend
+2. ...
+
+RIASZTÁSOK (Alert panel):
+- Mely KPI-ok piros zónában?
+- ...
+
+TRENDEK (Idősorok):
+- Mely mutatók javulnak/romlanak?
+
+DRILL-DOWN:
+- Mely részterületre lehet kattintani mélyebb elemzésért?
+
+Sketch/leírás:">${getResponse('sustainability_dashboard')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Red Flag Framework - Vörös zászlók
+              </label>
+              <textarea name="red_flags" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                placeholder="Milyen korai figyelmeztető jelek utalnak problémára?
+
+Red Flag 1: [Pl: Csapat meeting részvétel <60%]
+Mit jelez: Elköteleződés/motiváció csökken
+Akció: 1-on-1 beszélgetések, ok feltárása
+
+Red Flag 2: [Pl: Visszacsúszás régi folyamatokhoz]
+Mit jelez: ...
+Akció: ...
+
+Red Flag 3: [Pl: Új SOP-k nem használata]
+...
+
+Minimum 8 vörös zászló jelző:">${getResponse('red_flags')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Quick Response mechanizmus - Gyors beavatkozás
+              </label>
+              <textarea name="quick_response" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                placeholder="HA [RED FLAG], AKKOR [AKCIÓ] - protokoll
+
+Red Flag → Döntési fa:
+1. Ki értesül? (Riasztási lista)
+2. Válaszidő? (24h, 48h, 1 hét?)
+3. Ki avatkozik be? (Felelős)
+4. Milyen eszköz? (5 Whys, Retrospektíva, Coaching?)
+5. Kommunikáció? (Kinek kell tudni?)
+6. Follow-up? (Mikor ellenőrizzük újra?)
+
+Legalább 5 scenario és protokoll:">${getResponse('quick_response')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 5: Agility development
+    if (stepNum === 5) {
+      const okrsDefined = getFromDay2('strategic_goals_smart', 3) || '';
+      
+      return `
+        <div class="space-y-6">
+          ${okrsDefined ? `
+            <div class="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-purple-500 p-4 rounded-lg">
+              <h4 class="font-semibold text-purple-800 mb-2">
+                <i class="fas fa-bullseye"></i> Referencia: Stratégiai célok (2. Napból)
+              </h4>
+              <p class="text-sm text-gray-700">${okrsDefined.substring(0, 400)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Rövidebb tervezési ciklusok bevezetése
+              </label>
+              <textarea name="shorter_planning_cycles" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Jelenlegi tervezési ciklus: [Pl: Éves stratégiai tervezés]
+
+ÚJ tervezési ritmus:
+- Quarterly Planning (negyedéves): OKR setting, Q review
+- Monthly Check-in: Progress review, priorities adjustment
+- Weekly Stand-ups: Gyors sync, blockers
+- Daily Huddles (opcionális): 15 perc
+
+Részletek:
+- Mikor indítod?
+- Ki vesz részt?
+- Milyen formátum?
+- Milyen output?
+
+Konkrét implementációs terv:">${getResponse('shorter_planning_cycles')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Cross-funkcionális gyors csapatok (Squad model)
+              </label>
+              <textarea name="cross_functional_squads" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Milyen gyors csapatokat hozol létre?
+
+Squad 1: [Név/Cél]
+Tagok: [Szerepkörök: PO, Dev, UX, stb.]
+Lifecycle: Időzített projekt / Folyamatos
+Decision authority: Milyen döntéseket hozhat önállóan?
+Ritmus: Daily standup, Sprint planning, Review, Retro
+
+Squad 2: ...
+
+Minimum 3 cross-functional csapat terve:">${getResponse('cross_functional_squads')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Test-and-Learn kultúra - Kísérletezés
+              </label>
+              <textarea name="test_and_learn" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Hogyan támogatod a kísérletezést?
+
+1. Experiment Framework:
+   - Hipotézis: Mit gondolunk?
+   - Teszt: Hogyan ellenőrizzük?
+   - Metrika: Mit mérünk?
+   - Learning: Mit tanultunk?
+   - Döntés: Scale/Pivot/Kill
+
+2. Safe-to-fail experiments: Mely területeken?
+3. Budget/időkeret: Mennyi erőforrás kísérletezésre?
+4. Celebration: Hogyan ünnepeljük a tanulást?
+
+Konkrét példa + keretrendszer:">${getResponse('test_and_learn')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Retrospektívák rendszeresítése
+              </label>
+              <textarea name="regular_retrospectives" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Retrospektíva ritmus és formátum:
+
+Sprint/Project Retro:
+- Gyakoriság: Sprint végén / Projekt mérföldkő
+- Résztvevők: ...
+- Formátum: Start-Stop-Continue, 4Ls, Sailboat, stb.
+- Output: 3 action item (max!)
+
+Quarterly Business Review:
+- Mit tanultunk a negyedévben?
+- ...
+
+Konkrét terv és facilitátorok:">${getResponse('regular_retrospectives')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 6: Learning organization
+    if (stepNum === 6) {
+      const learningData = getFromDay5('learning_journal', 8) || getFromDay4('continuous_improvement', 8) || '';
+      
+      return `
+        <div class="space-y-6">
+          ${learningData ? `
+            <div class="bg-gradient-to-r from-indigo-50 to-blue-50 border-l-4 border-indigo-500 p-4 rounded-lg">
+              <h4 class="font-semibold text-indigo-800 mb-2">
+                <i class="fas fa-graduation-cap"></i> Referencia: Tanulási gyakorlatok
+              </h4>
+              <p class="text-sm text-gray-700">${learningData.substring(0, 400)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Peter Senge 5 Disciplines alkalmazása
+              </label>
+              <textarea name="senge_5_disciplines" rows="10" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                placeholder="Senge 5 fegyelme - Hogyan alkalmazod?
+
+1. Personal Mastery (Személyes fejlődés):
+   - Hogyan támogatod az egyéni tanulást?
+   - Fejlesztési budget/idő?
+
+2. Mental Models (Gondolkodási minták):
+   - Hogyan kérdőjelezed meg az feltevéseket?
+   - Reflection gyakorlatok?
+
+3. Shared Vision (Közös jövőkép):
+   - Hogyan alkotjátok közösen?
+
+4. Team Learning (Csapattanulás):
+   - Dialógus vs vita kultúrája?
+
+5. Systems Thinking (Rendszerszemlélet):
+   - Hogyan tanítod a rendszergondolkodást?
+
+Konkrét akciók mindegyikhez:">${getResponse('senge_5_disciplines')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. After Action Review (AAR) bevezetése
+              </label>
+              <textarea name="after_action_review" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                placeholder="AAR protokoll minden projekt/esemény után:
+
+4 kérdés:
+1. Mit akartunk elérni?
+2. Mi történt valójában?
+3. Miért volt különbség?
+4. Mit tanultunk? (Mit csinálunk legközelebb másképp?)
+
+Mikor használjuk:
+- Projekt lezárása után
+- Jelentős esemény után (siker vagy kudarc)
+- ...
+
+Ki facilitálja? Hogyan dokumentáljuk a tanulságokat?
+Kinek kommunikáljuk?">${getResponse('after_action_review')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Failure Celebration Framework - Produktív kudarcok ünneplése
+              </label>
+              <textarea name="failure_celebration" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                placeholder="Hogyan ünnepeljük a tanulságos kudarcokat?
+
+'Failure of the Month' award:
+- Ki oszt? Mikor?
+- Kritériumok: Bátor kísérlet + Őszinte tanulság
+- Elismerés formája: ...
+
+Blameless Postmortem:
+- Nem 'Ki a hibás?', hanem 'Mi a rendszer hiba?'
+- ...
+
+FuckUp Nights / Learning Lunch:
+- Osztás kudarcélményekről
+- ...
+
+Konkrét ceremóniák és formátumok:">${getResponse('failure_celebration')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Innovation Time (Google 20% modell adaptálása)
+              </label>
+              <textarea name="innovation_time" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                placeholder="Mennyit és hogyan adsz innovációs/tanulási időt?
+
+Modell: [20%, 10%, Hack days, stb.]
+Szabályok:
+- Mit lehet csinálni? (Kísérlet, tanulás, új skill, stb.)
+- Milyen elvárás? (Megosztás, prezentáció?)
+- Budget: Van-e pénzkeret?
+
+Példák, siker történetek:
+- Mit fejlesztettek eddig?
+
+Hogyan indítod?">${getResponse('innovation_time')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 7: Success communication
+    if (stepNum === 7) {
+      const communicationPlan = getFromDay2('communication_plan', 7) || '';
+      
+      return `
+        <div class="space-y-6">
+          ${communicationPlan ? `
+            <div class="bg-gradient-to-r from-green-50 to-teal-50 border-l-4 border-green-500 p-4 rounded-lg">
+              <h4 class="font-semibold text-green-800 mb-2">
+                <i class="fas fa-bullhorn"></i> Referencia: Kommunikációs terv (2. Napból)
+              </h4>
+              <p class="text-sm text-gray-700">${communicationPlan.substring(0, 400)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Quick Wins azonosítása és kommunikálása
+              </label>
+              <textarea name="quick_wins" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Milyen gyors sikereket értek el és hogyan kommunikálod?
+
+Quick Win 1: [Pl: Első sikeres OKR ciklus lezárása]
+Amikor: ...
+Mit kommunikálok: Számok, történet, tanulság
+Kinek: Team, vezetőség, szélesebb szervezet
+Hogyan: Email, all-hands, newsletter, dashboard
+
+Quick Win 2: ...
+
+Minimum 5 quick win és kommunikációs terv:">${getResponse('quick_wins')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Success Story Template - Sztori formátum
+              </label>
+              <textarea name="success_story_template" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Minden siker kommunikálásához használt sablon:
+
+📖 TÖRTÉNET SABLON:
+1. Context (Kontextus): Mi volt a kiindulási pont?
+2. Challenge (Kihívás): Milyen problémát oldottunk meg?
+3. Action (Akció): Mit csináltunk? Ki volt benne?
+4. Result (Eredmény): Számok, tények, hatás
+5. Learning (Tanulság): Mit tanultunk? Mit csinálnánk másképp?
+6. What's Next (Következő lépések): Hova tartunk?
+
+Válassz 1 sikert és írj story-t a sablon szerint:">${getResponse('success_story_template')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Recognition Program - Elismerés és ünneplés
+              </label>
+              <textarea name="recognition_program" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Strukturált elismerési program:
+
+Mérföldkő események (amikor ünneplünk):
+- Nap/Sprint vége
+- Quarterly review
+- Évforduló
+- ...
+
+Formátumok:
+- Public shout-out (All-hands, email)
+- Award/Recognition (Ki adja? Mi a díj?)
+- Celebration event (Pizza party, off-site, stb.)
+- Peer recognition platform
+
+Példa ceremóniák és felelősök:">${getResponse('recognition_program')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Kommunikációs csatornák és ritmus
+              </label>
+              <textarea name="communication_channels" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Strukturált kommunikációs terv:
+
+Napi/Heti:
+- Csatorna: [Slack, Teams, Email?]
+- Tartalom: Quick wins, shout-outs
+- Ki felelős?
+
+Havi:
+- Newsletter: Success stories, metrics
+- ...
+
+Negyedéves:
+- All-hands presentation
+- ...
+
+Éves:
+- ...
+
+Kommunikációs naptár:">${getResponse('communication_channels')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 8: Handover and succession planning
+    if (stepNum === 8) {
+      const teamData = getFromDay3('team_finalization', 8) || getFromDay3('talent_assessment', 5) || '';
+      
+      return `
+        <div class="space-y-6">
+          ${teamData ? `
+            <div class="bg-gradient-to-r from-orange-50 to-red-50 border-l-4 border-orange-500 p-4 rounded-lg">
+              <h4 class="font-semibold text-orange-800 mb-2">
+                <i class="fas fa-user-friends"></i> Referencia: Csapat és tehetségek (3. Napból)
+              </h4>
+              <p class="text-sm text-gray-700">${teamData.substring(0, 400)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Potenciális utódok azonosítása (9-Box Grid)
+              </label>
+              <textarea name="potential_successors" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                placeholder="9-Box Talent Grid alapján utódok:
+
+HIGH POTENTIAL KANDIDÁNSOK:
+1. [Név]
+   Jelenlegi pozíció: ...
+   Erősségek: ...
+   Fejlesztendő területek: ...
+   Időhorizont: Mikor lesz készen? (6-12-24 hónap)
+
+2. [Név]
+   ...
+
+BACKUP OPCIÓK (ha első nem elérhető):
+3. [Név]
+   ...
+
+Minimum 2-3 realisztikus utód jelölt:">${getResponse('potential_successors')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Utódfejlesztési terv (6-12 hónap roadmap)
+              </label>
+              <textarea name="successor_development_plan" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                placeholder="Minden utódjelölthez fejlesztési terv:
+
+KANDIDÁNS: [Név]
+
+0-3 hónap:
+- Shadowing: [Mely területek?]
+- Exposure: [Mely meetingek, projektek?]
+- Skill gaps: [Milyen képzések?]
+
+4-6 hónap:
+- Acting role: [Mely területen próbálhatja ki magát?]
+- Mentoring: [Ki mentorálja?]
+- Stretch assignments: [Kihívó feladatok]
+
+7-12 hónap:
+- Interim leadership: [Temporary role?]
+- Stakeholder introduction: [Kapcsolatok átadása]
+- Final readiness assessment
+
+Részletes roadmap legalább az első jelölthöz:">${getResponse('successor_development_plan')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Transition Roadmap - Átadási ütemterv
+              </label>
+              <textarea name="transition_roadmap" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                placeholder="Átadási terv (ha ténylegesen átadásra kerül sor):
+
+30 NAPPAL ÁTADÁS ELŐTT:
+- Stakeholder kommunikáció
+- Knowledge transfer intenzív fázis
+- ...
+
+ÁTADÁS NAPJA:
+- Hivatalos announcement
+- Intro to key stakeholders
+- ...
+
+30 NAP UTÁN:
+- Shadowing fordítva (régi vezető support-ol)
+- Check-in meetings
+- ...
+
+90 NAP UTÁN:
+- Teljes önállóság
+- Final retrospektíva
+- Lessons learned
+
+Részletes ütemterv:">${getResponse('transition_roadmap')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. "Tribal Knowledge" átadása - A láthatatlan dolgok
+              </label>
+              <textarea name="tribal_knowledge" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                placeholder="Mit kell átadni, ami nincs leírva?
+
+1. KAPCSOLATI TÉRKÉP:
+   - Kik a kulcsemberek?
+   - Kinek mi a motivációja?
+   - Kit kell bevonni mikor és miért?
+
+2. POLITIKAI TÉRKÉP:
+   - Milyen szövetségek/dinamikák vannak?
+   - Kik a veto players?
+   - Hogyan építesz konszenzust?
+
+3. DÖNTÉSHOZATALI LOGIKA:
+   - Mi az íratlan szabály?
+   - Mikor eszkalálsz?
+   - Milyen trade-off-ok vannak?
+
+4. KULTURÁLIS NUANCES:
+   - Mi működik itt?
+   - Mi a tabu?
+
+Konkrét példák és esettanulmányok átadásra:">${getResponse('tribal_knowledge')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                5. 30-60-90 napos terv az utód számára
+              </label>
+              <textarea name="successor_30_60_90_plan" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                placeholder="Mit várunk az utódtól az első 90 napban?
+
+ELSŐ 30 NAP (Tanulás):
+- Figyelj, tanulj, kérdezz
+- 1-on-1 minden stakeholderrel
+- Megérteni a rendszert
+- Quick wins: [1-2 gyors akció]
+
+60 NAP (Hozzájárulás):
+- Első változtatások
+- ...
+
+90 NAP (Ownership):
+- Teljes felelősség átvétele
+- Első stratégiai döntések
+- ...
+
+Világos elvárások és mérföldkövek:">${getResponse('successor_30_60_90_plan')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
   
   // Generic text area for other days
   return `
