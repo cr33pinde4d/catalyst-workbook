@@ -2839,6 +2839,724 @@ Mit fogsz fejleszteni a teljesítménymenedzsment rendszerben?">${getResponse('i
     }
   }
   
+  // Day 5: Team Management (8 steps)
+  if (dayId === 5) {
+    // Helper to get team info from Day 3
+    const getTeamFromDay3 = () => {
+      const charter = getResponseFromDay(3, 'team_charter', 8);
+      const roles = getResponseFromDay(3, 'final_role_descriptions', 8);
+      return { charter, roles };
+    };
+
+    // Step 1: Delegation strategy
+    if (stepNum === 1) {
+      const team = getTeamFromDay3();
+      
+      return `
+        <div class="space-y-6">
+          ${team.charter || team.roles ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Csapatod a 3. Napból:
+              </p>
+              ${team.charter ? `<p class="text-sm text-purple-900 mb-2"><strong>Team Charter:</strong> ${team.charter.substring(0, 100)}...</p>` : ''}
+              ${team.roles ? `<p class="text-sm text-purple-900"><strong>Szerepek:</strong> ${team.roles.substring(0, 100)}...</p>` : ''}
+            </div>
+          ` : ''}
+
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-hand-holding text-blue-500"></i> 
+            A jó delegálás fejleszti a csapatot és felszabadítja a vezetőt!
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Eisenhower mátrix - Mit delegálsz, mit tartasz meg?
+              </label>
+              <textarea name="eisenhower_matrix" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="           | Sürgős         | Nem sürgős
+-----------|----------------|----------------
+Fontos     | CSINÁLD MOST   | TERVEZD BE
+           | (Krízis)       | (Fejlesztés)
+-----------|----------------|----------------
+Nem fontos | DELEGÁLD       | DOBD EL
+           | (Zavaró)       | (Időpocsékolás)
+
+Mit delegálsz? Kinek?">${getResponse('eisenhower_matrix')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Skill-Will mátrix - Ki kapjon mit?
+              </label>
+              <textarea name="skill_will_matrix" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Magas Skill + Magas Will = Delegálj, adj felhatalmazást
+Magas Skill + Alacsony Will = Motiválj, érd meg miért fontos
+Alacsony Skill + Magas Will = Tanítsd, coachingolj
+Alacsony Skill + Alacsony Will = Irányíts vagy cserélj
+
+Ki melyik kvadránsban van?">${getResponse('skill_will_matrix')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Delegálási szintek (1-7) - Mennyi felhatalmazást adsz?
+              </label>
+              <textarea name="delegation_levels" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="1. Megmondom, csináld! (teljes irányítás)
+2. Eladok egy megoldást
+3. Javaslok, kérdezz
+4. Kérlek javaslatot, én döntök
+5. Javaslatot kérek, te döntesz
+6. Te döntesz, informálj
+7. Te döntesz és csinálod (teljes autonomy)
+
+Mely feladatoknál melyik szintet alkalmazod?">${getResponse('delegation_levels')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. SMART feladatátadás - Konkrét delegálási terv
+              </label>
+              <textarea name="smart_delegation" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="Feladat | Kinek | Miért ő | Szint | Check-in | Siker kritérium
+--------|-------|---------|-------|----------|------------------
+...     | ...   | ...     | 5     | Heti     | ...
+...     | ...   | ...     | 3     | Napi     | ...
+...">${getResponse('smart_delegation')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 2: Motivation factors
+    if (stepNum === 2) {
+      const teamStrengths = getResponseFromDay(3, 'team_strengths', 5);
+      
+      return `
+        <div class="space-y-6">
+          ${teamStrengths ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Csapattagok erősségei a 3. Napból:
+              </p>
+              <p class="text-sm text-purple-900">${teamStrengths.substring(0, 150)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Herzberg Two-Factor Theory - Higiénés vs Motivátor tényezők
+              </label>
+              <textarea name="herzberg_factors" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Higiénés tényezők (ha hiányzik → demotiváció):
+- Fizetés, benefit-ek
+- Munkakörülmények
+- Biztonság
+- Politikák, szabályok
+
+Motivátor tényezők (ha jelen → motiváció):
+- Elismér��s, siker
+- Felelősség, growth
+- Érdekes munka
+- Előrelépés lehetősége
+
+Melyik hiányzik? Mit tudsz javítani?">${getResponse('herzberg_factors')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Drive: Autonomy, Mastery, Purpose (Dan Pink)
+              </label>
+              <textarea name="drive_amp" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Autonomy (Autonómia): Önállóság, döntési szabadság
+- Hogyan növeled?
+
+Mastery (Mesterség): Fejlődés, szakértelem építése
+- Milyen tanulási lehetőségek?
+
+Purpose (Cél): Nagyobb cél, jelentés
+- Mi a WHY? Miben járul hozzá a csapat a nagyobb képhez?">${getResponse('drive_amp')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Motivációs térkép - Ki mit értékel?
+              </label>
+              <textarea name="motivation_map" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+                placeholder="Név | Pénz | Elismerés | Tanulás | Biztonság | Hatalom | Kapcsolat | Flexibilitás
+-----|------|-----------|---------|-----------|---------|-----------|---------------
+... | ⭐⭐⭐ | ⭐⭐      | ⭐⭐⭐⭐⭐ | ⭐⭐      | ⭐       | ⭐⭐⭐     | ⭐⭐⭐⭐
+... | ...  | ...       | ...     | ...       | ...     | ...       | ...
+
+(1-5 csillag, mi motiválja legjobban)">${getResponse('motivation_map')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Stay Interview kérdések - Miért maradnak?
+              </label>
+              <textarea name="stay_interview" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Kérdezz meg minden csapattagot:
+- Mi az, ami miatt szívesen maradsz?
+- Mi az, ami miatt fontolgatnád a távozást?
+- Mit változtatnál, ha tehetnéd?
+- Mit tanulsz/fejlődsz itt?
+- Érted a nagyobb képet, célokat?
+
+Mit tanultál belőle?">${getResponse('stay_interview')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 3: Conflict management
+    if (stepNum === 3) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-handshake text-blue-500"></i> 
+            A jól kezelt konfliktus nem romboló, hanem építő!
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Thomas-Kilmann Conflict Mode (TKI) - 5 konfliktuskezelési stílus
+              </label>
+              <textarea name="tki_modes" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Competing (Versengés): Asszertív, nem kooperatív → Ha gyors döntés kell
+Collaborating (Együttműködés): Asszertív, kooperatív → Win-win megoldás
+Compromising (Kompromisszum): Közepes asszertív+kooperatív → Gyors megoldás kell
+Avoiding (Elkerülés): Nem asszertív, nem kooperatív → Triviális konfliktus
+Accommodating (Alkalmazkodás): Nem asszertív, kooperatív → Kapcsolat fontosabb
+
+Melyiket mikor használod? Mi a természetes stílusod?">${getResponse('tki_modes')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Jelenlegi konfliktusok a csapatban
+              </label>
+              <textarea name="current_conflicts" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Konfliktus | Kik között | Típus | Súlyosság | Kezelési terv
+-----------|-----------|-------|-----------|---------------
+...        | X vs Y    | ...   | Közepes   | ...
+...        | ...       | ...   | ...       | ...
+
+Típusok: Feladat, Folyamat, Kapcsolat, Érték">${getResponse('current_conflicts')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Interest-Based Relational (IBR) Approach
+              </label>
+              <textarea name="ibr_approach" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="1. Válaszd el az embert a problémától
+2. Fókuszálj az érdekekre, nem pozíciókra
+3. Generálj win-win opciókat
+4. Használj objektív kritériumokat
+
+Hogyan alkalmaznád egy konkrét konfliktusnál?">${getResponse('ibr_approach')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Non-violent Communication (NVC) - Megfigyelés, Érzés, Szükséglet, Kérés
+              </label>
+              <textarea name="nvc_framework" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Megfigyelés: Mit láttál/hallottál konkrétan? (ítélet nélkül)
+Érzés: Mit érzel ezzel kapcsolatban?
+Szükséglet: Milyen szükségleted nem teljesült?
+Kérés: Mit kérnél konkrétan?
+
+Példa konfliktusodra alkalmazva:">${getResponse('nvc_framework')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 4: Psychological safety
+    if (stepNum === 4) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-shield-alt text-green-500"></i> 
+            A pszichológiai biztonság a magas teljesítmény alapja!
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Google Project Aristotle tanulságai
+              </label>
+              <textarea name="project_aristotle" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Top 5 team effectiveness faktor:
+1. Pszichológiai biztonság (egyértelműen #1!)
+2. Megbízhatóság (ígéretek betartása)
+3. Struktúra és világosság (ki mit csinál)
+4. Jelentés (munka értelme)
+5. Hatás (a munka számít)
+
+Melyik a legerősebb? Melyik a leggyengébb nálatok?">${getResponse('project_aristotle')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Amy Edmondson Psychological Safety Index - Önértékelés
+              </label>
+              <textarea name="safety_index" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="1-7 skála (1=egyáltalán nem igaz, 7=teljesen igaz):
+- Ebben a csapatban biztonságos kockáztatni ___
+- A hibákat nem használják ellenem ___
+- A csapattagok képesek nehéz kérdéseket felvetni ___
+- Senkit nem utasítanak el másságuk miatt ___
+- Bátran kérhetek segítséget ___
+- Nem szabotálnak ___
+- Egyedi készségeim értékeltek ___
+
+Átlag: ___ (alacsony < 4, közepes 4-5, magas > 5)">${getResponse('safety_index')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Blameless postmortem - Hogyan tanuljunk hibákból?
+              </label>
+              <textarea name="blameless_postmortem" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Mi történt? (timeline, tények)
+Mi volt a rendszerbeli ok? (nem személyes blame!)
+Mit tanultunk?
+Mit változtatunk meg?
+Action items: ki, mit, mikor
+
+Mikor alkalmazod legközelebb?">${getResponse('blameless_postmortem')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Check-in rituals - Hogy vagy? Mit hozol ma?
+              </label>
+              <textarea name="checkin_rituals" rows="5" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Napi stand-up: Hogyan érzed magad 1-10?
+Heti sync: Mi az, ami foglalkoztat?
+Retro: Rózsák és tövések (mi ment jól/nehéz)
+
+Milyen check-in rituálét építesz be?">${getResponse('checkin_rituals')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 5: Coaching and mentoring
+    if (stepNum === 5) {
+      const devAreas = getResponseFromDay(3, 'development_areas', 5);
+      
+      return `
+        <div class="space-y-6">
+          ${devAreas ? `
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p class="text-sm text-purple-800 font-medium mb-2">
+                <i class="fas fa-link"></i> Fejlesztendő területek a 3. Napból:
+              </p>
+              <p class="text-sm text-purple-900">${devAreas.substring(0, 150)}...</p>
+            </div>
+          ` : ''}
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. GROW modell - Coaching keretrendszer
+              </label>
+              <textarea name="grow_model" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Goal (Cél): Mit szeretnél elérni?
+- ...
+
+Reality (Jelenlegi helyzet): Hol vagy most?
+- ...
+
+Options (Opciók): Milyen lehetőségeid vannak?
+- ...
+
+Will (Akarat/Akció): Mit fogsz tenni? Mikor?
+- ...
+
+Kivel alkalmaznád ezt a modellt?">${getResponse('grow_model')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Socratic questioning - Kérdezz, ne tanácsolj!
+              </label>
+              <textarea name="socratic_questions" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Tisztázó kérdések: Mit értesz ezen? Példát tudsz mondani?
+Feltevések vizsgálata: Mi az feltételezés ebben? Honnan tudod?
+Bizonyítékok: Mi támasztja alá? Van ellenpélda?
+Perspektíva: Más hogyan látná? Mi lenne a másik oldal?
+Következmények: Mi lenne az eredmény? Long term hatások?
+Meta kérdések: Miért fontos ez? Mi a kérdés mögött?
+
+Gyakorold ezeket!">${getResponse('socratic_questions')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Active listening - Hallgass aktívan!
+              </label>
+              <textarea name="active_listening" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Parafrazálás: Ha jól értem, azt mondod...
+Tükrözés: Úgy tűnik, csalódott vagy...
+Összegzés: Tehát a fő pontok...
+Tisztázó kérdések: Mit értesz ezen?
+Testbeszéd: Szemkontaktus, bólintás, nyitott tartás
+
+Milyen akadályaid vannak az aktív hallgatásban?">${getResponse('active_listening')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. 70-20-10 fejlesztési modell
+              </label>
+              <textarea name="70_20_10" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="70% - On the job learning: Projektek, kihívások, stretch assignments
+20% - Learning from others: Mentorálás, shadowing, coaching
+10% - Formal training: Kurzusok, workshopok, certifikációk
+
+Mit adsz a csapattagjaidnak mindhárom kategóriában?">${getResponse('70_20_10')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 6: Difficult conversations
+    if (stepNum === 6) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-exclamation-triangle text-orange-500"></i> 
+            A nehéz beszélgetések elkerülése súlyosbítja a problémát!
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Crucial Conversations Framework
+              </label>
+              <textarea name="crucial_conversations" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="1. Start with Heart: Mi a valódi célod?
+2. Learn to Look: Figyeld a biztonság jeleit
+3. Make it Safe: Teremts biztonságos környezetet
+4. Master My Stories: Kezeld az érzelmeidet
+5. STATE my path:
+   - Share facts
+   - Tell your story
+   - Ask for others' paths
+   - Talk tentatively
+   - Encourage testing
+
+Milyen nehéz beszélgetésre készülsz?">${getResponse('crucial_conversations')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. SBI feedback (Situation-Behavior-Impact) - már ismered
+              </label>
+              <textarea name="sbi_difficult" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Situation: Konkrét helyzet, kontextus
+Behavior: Megfigyelhető viselkedés (ítélet nélkül)
+Impact: Mi volt ennek a hatása?
+
+Példa egy nehéz beszélgetésre:
+Helyzet: Tegnapi meeting-en...
+Viselkedés: Félbeszakítottad Annát 3x...
+Hatás: Anna visszahúzódott, nem osztotta meg az ötletét...">${getResponse('sbi_difficult')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. PIE modell (Performance Improvement Expectations)
+              </label>
+              <textarea name="pie_model" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Performance issue: Mi a konkrét probléma?
+Improvement: Mit vársz el konkrétan?
+Expectations: Mi történik, ha javul? Mi, ha nem?
+Timeline: Mikorra? Mikor beszélünk újra?
+
+Példa PIP (Performance Improvement Plan)-ra:
+...">${getResponse('pie_model')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Nehéz beszélgetés checklist - Előkészület
+              </label>
+              <textarea name="difficult_conv_checklist" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Előtte:
+☐ Mi a valódi célom?
+☐ Tények vs interpretáció szétválasztása
+☐ Empátia - mi lehet a másik perspektívája?
+☐ Időpont, helyszín (privát, csendes)
+☐ Érzelmi állapot rendben?
+
+Közben:
+☐ Aktív hallgatás
+☐ Kérdezz, ne csak mondd
+☐ Tényekre fókusz
+
+Utána:
+☐ Follow-up időpont egyeztetése">${getResponse('difficult_conv_checklist')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 7: Team cohesion
+    if (stepNum === 7) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-users-cog text-blue-500"></i> 
+            Erős, összetartó csapat = magas teljesítmény + alacsony fluktuáció!
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Lencioni 5 Dysfunctions of a Team - Piramis
+              </label>
+              <textarea name="lencioni_pyramid" rows="11" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="               Eredmények
+              (Results Inattention)
+            -------------------------
+          Elszámoltathatóság hiánya
+        (Avoidance of Accountability)
+      ---------------------------------
+    Elkötelezettség hiánya
+  (Lack of Commitment)
+----------------------------------
+Konfliktus kerülése
+(Fear of Conflict)
+----------------------------------
+BIZALOM hiánya (ALAP!)
+(Absence of Trust)
+
+Melyik szinten van a legnagyobb problémátok?">${getResponse('lencioni_pyramid')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. Team building tevékenységek - Mit csinálsz?
+              </label>
+              <textarea name="team_building" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Bizalom építése:
+- Személyes történetek megosztása
+- Vulnerability exercises
+- Trust falls (klasszikus, de működik)
+
+Együttműködés:
+- Közös problémamegoldás
+- Escape room
+- Közös sport/hobbi
+
+Ünneplés:
+- Sikerek megünneplése
+- Team lunch/dinner
+- Évfordulók, születésnapok
+
+Milyen gyakran? Mire van szükség?">${getResponse('team_building')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Tuckman stages - Forming, Storming, Norming, Performing
+              </label>
+              <textarea name="tuckman_stages" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Forming: Udvarias, óvatos, irányításra vágyó
+→ Mit tegyél: Világos cél és szerepek
+
+Storming: Konfliktusok, power struggle, frusztráció
+→ Mit tegyél: Facilitálj, hallgasd meg mindenkit
+
+Norming: Szabályok kialakulása, együttműködés
+→ Mit tegyél: Erősítsd a normákat
+
+Performing: Magas teljesítmény, autonómia, flow
+→ Mit tegyél: Delegálj, támogasd
+
+Melyik fázisban van a csapatod?">${getResponse('tuckman_stages')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Team rituals és hagyományok
+              </label>
+              <textarea name="team_rituals" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Napi rituals:
+- Stand-up formátum
+- Check-in kérdések
+
+Heti rituals:
+- Team lunch pénteken
+- Retro formátum
+
+Havi/negyedéves:
+- All-hands meeting
+- Offsite, hackathon
+
+Milyen rituálék jellemzik a csapatodat?">${getResponse('team_rituals')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Step 8: Leadership presence
+    if (stepNum === 8) {
+      return `
+        <div class="space-y-6">
+          <p class="text-gray-700 font-medium mb-4">
+            <i class="fas fa-user-tie text-purple-500"></i> 
+            A vezetői jelenlét modellt ad a csapatnak - légy tudatos!
+          </p>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                1. Leadership Brand - Hogyan szeretnéd, hogy lássanak?
+              </label>
+              <textarea name="leadership_brand" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Mit szeretnél, hogy mondjanak rólad mint vezetőről?
+- 3 szó, ami leír:
+- Amit jól csinálok:
+- Amit fejlesztenem kell:
+- Mit szeretnék, hogy emlékezzek rólam?
+
+Példa: "Autentikus, fejlesztő, eredményorientált"
+vs "Mikromenedzselő, impatiens, közelíthetetlen"">${getResponse('leadership_brand')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                2. 360° visszajelzés - Önkép vs mások képe
+              </label>
+              <textarea name="360_self_vs_others" rows="7" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Kérdezz meg:
+- Felettesed: ...
+- Peers: ...
+- Beosztottjaid: ...
+
+Énkép vs Mások véleménye:
+- Hol van gap?
+- Mi a vak folt?
+- Mi a rejtett erősség?
+
+Mit tanultál?">${getResponse('360_self_vs_others')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                3. Vezetői napló és reflekció
+              </label>
+              <textarea name="leadership_journal" rows="8" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Napi reflekció:
+- Mi ment jól ma?
+- Mi volt nehéz?
+- Mit tanultam?
+- Mit csinálnék másképp?
+
+Heti reflekció:
+- Mik voltak a highlights?
+- Milyen vezetői döntést hoztam?
+- Hogyan támogattam a csapatot?
+- Mit fejleszteni jövő héten?
+
+Elkötelezel-e magad napi/heti naplózásra?">${getResponse('leadership_journal')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                4. Executive Presence - Megjelenés, Kommunikáció, Karizma
+              </label>
+              <textarea name="executive_presence" rows="9" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="Megjelenés (Gravitas):
+- Magabiztosság, nyugalom nyomás alatt
+- Döntésképesség
+- Érzelmi intelligencia
+
+Kommunikáció:
+- Világos, tömör üzenetek
+- Aktív hallgatás
+- Storytelling
+
+Karizma:
+- Energia, pozitivitás
+- Autenticitás
+- Empátia
+
+Melyik a legerősebb? Melyiket fejleszteni?">${getResponse('executive_presence')}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                5. Személyes fejlesztési terv - Mi a következő 6 hónap?
+              </label>
+              <textarea name="leadership_dev_plan" rows="6" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                placeholder="1. Fejlesztési terület: ...
+   Miért fontos: ...
+   Akció: ...
+   Mérés: Honnan tudom, hogy sikerült?
+
+2. Fejlesztési terület: ...
+   ...
+
+3. Fejlesztési terület: ...">${getResponse('leadership_dev_plan')}</textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+  
   // Generic text area for other days
   return `
     <div>
