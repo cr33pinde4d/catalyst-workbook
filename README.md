@@ -18,6 +18,9 @@ A Catalyst Tanulási Napló egy full-stack webalkalmazás, amely digitalizálja 
 - **📝 Dinamikus mezők**: Kontextus-érzékeny input mezők minden lépéshez
 - **🎯 Státusz menedzsment**: "Folyamatban" és "Befejezett" státuszok
 - **📈 Dashboard**: Vizuális áttekintés az összes tréningnapról és haladásról
+- **🔗 Progresszív adatáramlás**: Lépések egymásra épülnek - az előző lépés adatai automatikusan importálódnak a következőbe
+- **🛠️ Eszköz One-Pagerek**: 15+ vezetői eszköz teljes dokumentációval, kattintható modal ablakokban
+- **📋 Strukturált táblázatok**: Hatáselemzés, priorizálás, adatgyűjtés táblázatos formában
 
 ### 🔄 Folyamatban lévő funkciók
 
@@ -154,6 +157,19 @@ Változás beépítése, folyamatos fejlődés kultúrája
 8. 🔄 Collaborative features (csoportos munkafüzetek)
 
 ## 📝 Változásnapló
+
+### 2025-11-04 - v1.2.0
+- ✅ **Progresszív adatáramlás**: 1. nap 8 lépése egymásra épül
+  - Step 1 → Step 2: Problémák importálása hatáselemzésbe
+  - Step 2 → Step 3: Kiválasztott probléma elemzése
+  - Step 3 → Step 4: Priorizálás minden problémára
+  - Step 4 → Step 5: Legfontosabb probléma 5W1H definíciója
+  - Step 5 → Step 6: SWOT elemzés a definiált problémára
+  - Step 6 → Step 7: Adatok gyűjtése strukturált táblázattal
+  - Step 7 → Step 8: Gyökérok-elemzés 5 Miért módszerrel
+- ✅ **Eszköz modalok**: 15+ vezetői eszköz one-pager dokumentációval
+- ✅ **Strukturált input formok**: Táblázatok, dropdown-ok, validációk
+- ✅ **Kontextus-érzékeny hibaüzenetek**: Ha előző lépés hiányzik
 
 ### 2025-11-04 - v1.0.0
 - ✅ Teljes auth rendszer (register/login/JWT)
