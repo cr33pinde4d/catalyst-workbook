@@ -227,6 +227,18 @@ pm2 stop catalyst
 
 ## 📝 Változásnapló
 
+### 2025-11-04 - v1.9.3 🎨 **Catalyst Branding Complete**
+- 🎨 **MVM Catalyst színpaletta**: Teljes UI átállítva hivatalos brand színekre
+  - Zöld #34957E, Kék #005DAB, Sárga #EEB134, Piros #EE7A61, Lila #765AA1, Szürke #8DA4A9
+  - catalyst-theme.css létrehozva CSS változókkal
+  - Minden gomb, kártya, badge, progress bar frissítve
+- 🖼️ **Logo integráció**: 3 verzió hozzáadva és alkalmazva
+  - Dashboard header: logo + név
+  - Landing page hero: nagy logo
+  - PDF export template: logo a fejlécben
+- ✨ **Gradient frissítések**: Catalyst kék-lila (#005DAB → #765AA1)
+- 📊 **Vizualizáció előkészítve**: Holnap SWOT, Eisenhower, 9-Box mátrixok
+
 ### 2025-11-04 - v1.9.2 🗄️ **Production Database Setup**
 - ✅ **Seed adatok production-ben**: 6 tréningnap + 48 lépés + eszközök feltöltve
 - ✅ **D1 binding konfiguráció**: wrangler.toml létrehozva Cloudflare Pages binding-hoz
