@@ -148,8 +148,16 @@ pm2 stop catalyst
 - **7. Korrekciós mechanizmusok**: Alert rendszer, CAP, root cause analysis, PDCA ciklus
 - **8. Folyamatos fejlesztés**: Kaizen kultúra, retrospektívek, A/B testing, learning reviews, KPI felülvizsgálat
 
-### 5. Nap: Csapatmenedzsment
-Delegálás, motiváció, konfliktuskezelés
+### 5. Nap: Csapatmenedzsment ✅
+8 lépés - Delegálás, motiváció, konfliktus, biztonság, coaching
+- **1. Delegálási stratégia**: Eisenhower mátrix, Skill-Will, delegálási szintek (1-7), SMART
+- **2. Motivációs tényezők**: Herzberg, Drive (AMP), motivációs térkép, Stay Interview
+- **3. Konfliktuskezelés**: Thomas-Kilmann TKI, Interest-Based Relational, NVC
+- **4. Pszichológiai biztonság**: Google Aristotle, Edmondson Index, blameless postmortem
+- **5. Coaching és mentoring**: GROW modell, Socratic questioning, aktív hallgatás, 70-20-10
+- **6. Nehéz beszélgetések**: Crucial Conversations, SBI, PIE modell, checklist
+- **7. Csapatkohézió**: Lencioni 5 Dysfunctions, team building, Tuckman stages, rituals
+- **8. Vezetői jelenléted**: Leadership Brand, 360° visszajelzés, vezetői napló, Executive Presence
 
 ### 6. Nap: Fenntartás & adaptáció
 Változás beépítése, folyamatos fejlődés kultúrája
@@ -183,6 +191,18 @@ Változás beépítése, folyamatos fejlődés kultúrája
 8. 🔄 Collaborative features (csoportos munkafüzetek)
 
 ## 📝 Változásnapló
+
+### 2025-11-04 - v1.6.0
+- ✅ **5. Nap teljes implementáció (8 lépés)**: Csapatmenedzsment
+  - 1. Delegálási stratégia - Eisenhower, Skill-Will, szintek
+  - 2. Motivációs tényezők - Herzberg, Drive, térkép, Stay Interview
+  - 3. Konfliktuskezelés - TKI, IBR, NVC
+  - 4. Pszichológiai biztonság - Aristotle, Safety Index, postmortem
+  - 5. Coaching & mentoring - GROW, Socratic, active listening, 70-20-10
+  - 6. Nehéz beszélgetések - Crucial Conv, SBI, PIE, checklist
+  - 7. Csapatkohézió - Lencioni, team building, Tuckman, rituals
+  - 8. Vezetői jelenléted - Brand, 360°, napló, Executive Presence
+- ✅ **Migration frissítése**: Mind a 8 lépés hozzáadva
 
 ### 2025-11-04 - v1.5.0
 - ✅ **4. Nap teljes implementáció (8 lépés)**: Teljesítménymenedzsment
@@ -256,7 +276,7 @@ Proprietary - MVM Group
 ---
 
 **Készült**: 2025-11-04  
-**Verzió**: 1.5.0  
+**Verzió**: 1.6.0  
 **Státusz**: ✅ Működőképes (Development)  
 **Tech Stack**: Hono + Cloudflare D1 + TypeScript + Tailwind CSS  
-**Haladás**: 4/6 tréningnap implementálva (67%) 🚀
+**Haladás**: 5/6 tréningnap implementálva (83%) 🎉
