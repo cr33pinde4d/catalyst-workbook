@@ -1405,23 +1405,6 @@ function renderStepView() {
             </div>
           </form>
         </div>
-
-        <!-- Status Update -->
-        <div class="bg-white rounded-xl shadow-md p-6">
-          <h2 class="text-xl font-bold text-gray-800 mb-4">
-            <i class="fas fa-flag text-purple-500"></i> Státusz
-          </h2>
-          <div class="flex gap-3">
-            <button onclick="updateStepStatus(${step.id}, 'in_progress')"
-              class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
-              <i class="fas fa-play"></i> Folyamatban
-            </button>
-            <button onclick="updateStepStatus(${step.id}, 'completed')"
-              class="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition">
-              <i class="fas fa-check"></i> Kész
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   `;
