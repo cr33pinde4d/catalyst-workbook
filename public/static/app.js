@@ -257,16 +257,14 @@ function showView(viewName, params = {}) {
 // View renderers
 function renderLandingView() {
   return `
-    <div class="min-h-screen gradient-bg">
+    <div class="min-h-screen" style="background: linear-gradient(to bottom, white 0%, white 15%, rgba(0, 93, 171, 0.3) 35%, #005DAB 50%, #765AA1 100%);">
       <!-- Hero Section -->
       <div class="container mx-auto px-4 py-16">
         <div class="max-w-4xl mx-auto">
           <!-- Header -->
           <div class="text-center mb-12 animate-slide-in">
             <div class="flex justify-center mb-6">
-              <div style="background: linear-gradient(to bottom, white 0%, rgba(255,255,255,0.9) 40%, rgba(255,255,255,0.5) 70%, transparent 100%); padding: 20px 40px; border-radius: 16px;">
-                <img src="/static/catalyst-logo-full.png" alt="MVM Catalyst" class="h-24" />
-              </div>
+              <img src="/static/catalyst-logo-full.png" alt="MVM Catalyst" class="h-24" />
             </div>
             <h1 class="text-4xl font-bold text-white mb-4">Munkafüzet</h1>
             <p class="text-2xl text-white opacity-90">
@@ -732,13 +730,11 @@ function renderDashboardView() {
   return `
     <div class="min-h-screen bg-gray-50">
       <!-- Header -->
-      <header class="gradient-bg text-white shadow-lg">
+      <header class="text-white shadow-lg" style="background: linear-gradient(to right, white 0%, white 8%, rgba(0, 93, 171, 0.5) 20%, #005DAB 35%, #765AA1 100%);">
         <div class="max-w-7xl mx-auto px-4 py-6">
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-4">
-              <div style="background: linear-gradient(to right, white 0%, rgba(255,255,255,0.8) 50%, transparent 100%); padding: 8px 16px 8px 12px; border-radius: 12px;">
-                <img src="/static/catalyst-logo-full.png" alt="Catalyst Logo" class="h-12" />
-              </div>
+              <img src="/static/catalyst-logo-full.png" alt="Catalyst Logo" class="h-12" />
               <div>
                 <h1 class="text-2xl font-bold">Tanulási Napló</h1>
                 <p class="text-white opacity-90 text-sm">Üdv, ${state.user.name}!</p>
