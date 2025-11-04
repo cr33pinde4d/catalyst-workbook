@@ -97,7 +97,7 @@ pm2 stop catalyst
 ### Publikus URL
 
 **Production**: https://catalyst-workbook.pages.dev
-**Latest Deployment**: https://7668c8af.catalyst-workbook.pages.dev
+**Latest Deployment**: https://1b461682.catalyst-workbook.pages.dev (2025-11-04 - Bug fixes)
 **GitHub Repository**: https://github.com/cr33pinde4d/catalyst-workbook
 **Development**: https://3000-ildzif0p6yl6272ppdpuy-5c13a017.sandbox.novita.ai
 
@@ -226,6 +226,16 @@ pm2 stop catalyst
 8. 🔄 Collaborative features (csoportos munkafüzetek)
 
 ## 📝 Változásnapló
+
+### 2025-11-04 - v1.9.1 🐛 **Critical Bug Fixes**
+- 🐛 **SQL oszlophiba javítás**: Fixed "no such column: td.day_number" error
+  - Root cause: Queries referenced `td.day_number` but column name is `order_num`
+  - Fixed in `processes.ts` GET /:id endpoint (lines 64, 72)
+  - Fixed in `export.ts` GET /process/:id endpoint (line 24)
+- ✅ **Folytatás gomb javítva**: 500 error eliminated, process navigation works
+- ✅ **PDF export javítva**: Export template can now load process data
+- ✅ **Deployed to production**: https://1b461682.catalyst-workbook.pages.dev
+- 📊 **Testing confirmed**: Both endpoints return correct data structure
 
 ### 2025-11-04 - v1.9.0 🚀 **Process Management**
 - ✅ **Valós problémák elemzése**: Tréning utáni folyamatkezelés
