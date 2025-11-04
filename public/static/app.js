@@ -920,10 +920,17 @@ function renderDashboardProcessCard(process) {
         </div>
       </div>
       
-      <button onclick="navigateToProcess(${process.id})" 
-        class="w-full mt-3 bg-catalyst-blue text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm">
-        <i class="fas fa-arrow-right"></i> Folytatás
-      </button>
+      <div class="flex gap-2 mt-3">
+        <button onclick="navigateToProcess(${process.id})" 
+          class="flex-1 bg-catalyst-blue text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm">
+          <i class="fas fa-arrow-right"></i> Folytatás
+        </button>
+        <button onclick="exportProcessToPDF(${process.id})" 
+          class="bg-catalyst-grey text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition font-medium text-sm"
+          title="PDF Export">
+          <i class="fas fa-file-pdf"></i>
+        </button>
+      </div>
     </div>
   `;
 }
