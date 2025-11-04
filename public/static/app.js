@@ -512,12 +512,14 @@ function renderStepView() {
           <div class="bg-white rounded-xl shadow-md p-6 mb-6">
             <h2 class="text-xl font-bold text-gray-800 mb-3">
               <i class="fas fa-toolbox text-purple-500"></i> Eszközök
+              <span class="text-sm text-gray-500 font-normal ml-2">(Kattints a részletekért)</span>
             </h2>
             <div class="flex flex-wrap gap-3">
               ${JSON.parse(step.tools).map(tool => 
-                `<span class="bg-purple-100 text-purple-700 px-4 py-2 rounded-lg font-medium">
-                  ${tool}
-                </span>`
+                `<button type="button" onclick="openToolModal('${tool.replace(/'/g, "\\'")}')" 
+                  class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-4 py-2 rounded-lg font-medium transition-all hover:scale-105 hover:shadow-md cursor-pointer">
+                  <i class="fas fa-book-open"></i> ${tool}
+                </button>`
               ).join('')}
             </div>
           </div>
